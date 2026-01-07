@@ -1,0 +1,230 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400&display=swap');
+
+.section-01 {
+    --primary-color: #c5a36b;
+    --bg-dark: #0a0a0a;
+    --text-muted: rgba(255, 255, 255, 0.6);
+    --font-heading: 'Cinzel', serif;
+    --font-body: 'Inter', sans-serif;
+    --font-accent: 'Cormorant Garamond', serif;
+
+    background-color: var(--bg-dark);
+    color: white;
+    min-height: 100vh;
+    display: flex;
+    font-family: var(--font-body);
+
+    .data-column {
+        flex: 1 1 50%;
+        padding: 4rem;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        .vertical-label {
+            position: absolute;
+            left: 3rem;
+            top: 50%;
+
+            // 1. Lo centramos respecto a sí mismo primero
+            // 2. Luego lo rotamos
+            transform: translate(-50%, -50%) rotate(-90deg);
+
+            // Quitamos el origin manual para que use el centro por defecto
+            transform-origin: center center;
+            font-family: var(--font-accent);
+            font-size: 0.9rem;
+            letter-spacing: 0.3em;
+            color: var(--text-muted);
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+
+            &::before {
+                content: '';
+                display: inline-block;
+                width: 120px;
+                height: 1px;
+                background: var(--text-muted);
+                margin-right: 1.5rem;
+            }
+        }
+
+        .content-wrapper {
+            max-width: 500px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .title-wrapper {
+            margin-bottom: 4rem;
+
+            .title-decor {
+                font-family: var(--font-accent);
+                font-style: italic;
+                font-size: 1.5rem;
+                color: var(--primary-color);
+                margin-right: 1rem;
+                position: relative;
+
+                &::after {
+                    content: '';
+                    position: absolute;
+                    left: -2rem;
+                    top: 50%;
+                    width: 1.5rem;
+                    height: 1px;
+                    background: var(--primary-color);
+                }
+            }
+
+            h2 {
+                font-family: var(--font-heading);
+                font-size: 3.5rem;
+                text-transform: uppercase;
+                letter-spacing: 0.2em;
+                line-height: 1.2;
+
+                span {
+                    display: block;
+                }
+            }
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 4rem;
+
+            li {
+                display: flex;
+                gap: 2rem;
+                margin-bottom: 3rem;
+                align-items: flex-start;
+
+                .icon-box {
+                    flex-shrink: 0;
+                    width: 40px;
+                    height: 40px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    color: var(--primary-color);
+                    opacity: 0.8;
+
+                    svg {
+                        width: 100%;
+                        height: 100%;
+                        stroke-width: 1;
+                    }
+                }
+
+                .content {
+                    h3 {
+                        font-family: var(--font-heading);
+                        font-size: 1.1rem;
+                        margin-bottom: 0.5rem;
+                        letter-spacing: 0.1em;
+                    }
+
+                    p {
+                        font-size: 0.9rem;
+                        line-height: 1.6;
+                        color: var(--text-muted);
+                        max-width: 400px;
+                    }
+                }
+            }
+        }
+
+        .more-info-btn {
+            align-self: flex-start;
+            background: none;
+            border: none;
+            color: white;
+            font-family: var(--font-heading);
+            font-size: 0.9rem;
+            letter-spacing: 0.3em;
+            padding: 0.5rem 0;
+            cursor: pointer;
+            position: relative;
+            transition: color 0.3s ease;
+
+            &::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                height: 1px;
+                background: var(--primary-color);
+                transform: scaleX(0.4);
+                transform-origin: left;
+                transition: transform 0.3s ease;
+            }
+
+            &:hover {
+                color: var(--primary-color);
+
+                &::after {
+                    transform: scaleX(1);
+                }
+            }
+        }
+    }
+
+    .image-column {
+        flex: 1 1 50%;
+        position: relative;
+        overflow: hidden;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .image-overlay-text {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: var(--font-heading);
+            font-size: 0.7rem;
+            letter-spacing: 0.4em;
+            color: rgba(255, 255, 255, 0.788);
+            width: 100%;
+            text-align: center;
+            text-transform: uppercase;
+
+            &::after {
+                content: '';
+                display: block;
+                width: 4px;
+                height: 4px;
+                border: 1px solid rgba(255, 255, 255, 0.4);
+                margin: 0.5rem auto 0;
+                transform: rotate(45deg);
+            }
+        }
+    }
+}
+
+@media (max-width: 1024px) {
+    .section-01 {
+        flex-direction: column;
+
+        .data-column {
+            flex: 1 1 auto;
+            padding: 4rem 2rem;
+        }
+
+        .image-column {
+            flex: 1 1 auto;
+            height: 60vh;
+        }
+    }
+}

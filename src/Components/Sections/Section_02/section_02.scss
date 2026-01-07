@@ -1,0 +1,176 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400&display=swap');
+
+.section-02 {
+    --primary-color: #c5a36b;
+    --bg-dark: #121111;
+    --text-muted: rgba(255, 255, 255, 0.5);
+    --font-heading: 'Cinzel', serif;
+    --font-body: 'Inter', sans-serif;
+    --font-accent: 'Cormorant Garamond', serif;
+
+    background-color: var(--bg-dark);
+    color: white;
+    height: 100vh;
+    width: 100%;
+    position: relative;
+    font-family: var(--font-body);
+    overflow: hidden;
+
+    background: radial-gradient(circle at 50% 50%, #1a1919 0%, #0a0a0a 100%);
+
+    .background-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-family: var(--font-accent);
+        font-style: italic;
+        font-size: 25vw;
+        font-weight: 700;
+        line-height: 1;
+        z-index: 0; // Detrás de todo
+        pointer-events: none;
+        white-space: nowrap;
+        color: transparent;
+        -webkit-text-stroke: 1px rgba(255, 255, 255, 0.05);
+        opacity: 0.4;
+    }
+
+    .vertical-label {
+        position: absolute;
+        left: 3rem;
+        top: 50%;
+        transform: translate(-50%, -50%) rotate(-90deg);
+        transform-origin: center center;
+        z-index: 10;
+
+        font-family: var(--font-accent);
+        font-size: 0.8rem;
+        letter-spacing: 0.3em;
+        color: var(--text-muted);
+        white-space: nowrap;
+        display: flex;
+        align-items: center;
+
+        &::before {
+            content: '';
+            display: inline-block;
+            width: 80px;
+            height: 1px;
+            background: var(--text-muted);
+            margin-right: 1.5rem;
+        }
+    }
+
+    .house-container {
+        position: relative;
+        z-index: 1; // Encima del background-text
+        width: 100%;
+        height: 100vh;
+
+        .house-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 0 15%;
+            // Quitamos el background-color de aquí para que el background-text sea visible
+            background-color: transparent;
+
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+
+            &.active {
+                opacity: 1;
+                visibility: visible;
+                pointer-events: all;
+            }
+
+            .main-content {
+                max-width: 900px;
+                width: 100%;
+                margin-bottom: 8rem;
+
+                .title-group {
+                    margin-bottom: 2rem;
+                    display: flex;
+                    align-items: baseline;
+                    gap: 1.5rem;
+
+                    span.step-number {
+                        font-family: var(--font-heading);
+                        font-size: 2.5rem;
+                        color: white;
+                    }
+
+                    h2 {
+                        font-family: var(--font-heading);
+                        font-size: 3rem;
+                        letter-spacing: 0.2em;
+                        text-transform: uppercase;
+                        margin: 0;
+                    }
+                }
+
+                p.description {
+                    font-size: 1rem;
+                    line-height: 1.8;
+                    color: var(--text-muted);
+                    max-width: 450px;
+                    margin-left: 4.5rem;
+                }
+            }
+
+            .sub-steps-grid {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 3rem;
+                width: 100%;
+                max-width: 1100px;
+
+                .sub-step {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    text-align: center;
+
+                    .icon-wrapper {
+                        width: 60px;
+                        height: 60px;
+                        margin-bottom: 2rem;
+                        color: var(--primary-color);
+                        opacity: 0.8;
+                        position: relative;
+
+                        svg {
+                            width: 100%;
+                            height: 100%;
+                            stroke-width: 0.8;
+                        }
+                    }
+
+                    h4 {
+                        font-family: var(--font-heading);
+                        font-size: 0.8rem;
+                        letter-spacing: 0.2em;
+                        text-transform: uppercase;
+                        margin-bottom: 2rem;
+                        color: white;
+                    }
+
+                    p {
+                        font-size: 0.75rem;
+                        line-height: 1.6;
+                        color: var(--text-muted);
+                    }
+                }
+            }
+        }
+    }
+}
