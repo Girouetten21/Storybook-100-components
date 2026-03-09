@@ -1,9 +1,9 @@
-import { Section_02 } from './Components/Sections/Section_02/section_02'
+import ActivityList from './Components/ActivityList/ActivityList'
 
 function App() {
   return (
     <div className="app-container">
-      <Section_02 />
+      <ActivityList />
     </div>
   )
 }

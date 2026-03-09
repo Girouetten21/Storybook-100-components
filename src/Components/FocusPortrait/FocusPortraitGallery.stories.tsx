@@ -19,12 +19,12 @@ const meta = {
   },
   decorators: [
     (Story) => (
-      <main 
-        className="relative flex items-center justify-center min-h-screen overflow-hidden bg-cover bg-center"
+      <main
+        className="focus-portrait-showcase"
         style={{ backgroundImage: `url(${bgPhoto})` }}
       >
-        <div className="absolute inset-0 bg-black/50"></div>
-        <div className="absolute inset-0 w-full h-full">
+        <div className="overlay"></div>
+        <div className="gallery-container">
           <Story />
         </div>
       </main>

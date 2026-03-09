@@ -3,6 +3,7 @@ import bgPhoto from './Photos/background.webp'
 import photo1 from './Photos/1.webp'
 import photo2 from './Photos/2.webp'
 import photo3 from './Photos/3.webp'
+import './FocusPortrait.scss'
 
 const FocusPortraitShowcase = () => {
   const galleryItems = [
@@ -39,13 +40,13 @@ const FocusPortraitShowcase = () => {
   ];
 
   return (
-    <main 
-      className="relative flex items-center justify-center min-h-screen overflow-hidden bg-cover bg-center"
+    <main
+      className="focus-portrait-showcase"
       style={{ backgroundImage: `url(${bgPhoto})` }}
     >
-      <div className="absolute inset-0 bg-black/50"></div>
-      
-      <div className="absolute inset-0 w-full h-full">
+      <div className="overlay"></div>
+
+      <div className="gallery-container">
         <FocusPortraitGallery items={galleryItems} />
       </div>
     </main>

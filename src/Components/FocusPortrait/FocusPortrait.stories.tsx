@@ -22,11 +22,11 @@ const meta = {
   },
   decorators: [
     (Story) => (
-      <main 
-        className="relative flex items-center justify-center min-h-screen overflow-hidden bg-cover bg-center"
+      <main
+        className="focus-portrait-showcase"
         style={{ backgroundImage: `url(${bgPhoto})` }}
       >
-        <div className="absolute inset-0 bg-black/40"></div>
+        <div className="overlay"></div>
         <Story />
       </main>
     ),
