@@ -17,32 +17,33 @@ interface Activity {
 const activities: Activity[] = [
     {
         id: 1,
-        title: 'Walk in the footsteps of Emily',
-        tags: ['WALKING TOURS', '2.5 HOURS', 'FROM 52 €'],
+        title: 'Hypatia of Alexandria',
+        tags: ['MATHEMATICS', 'PHILOSOPHY', 'ANCIENT WORLD'],
         image: photo1
     },
     {
         id: 2,
-        title: 'Croissant-Making Workshop',
-        tags: ['WORKSHOPS', '2.5 HOURS', 'FROM 131 €'],
+        title: 'Artemisia Gentileschi',
+        tags: ['BAROQUE ART', 'PAINTER', 'STRENGTH'],
         image: photo2
     },
     {
         id: 3,
-        title: 'Macaron-Making Workshop',
-        tags: ['WORKSHOPS', '2.5 HOURS', 'FROM 131 €'],
+        title: 'Ada Lovelace',
+        tags: ['COMPUTING', 'VISIONARY', '19TH CENTURY'],
         image: photo3
     },
     {
         id: 4,
-        title: 'Champagne Seine Cruise',
-        tags: ['BOAT CRUISE', '1.5 HOURS', 'FROM 115 €'],
+        title: 'Marie Curie',
+        tags: ['SCIENCE', 'NOBEL PRIZE', 'RADIOACTIVITY'],
         image: photo1
     },
 ];
 
 export const ActivityList: React.FC = () => {
     const [activeImage, setActiveImage] = useState<string | null>(null);
+    const [hoveredId, setHoveredId] = useState<number | null>(null);
     const imageContainerRef = useRef<HTMLDivElement>(null);
     const mousePos = useRef({ x: 0, y: 0 });
 
@@ -51,11 +52,10 @@ export const ActivityList: React.FC = () => {
             mousePos.current = { x: e.clientX, y: e.clientY };
 
             if (activeImage && imageContainerRef.current) {
-                // Smooth follow using GSAP
                 gsap.to(imageContainerRef.current, {
                     x: mousePos.current.x,
                     y: mousePos.current.y,
-                    duration: 0.8,
+                    duration: 0.6,
                     ease: "power3.out"
                 });
             }
@@ -63,6 +63,7 @@ export const ActivityList: React.FC = () => {
 
         const handleWindowMouseLeave = () => {
             handleMouseLeave();
+            setHoveredId(null);
         };
 
         window.addEventListener('mousemove', handleMouseMove);
@@ -74,37 +75,46 @@ export const ActivityList: React.FC = () => {
         };
     }, [activeImage]);
 
-    const handleMouseEnter = (image: string) => {
+    const handleMouseEnter = (id: number, image: string) => {
         setActiveImage(image);
+        setHoveredId(id);
         if (imageContainerRef.current) {
             gsap.to(imageContainerRef.current, {
                 opacity: 1,
                 scale: 1,
                 duration: 0.4,
-                ease: "power2.out"
+                ease: "power2.out",
+                overwrite: "auto"
             });
         }
     };
 
     const handleMouseLeave = () => {
+        setHoveredId(null);
         if (imageContainerRef.current) {
             gsap.to(imageContainerRef.current, {
                 opacity: 0,
                 scale: 0.8,
                 duration: 0.3,
-                ease: "power2.in"
+                ease: "power2.in",
+                overwrite: "auto",
+                onComplete: () => {
+                    setActiveImage(null);
+                }
             });
+        } else {
+            setActiveImage(null);
         }
     };
 
     return (
-        <div className="activity-list-container">
+        <div className="activity-list-container" onMouseLeave={handleMouseLeave}>
             <div className="list-wrapper">
                 {activities.map((activity) => (
                     <div
                         key={activity.id}
                         className="activity-item"
-                        onMouseEnter={() => handleMouseEnter(activity.image)}
+                        onMouseEnter={() => handleMouseEnter(activity.id, activity.image)}
                         onMouseLeave={handleMouseLeave}
                     >
                         <div className="info-content">
@@ -118,17 +128,17 @@ export const ActivityList: React.FC = () => {
                             </div>
                         </div>
                         <div className="arrow-button">
-                            <svg
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                            >
-                                <line x1="7" y1="17" x2="17" y2="7"></line>
-                                <polyline points="7 7 17 7 17 17"></polyline>
-                            </svg>
+                            {hoveredId === activity.id ? (
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    <polyline points="12 5 19 12 12 19"></polyline>
+                                </svg>
+                            ) : (
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                    <line x1="7" y1="17" x2="17" y2="7"></line>
+                                    <polyline points="7 7 17 7 17 17"></polyline>
+                                </svg>
+                            )}
                         </div>
                     </div>
                 ))}
@@ -137,9 +147,14 @@ export const ActivityList: React.FC = () => {
             <div
                 ref={imageContainerRef}
                 className="floating-image-container"
-                style={{ opacity: 0 }}
+                style={{ opacity: 0, visibility: activeImage ? 'visible' : 'hidden' }}
             >
-                {activeImage && <img src={activeImage} alt="Preview" />}
+                {activeImage && (
+                    <>
+                        <img src={activeImage} alt="Preview" />
+                        <div className="explore-label">EXPLORE NOW</div>
+                    </>
+                )}
             </div>
         </div>
     );
