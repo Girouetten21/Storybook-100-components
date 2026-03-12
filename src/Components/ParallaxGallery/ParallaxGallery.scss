@@ -1,0 +1,133 @@
+@import url('https://fonts.googleapis.com/css2?family=Baskervville:ital@0;1&family=Inter:wght@400;500;600;700&family=Oswald:wght@500;600&display=swap');
+
+.parallax-gallery-container {
+    padding: 6rem 4rem;
+    background-color: #f0e9d9; // Cream background matching the design
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 4rem 3rem;
+    
+    @media (max-width: 1024px) {
+        grid-template-columns: 1fr;
+        padding: 4rem 2rem;
+    }
+}
+
+.gallery-card {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    cursor: pointer;
+
+    // The Magic Hover Interaction
+    &:hover {
+        .image-wrapper {
+            transform: translateY(-12px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
+            border-radius: 16px; // Slightly sharper corners on lift
+        }
+        
+        .parallax-image {
+            filter: brightness(1.08) contrast(1.05); // Pops the colors slightly
+        }
+
+        .category-badge {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .content-wrapper {
+            .title {
+                color: #b58c4c; // Warm gold-ish tone to signal interaction
+            }
+            .divider {
+                background-color: #b58c4c;
+            }
+            .detail-pill {
+                border-color: #b58c4c;
+                background-color: rgba(181, 140, 76, 0.05);
+                color: #b58c4c;
+            }
+        }
+    }
+}
+
+.image-wrapper {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    border-radius: 24px;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+    background-color: #ddd; // Fallback
+    transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+    
+    .category-badge {
+        position: absolute;
+        top: 24px;
+        left: 24px;
+        color: #111;
+        font-family: 'Oswald', 'Inter', sans-serif;
+        font-size: 1rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        padding: 0.4rem 1rem;
+        border-radius: 50px;
+        z-index: 2;
+        letter-spacing: 0.05em;
+        transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+    
+    .parallax-image {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        will-change: transform, filter;
+        transition: filter 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+}
+
+.content-wrapper {
+    display: flex;
+    flex-direction: column;
+    
+    .title {
+        font-family: 'Baskervville', serif;
+        font-size: 2.8rem;
+        color: #1a1a1a;
+        margin: 0 0 1rem 0;
+        font-weight: 400;
+        letter-spacing: -0.02em;
+        line-height: 1.1;
+        transition: color 0.5s ease;
+    }
+
+    .divider {
+        width: 100%;
+        height: 1px;
+        background-color: rgba(0, 0, 0, 0.8);
+        margin-bottom: 1.2rem;
+        transition: background-color 0.5s ease;
+    }
+
+    .details-row {
+        display: flex;
+        gap: 0.8rem;
+
+        .detail-pill {
+            font-family: 'Oswald', 'Inter', sans-serif;
+            font-size: 1rem;
+            color: #1a1a1a;
+            border: 1px solid rgba(0, 0, 0, 0.5);
+            padding: 0.3rem 1rem;
+            border-radius: 50px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            background-color: transparent;
+            transition: all 0.5s ease;
+        }
+    }
+}

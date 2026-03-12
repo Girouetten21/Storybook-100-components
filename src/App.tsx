@@ -1,4 +1,4 @@
-import StackedTourCards from './Components/StackedTourCards/StackedTourCards'
+import ProductFeatureGallery from './Components/ProductFeatureGallery/ProductFeatureGallery'
 
 function App() {
   return (
@@ -8,7 +8,7 @@ function App() {
         <h1 style={{ fontSize: '3rem', textTransform: 'uppercase', letterSpacing: '0.2em' }}>Scroll Down</h1>
       </section>
 
-      <StackedTourCards />
+      <ProductFeatureGallery />
 
       {/* Testing Section after Testimonial */}
       <section style={{ height: '100vh', background: '#e0e0e0', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#1a1a1a' }}>

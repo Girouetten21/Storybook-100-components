@@ -1,0 +1,112 @@
+@import url('https://fonts.googleapis.com/css2?family=Baskervville:ital@0;1&family=Inter:wght@400;500;600;700&family=Oswald:wght@500;600&display=swap');
+
+.deck-wrapper {
+    height: 100vh;
+    width: 100vw;
+    background-color: #050505; // Very deep dark background to make colors pop
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.deck-scene {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    z-index: 10;
+}
+
+// Center Title
+.deck-title {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    // We use translate(-50%, -50%) in JS initially, so we let GSAP handle it securely, 
+    // but we can set initial CSS for safety. GSAP will override xPercent/yPercent and x/y.
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: #fff;
+    z-index: 100; // Above everything initially
+    pointer-events: none;
+    will-change: transform, opacity;
+
+    h2 {
+        font-family: 'Baskervville', serif;
+        font-size: 8rem;
+        margin: 0;
+        line-height: 1;
+        letter-spacing: -0.02em;
+        text-transform: uppercase;
+        text-shadow: 0 0 50px rgba(0,0,0,1); // Heavy shadow so it separates from cards
+    }
+    
+    p {
+        font-family: 'Oswald', sans-serif;
+        font-size: 1.5rem;
+        color: #ff7686;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        margin-top: 1.5rem;
+    }
+}
+
+// Individual Cards
+.deck-card {
+    position: absolute;
+    // Desktop size
+    width: 25vw;
+    height: 28vh;
+    // Center it physically relative to the 0x0 deck-scene parent
+    top: -14vh;
+    left: -12.5vw;
+    
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.8); // Deep drop shadow for the "pile" look
+    cursor: pointer;
+    will-change: transform;
+    
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        // Deep dimmed look until hover
+        filter: brightness(0.6) contrast(1.2);
+        transition: filter 0.5s cubic-bezier(0.165, 0.84, 0.44, 1), transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+        pointer-events: none; // Prevent image dragging or blocking
+    }
+
+    &:hover {
+        z-index: 50 !important; // Bring to absolute front on hover
+        img {
+            filter: brightness(1.1) contrast(1.05); // Illuminates beautifully
+            transform: scale(1.1); // Optical zoom into the frame
+        }
+    }
+}
+
+// Ensure responsiveness
+@media (max-width: 1024px) {
+    .deck-title h2 { font-size: 5rem; }
+    .deck-card {
+        width: 28vw;
+        height: 22vh;
+        top: -11vh;
+        left: -14vw;
+    }
+}
+
+@media (max-width: 768px) {
+    .deck-title h2 { font-size: 3.5rem; }
+    .deck-title p { font-size: 1rem; }
+    .deck-card {
+        width: 30vw;
+        height: 15vh;
+        top: -7.5vh;
+        left: -15vw;
+    }
+}
