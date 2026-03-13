@@ -20,12 +20,35 @@
     box-sizing: border-box;
 }
 
+html, body {
+    margin: 0;
+    padding: 0;
+    /* Removed overflow-x: hidden as per instruction 1 */
+}
+
 body {
+    width: 100%;
+    // We remove the global overflow-x: hidden from here as it interferes with GSAP ScrollTrigger's calc
     font-family: var(--font-sans);
     background-color: #0f172a;
     color: var(--color-white);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+}
+
+// Elegant scrollbar for premium aesthetic
+::-webkit-scrollbar {
+    width: 6px;
+}
+::-webkit-scrollbar-track {
+    background: #0f172a;
+}
+::-webkit-scrollbar-thumb {
+    background: #334155;
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #475569;
 }
 
 main {

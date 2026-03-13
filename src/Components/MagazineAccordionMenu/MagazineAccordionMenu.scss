@@ -1,0 +1,292 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Jost:wght@300;400;500;600&display=swap');
+
+// Colors
+$mag-dark: #0a0a0a;
+$mag-light: #f7f5f0;
+$mag-accent: #c0b8a0;
+
+.mag-accordion-wrapper {
+    position: relative;
+    z-index: 9999;
+}
+
+// Minimal Button
+.mag-toggle {
+    position: fixed;
+    top: 40px;
+    right: 5vw;
+    z-index: 10001;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    color: #fff;
+    mix-blend-mode: difference;
+    font-family: 'Jost', sans-serif;
+    font-weight: 500;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    overflow: hidden;
+    padding: 10px;
+    
+    .mag-toggle-text {
+        position: relative;
+        padding-bottom: 4px;
+        
+        &::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: currentColor;
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+    }
+    
+    &:hover .mag-toggle-text::after {
+        transform: scaleX(1);
+        transform-origin: left;
+    }
+}
+
+.mag-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: 10000;
+    visibility: hidden;
+    pointer-events: none;
+    background: $mag-dark; 
+    
+    &.is-active {
+        visibility: visible;
+        pointer-events: auto;
+    }
+
+    .mag-strips-container {
+        display: flex;
+        width: 100%;
+        height: 100%;
+    }
+
+    .mag-strip {
+        flex: 1; // Default state: identical vertical columns
+        height: 100%;
+        position: relative;
+        overflow: hidden;
+        border-right: 1px solid rgba(255, 255, 255, 0.15); // Fine separator lines
+        transition: flex 0.8s cubic-bezier(0.25, 1, 0.15, 1);
+        cursor: crosshair;
+
+        &:last-child {
+            border-right: none;
+        }
+
+        .mag-strip-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                transform: scale(1.1); // Keep slight zoom for hover reveal
+                transition: transform 1.2s cubic-bezier(0.25, 1, 0.15, 1);
+            }
+
+            .mag-dark-veil {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.65); // Very dark by default like an unlit stage
+                transition: background 0.8s ease;
+            }
+        }
+
+        // Shrunk Content View (Vertical text)
+        .mag-shrunk-content {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 50px 0;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+
+            .mag-num {
+                font-family: 'Jost', sans-serif;
+                color: $mag-accent;
+                font-weight: 500;
+                font-size: 1rem;
+                letter-spacing: 0.15em;
+                margin-bottom: auto;
+            }
+
+            .mag-title-vertical {
+                font-family: 'Playfair Display', serif;
+                font-size: 4vw; // Responsive massiveness
+                color: $mag-light;
+                font-weight: 400;
+                letter-spacing: 0.05em;
+                writing-mode: vertical-rl; // The magic property
+                transform: rotate(180deg); // Flipped so it reads top-to-bottom
+                text-transform: uppercase;
+                margin-top: auto;
+                white-space: nowrap;
+            }
+        }
+
+        // Expanded Hover Content
+        .mag-expanded-content {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 3;
+            display: flex;
+            align-items: flex-end;
+            padding: 50px 60px;
+            opacity: 0; // Hidden by default
+            visibility: hidden;
+            transition: opacity 0.6s ease, visibility 0.6s ease;
+            
+            .mag-expanded-inner {
+                transform: translateY(30px);
+                transition: transform 0.6s cubic-bezier(0.25, 1, 0.15, 1);
+                width: 100%;
+            }
+
+            .mag-expanded-num {
+                font-family: 'Jost', sans-serif;
+                color: $mag-accent;
+                font-weight: 400;
+                font-size: 0.95rem;
+                letter-spacing: 0.2em;
+                text-transform: uppercase;
+                display: block;
+                margin-bottom: 20px;
+            }
+
+            .mag-expanded-title {
+                font-family: 'Playfair Display', serif;
+                font-size: 6rem;
+                color: $mag-light;
+                font-weight: 400;
+                letter-spacing: 0.02em;
+                text-transform: uppercase;
+                margin-bottom: 30px;
+                line-height: 1;
+            }
+
+            .mag-links {
+                list-style: none;
+                display: flex;
+                flex-direction: column;
+                gap: 15px;
+
+                li a {
+                    font-family: 'Jost', sans-serif;
+                    text-decoration: none;
+                    color: rgba(255,255,255,0.7);
+                    font-size: 1.2rem;
+                    text-transform: uppercase;
+                    letter-spacing: 0.1em;
+                    transition: color 0.3s ease, padding-left 0.3s ease;
+
+                    &:hover {
+                        color: $mag-accent;
+                        padding-left: 15px;
+                    }
+                }
+            }
+        }
+
+        // THE HOVER PHYSICS
+        &:hover {
+            flex: 3.5; // Expands to dominate the horizontal screen!
+
+            .mag-strip-bg {
+                img {
+                    transform: scale(1); // Relaxes zoom
+                }
+                .mag-dark-veil {
+                    background: rgba(0, 0, 0, 0.2); // Spotlight brightly
+                }
+            }
+
+            .mag-shrunk-content {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+
+            .mag-expanded-content {
+                opacity: 1;
+                visibility: visible;
+                
+                .mag-expanded-inner {
+                    transform: translateY(0);
+                }
+            }
+        }
+    }
+}
+
+// Mobile Responsiveness (Flips to a Vertical Accordion)
+@media (max-width: 1024px) {
+    .mag-overlay {
+        .mag-strips-container {
+            flex-direction: column; // Stack rows
+        }
+
+        .mag-strip {
+            border-right: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+            
+            // Revert layout for small devices
+            .mag-shrunk-content {
+                flex-direction: row; // Horizontal line
+                padding: 0 30px;
+                
+                .mag-num {
+                    margin-bottom: 0;
+                    margin-right: 20px;
+                }
+                
+                .mag-title-vertical {
+                    writing-mode: horizontal-tb; // Back to normal text
+                    transform: none;
+                    font-size: 2.2rem;
+                    margin-top: 0;
+                }
+            }
+            
+            .mag-expanded-content {
+                padding: 30px;
+                
+                .mag-expanded-title {
+                    font-size: 3rem;
+                    margin-bottom: 20px;
+                }
+            }
+        }
+    }
+}

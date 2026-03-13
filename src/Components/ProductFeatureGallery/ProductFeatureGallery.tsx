@@ -72,11 +72,11 @@ export const ProductFeatureGallery: React.FC = () => {
             // 1. Setup Initial States for all elements
             productFeatures.forEach((_, i) => {
                 if (i !== 0) {
-                    gsap.set(`.wrapper-${i}`, { clipPath: 'polygon(0 100%, 100% 100%, 100% 100%, 0 100%)' });
-                    gsap.set(`.text-${i}`, { y: 150, opacity: 0 });
+                    gsap.set(`.wrapper-${i}`, { clipPath: 'polygon(0 100%, 100% 100%, 100% 100%, 0 100%)', pointerEvents: 'none' });
+                    gsap.set(`.text-${i}`, { y: 150, opacity: 0, pointerEvents: 'none' });
                 } else {
-                    gsap.set(`.wrapper-0`, { clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)' });
-                    gsap.set(`.text-0`, { yPercent: -50, y: 0, opacity: 1 });
+                    gsap.set(`.wrapper-0`, { clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)', pointerEvents: 'auto' });
+                    gsap.set(`.text-0`, { yPercent: -50, y: 0, opacity: 1, pointerEvents: 'auto' });
                 }
                 gsap.set(`.hotspot-group-${i}`, { scale: 0, opacity: 0 });
                 gsap.set(`.hotspot-group-${i} .line`, { width: 0 });
@@ -107,6 +107,7 @@ export const ProductFeatureGallery: React.FC = () => {
                 tl.to(`.wrapper-${outIdx}`, {
                     yPercent: direction > 0 ? -15 : 15,
                     opacity: 0,
+                    pointerEvents: 'none',
                     filter: "blur(10px)",
                     scale: 0.95,
                     duration: 0.8,
@@ -126,8 +127,8 @@ export const ProductFeatureGallery: React.FC = () => {
 
                 // Animate In Next
                 tl.fromTo(`.wrapper-${index}`,
-                    { opacity: 1, filter: "blur(0px)", scale: 1, yPercent: direction > 0 ? 15 : -15, clipPath: direction > 0 ? 'polygon(0 100%, 100% 100%, 100% 100%, 0 100%)' : 'polygon(0 0, 100% 0, 100% 0, 0 0)' },
-                    { clipPath: 'polygon(0 0%, 100% 0%, 100% 100%, 0 100%)', yPercent: 0, duration: 1, ease: "power3.inOut" },
+                    { opacity: 1, filter: "blur(0px)", scale: 1, yPercent: direction > 0 ? 15 : -15, clipPath: direction > 0 ? 'polygon(0 100%, 100% 100%, 100% 100%, 0 100%)' : 'polygon(0 0, 100% 0, 100% 0, 0 0)', pointerEvents: 'none' },
+                    { clipPath: 'polygon(0 0%, 100% 0%, 100% 100%, 0 100%)', yPercent: 0, duration: 1, ease: "power3.inOut", pointerEvents: 'auto' },
                     0
                 )
                     .fromTo(`.text-${index}`,
@@ -154,13 +155,13 @@ export const ProductFeatureGallery: React.FC = () => {
                 currentIndex = index;
                 productFeatures.forEach((_, i) => {
                     if (i === index) {
-                        gsap.set(`.wrapper-${i}`, { clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)', yPercent: 0, opacity: 1, scale: 1, filter: "blur(0px)" });
+                        gsap.set(`.wrapper-${i}`, { clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)', yPercent: 0, opacity: 1, scale: 1, filter: "blur(0px)", pointerEvents: 'auto' });
                         gsap.set(`.text-${i}`, { y: 0, yPercent: -50, opacity: 1, filter: "blur(0px)", pointerEvents: 'auto' });
                         gsap.set(`.hotspot-group-${i}`, { scale: 1, opacity: 1 });
                         gsap.set(`.hotspot-group-${i} .line`, { width: 60 });
                     } else {
                         // Position previous items above and future items below
-                        gsap.set(`.wrapper-${i}`, { clipPath: i < index ? 'polygon(0 0, 100% 0, 100% 0, 0 0)' : 'polygon(0 100%, 100% 100%, 100% 100%, 0 100%)', yPercent: i < index ? -15 : 15, opacity: 0, scale: 0.95, filter: "blur(10px)" });
+                        gsap.set(`.wrapper-${i}`, { clipPath: i < index ? 'polygon(0 0, 100% 0, 100% 0, 0 0)' : 'polygon(0 100%, 100% 100%, 100% 100%, 0 100%)', yPercent: i < index ? -15 : 15, opacity: 0, scale: 0.95, filter: "blur(10px)", pointerEvents: 'none' });
                         gsap.set(`.text-${i}`, { y: i < index ? -150 : 150, opacity: 0, filter: "blur(5px)", pointerEvents: 'none' });
                         gsap.set(`.hotspot-group-${i}`, { scale: 0, opacity: 0 });
                     }
@@ -175,7 +176,7 @@ export const ProductFeatureGallery: React.FC = () => {
                     if (currentIndex < productFeatures.length - 1) {
                         gotoSlide(currentIndex + 1, 1);
                     } else {
-                        intentObserver.disable(); // Free the native scroll downwards
+                        disableObservers(); // Free the native scroll downwards
                         const st = ScrollTrigger.getById("productPin");
                         if (st) {
                             // Instantly teleport out bypassing any smooth-scroller
@@ -187,7 +188,7 @@ export const ProductFeatureGallery: React.FC = () => {
                     if (currentIndex > 0) {
                         gotoSlide(currentIndex - 1, -1);
                     } else {
-                        intentObserver.disable(); // Free the native scroll upwards
+                        disableObservers(); // Free the native scroll upwards
                         const st = ScrollTrigger.getById("productPin");
                         if (st) {
                             window.scrollTo({ top: Math.max(0, st.start - 50), behavior: 'instant' });
@@ -199,14 +200,34 @@ export const ProductFeatureGallery: React.FC = () => {
             // Intent-Based Observer: Captures mouse wheel exactly like a presentation deck
             const intentObserver = Observer.create({
                 target: window,
-                type: "wheel,touch,pointer",
+                type: "wheel,touch", // Removed 'pointer' so dragging the mouse globally doesn't swipe
                 preventDefault: true, // Crucial: Halts smooth scrolling entirely while trapped in the section
                 tolerance: 15,
                 onDown: () => handleDirection(1), // Wheel rotates down -> go next
                 onUp: () => handleDirection(-1)   // Wheel rotates up -> go prev
             });
 
-            intentObserver.disable();
+            // Drag Observer: Captures mouse drag ONLY on the images column
+            const dragObserver = Observer.create({
+                target: sectionRef.current?.querySelector(".showcase-images-col") || window,
+                type: "pointer", 
+                preventDefault: true, // Prevents text selection loops when swiping
+                tolerance: 15,
+                onDown: () => handleDirection(1), 
+                onUp: () => handleDirection(-1)  
+            });
+
+            const enableObservers = () => {
+                intentObserver.enable();
+                dragObserver.enable();
+            };
+
+            const disableObservers = () => {
+                intentObserver.disable();
+                dragObserver.disable();
+            };
+
+            disableObservers();
 
             // ScrollTrigger serves strictly to PIN the gallery in place and route the wheel events to Observer
             ScrollTrigger.create({
@@ -218,17 +239,26 @@ export const ProductFeatureGallery: React.FC = () => {
                 anticipatePin: 1, // Pre-calculates the pin to catch high velocity scrolls before they arrive physically
                 onEnter: (self) => {
                     if (intentObserver.isEnabled) return;
-                    // Sink precisely 500px DEEP into the pin safe-zone so trackpad momentum bounces cannot trigger onLeaveBack
-                    self.scroll(self.start + 500);
+                    // Sink precisely to the core of the safe-zone making it impervious to momentum escapes
+                    self.scroll(self.start + 1500);
                     forceSlide(0);
-                    intentObserver.enable();
+                    enableObservers();
                 },
                 onEnterBack: (self) => {
                     if (intentObserver.isEnabled) return;
-                    // Sink DEEP backwards into the safe-zone
-                    self.scroll(self.end - 500);
+                    // Sink precisely to the core of the safe zone
+                    self.scroll(self.start + 1500);
                     forceSlide(productFeatures.length - 1);
-                    intentObserver.enable();
+                    enableObservers();
+                },
+                onUpdate: (self) => {
+                    if (!intentObserver.isEnabled) return;
+                    // THE INFINITE TRAP: If aggressive scroll momentum tries to eat through the 3000px buffer
+                    // while animations are cooling down, we silently teleport the scrollbar back to the middle.
+                    // This mathematically guarantees they can NEVER skip slides by out-scrolling the pin.
+                    if (self.progress > 0.85 || self.progress < 0.15) {
+                        self.scroll(self.start + 1500);
+                    }
                 }
             });
 

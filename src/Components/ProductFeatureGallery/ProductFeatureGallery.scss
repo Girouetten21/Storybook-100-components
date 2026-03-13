@@ -5,7 +5,7 @@
     color: #111;
     overflow: hidden;
     position: relative;
-    width: 100vw;
+    width: 100%; // 100% avoids horizontal scrollbar issues that 100vw causes
 }
 
 .showcase-pin {
@@ -55,6 +55,13 @@
         height: 100%;
         object-fit: cover;
         transform: scale(1.05); // Slight inner zoom for premium feel
+        user-select: none;
+        -webkit-user-drag: none;
+        cursor: grab;
+
+        &:active {
+            cursor: grabbing;
+        }
     }
 }
 

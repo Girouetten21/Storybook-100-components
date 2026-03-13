@@ -1,0 +1,280 @@
+@import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Syne:wght@400;600;800&display=swap');
+
+// Colors
+$menu-bg: #e4e2dd; // Elegant bone/beige tone indicating premium design
+$menu-txt: #121212;
+$menu-accent: #9c9586;
+
+.staggered-menu-wrapper {
+    position: relative;
+    z-index: 9999;
+}
+
+.staggered-toggle {
+    position: fixed;
+    top: 40px;
+    right: 5vw;
+    z-index: 10001;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-family: 'Syne', sans-serif;
+    color: #fff;
+    mix-blend-mode: difference; // Ensures visibility on light OR dark website backgrounds automatically!
+    font-weight: 600;
+    font-size: 1rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: transform 0.3s ease;
+
+    &:hover {
+        transform: scale(1.05);
+    }
+
+    .burger-lines {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 30px;
+        height: 10px;
+
+        span {
+            display: block;
+            width: 100%;
+            height: 2px;
+            background: #fff;
+            transition: all 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+            transform-origin: right;
+        }
+    }
+
+    &.open {
+        .burger-lines {
+            span:nth-child(1) {
+                transform: rotate(-45deg) scaleX(1.1);
+            }
+            span:nth-child(2) {
+                transform: rotate(45deg) scaleX(1.1);
+            }
+        }
+    }
+}
+
+.staggered-menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: 10000;
+    pointer-events: none; // Off initially
+    visibility: hidden;   // Prevents ghostly un-animated text from rendering
+
+    &.is-active {
+        visibility: visible;
+    }
+
+    .blinds-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        z-index: 1;
+
+        .menu-blind {
+            flex: 1;
+            height: 100%;
+            background: $menu-bg;
+            transform: scaleY(0); // GSAP will animate this
+            will-change: transform;
+        }
+    }
+
+    .staggered-menu-content {
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 10vw;
+    }
+
+    .main-nav {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .menu-link-anim-wrapper {
+        overflow: hidden;
+        padding: 10px 0; // Prevent text clipping
+    }
+
+    .menu-link-item {
+        text-decoration: none;
+        display: inline-block;
+        
+        .menu-link-inner {
+            display: flex;
+            align-items: baseline;
+            gap: 2rem;
+            will-change: transform;
+            transition: padding-left 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        .link-num {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: $menu-accent;
+        }
+
+        .link-title {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 6.5rem;
+            color: $menu-txt;
+            text-transform: uppercase;
+            letter-spacing: -0.03em;
+            line-height: 0.9;
+            transition: color 0.4s ease;
+        }
+
+        &:hover {
+            .menu-link-inner {
+                padding-left: 40px;
+            }
+            .link-title {
+                color: transparent;
+                -webkit-text-stroke: 2px $menu-txt;
+            }
+        }
+    }
+
+    .secondary-nav {
+        display: flex;
+        flex-direction: column;
+        gap: 1.2rem;
+        align-items: flex-end;
+        position: relative;
+        z-index: 3; // Keep above floating image
+
+        .secondary-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: $menu-accent;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5rem;
+        }
+
+        .secondary-link {
+            text-decoration: none;
+            font-family: 'Syne', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: $menu-txt;
+            text-transform: uppercase;
+            position: relative;
+            overflow: hidden;
+
+            &::after {
+                content: '';
+                position: absolute;
+                bottom: -2px;
+                right: 0;
+                width: 0;
+                height: 2px;
+                background: $menu-txt;
+                transition: width 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+            }
+
+            &:hover::after {
+                width: 100%;
+                left: 0;
+                right: auto;
+            }
+        }
+    }
+
+    // THE FLOATING IMAGE EFFECT
+    .floating-image-wrapper {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 350px;
+        height: 480px;
+        pointer-events: none; // Crucial: ensures it doesn't block hover events
+        z-index: 1; // Between the blinds(1) and the text(2)!
+        opacity: 0;
+        visibility: hidden;
+        transform: scale(0.9);
+        transition: opacity 0.4s ease, visibility 0.4s ease, transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        overflow: hidden;
+        border-radius: 20px;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+
+        &.visible {
+            opacity: 1;
+            visibility: visible;
+            transform: scale(1);
+        }
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+}
+
+// Mobile responsiveness
+@media (max-width: 1024px) {
+    .staggered-menu-overlay {
+        .staggered-menu-content {
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 4rem;
+        }
+        
+        .menu-link-item .link-title {
+            font-size: 4.5rem;
+        }
+
+        .secondary-nav {
+            flex-direction: row;
+            flex-wrap: wrap;
+            align-items: baseline;
+            gap: 2rem;
+
+            .secondary-title {
+                width: 100%;
+                margin-bottom: 0;
+            }
+        }
+
+        .floating-image-wrapper {
+            display: none; // Disable complex cursor trailing on small screens/touch devices
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .staggered-toggle {
+        .burger-text {
+            display: none;
+        }
+    }
+    .staggered-menu-overlay .menu-link-item .link-title {
+        font-size: 3rem;
+    }
+}
