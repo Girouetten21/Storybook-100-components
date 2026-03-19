@@ -1,11 +1,11 @@
 import ProductFeatureGallery from './Components/ProductFeatureGallery/ProductFeatureGallery'
-import MagazineAccordionMenu from './Components/MagazineAccordionMenu/MagazineAccordionMenu'
+import CelestialVectorMenu from './Components/CelestialVectorMenu/CelestialVectorMenu'
 
 function App() {
   return (
     <div className="app-container">
       {/* Global Navigation */}
-      <MagazineAccordionMenu />
+      <CelestialVectorMenu />
 
       {/* Testing Section before Gallery */}
       <section style={{ height: '100vh', background: '#0a0a0c', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>

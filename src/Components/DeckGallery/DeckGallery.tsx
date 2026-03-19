@@ -26,7 +26,7 @@ export const DeckGallery: React.FC = () => {
         if (!sectionRef.current || !sceneRef.current) return;
 
         const ctx = gsap.context(() => {
-            const cards = gsap.utils.toArray('.deck-card');
+            const cards = gsap.utils.toArray('.deck-card') as HTMLElement[];
 
             // Set up the GSAP Master Timeline
             const tl = gsap.timeline({

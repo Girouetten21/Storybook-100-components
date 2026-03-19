@@ -1,0 +1,277 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;600&family=Playfair+Display:ital,wght@1,400;1,600&display=swap');
+
+$espresso: #0d0603; // Pitch darkness of a black coffee
+$crema: #3b2011;    // Warm brown foam
+$milk: #e8dccb;     // Warm off-white latte text
+$accent: #bf8d69;   // Caramel accents
+
+.liquid-pour-wrapper {
+    position: relative;
+    z-index: 9999;
+}
+
+// ----------------------------------------------------
+// THE BUTTON
+// ----------------------------------------------------
+.pour-toggle {
+    position: fixed;
+    top: 40px; right: 5vw;
+    background: transparent;
+    border: none;
+    font-family: 'Outfit', sans-serif;
+    color: #fff;
+    mix-blend-mode: difference; // Ensures contrast against both white pages and the dark espresso background
+    font-size: 1rem;
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    cursor: pointer;
+    z-index: 10001;
+    overflow: hidden;
+    height: 30px;
+    width: 80px; // Critical Fix: Gives physical bounds to absolute children
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .pour-toggle-text {
+        position: absolute;
+    }
+    
+    .pour-toggle-close {
+        position: absolute;
+        font-size: 1.5rem;
+        opacity: 0;
+        transform: translateY(20px);
+    }
+}
+
+// ----------------------------------------------------
+// THE VESSEL (OVERLAY)
+// ----------------------------------------------------
+.pour-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    z-index: 10000;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+// ----------------------------------------------------
+// CSS LIQUID PHYSICS ENGINE
+// ----------------------------------------------------
+.liquid-theatre {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    overflow: hidden;
+    z-index: 1;
+
+    // The single stream dropping from the ceiling
+    .coffee-stream {
+        position: absolute;
+        top: 0; left: 50%;
+        width: 15px; height: 0; 
+        background: #2a1409; 
+        transform: translateX(-50%);
+        border-radius: 0 0 15px 15px; // Teardrop tip
+        // Wobble physics
+        animation: streamWobble 0.15s infinite alternate ease-in-out;
+    }
+
+    // The expanding volumes of liquid
+    .coffee-wave {
+        position: absolute;
+        // Mathematical absolute safety measure using `vmax` to guarantee the wave is 
+        // physically large enough to NEVER expose its bottom edge during rotations!
+        width: 400vmax;
+        height: 400vmax;
+        left: calc(50% - 200vmax); // Geometric centering
+        
+        top: 150vh; // Guaranteed hidden state below the browser floor
+        
+        border-radius: 40% 45% 42% 47%; // Asymmetrical Blob Geometry
+        animation: waveSpin 6s infinite linear;
+        
+        // This acts as the frothy top layer that splashes up first
+        &.foam-wave {
+            background: $crema;
+            z-index: 2;
+            animation-duration: 5s;
+        }
+
+        // This acts as the heavy body of the drink
+        &.espresso-wave {
+            background: $espresso;
+            z-index: 3;
+            animation-duration: 7s;
+            animation-direction: reverse; // Crashes perpendicularly into the foam
+            border-radius: 45% 40% 47% 42%;
+        }
+    }
+}
+
+// Fluid physics loops
+@keyframes waveSpin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes streamWobble {
+    0% { width: 15px; transform: translateX(-50%) skewX(0.5deg); }
+    100% { width: 11px; transform: translateX(-52%) skewX(-0.5deg); }
+}
+
+
+// ----------------------------------------------------
+// THE TYPOGRAPHY & CARDS ON THE CREEK
+// ----------------------------------------------------
+.pour-content-grid {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 10; // Sits physically on top of the Espresso wave
+    display: flex;
+    padding: 0 8vw;
+
+    .pour-nav-container {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+        .cafe-tagline {
+            font-family: 'Outfit', sans-serif;
+            color: $accent;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            font-size: 0.9rem;
+            margin-bottom: 40px;
+        }
+
+        .pour-nav {
+            list-style: none; padding: 0; margin: 0;
+            display: flex; flex-direction: column; gap: 30px;
+
+            li {
+                cursor: pointer;
+                opacity: 0.6;
+                transition: opacity 0.4s ease, transform 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+
+                .nav-details {
+                    display: flex; align-items: baseline; gap: 40px;
+                    
+                    .num {
+                        font-family: 'Outfit', sans-serif;
+                        font-weight: 300;
+                        font-size: 1.2rem;
+                        color: $accent;
+                    }
+
+                    .title {
+                        font-family: 'Playfair Display', serif;
+                        font-style: italic;
+                        font-size: 4.5rem;
+                        color: $milk;
+                    }
+                }
+
+                .desc {
+                    font-family: 'Outfit', sans-serif;
+                    font-weight: 200;
+                    color: rgba(232, 220, 203, 0.7);
+                    margin-left: 70px; // Aligns with title
+                    font-size: 1rem;
+                    height: 0;
+                    overflow: hidden;
+                    opacity: 0;
+                    transform: translateY(-10px);
+                    transition: height 0.5s ease, opacity 0.5s ease, transform 0.5s ease;
+                }
+
+                // Interaction
+                &.hovered {
+                    opacity: 1;
+                    transform: translateX(20px);
+                    
+                    .desc {
+                        height: 30px;
+                        opacity: 1;
+                        transform: translateY(10px);
+                    }
+                }
+            }
+        }
+    }
+
+    // RIGHT SIDE BRUTALIST CAFE PHOTOGRAPHY
+    .pour-gallery {
+        position: absolute;
+        right: 0; top: 0;
+        width: 45vw; // Takes almost half the screen
+        height: 100vh;
+        z-index: 5;
+
+        .gallery-frame {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background: $crema;
+            box-shadow: -15px 0 50px rgba(0,0,0,0.6); // Heavy shadow drops over the espresso wave
+            overflow: hidden;
+            will-change: transform;
+
+            // Dark aesthetic coffee tint mask
+            .crema-overlay {
+                position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+                background: linear-gradient(to top, rgba(13, 6, 3, 0.4), rgba(13, 6, 3, 0.9));
+                pointer-events: none;
+                z-index: 10;
+                mix-blend-mode: multiply;
+            }
+
+            // Cinematic Vertical Slider Physics
+            .pour-slide {
+                position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+                overflow: hidden;
+                will-change: transform;
+                transition: transform 1.2s cubic-bezier(0.19, 1, 0.22, 1);
+
+                // States managed natively by React Index Math
+                &.active { transform: translateY(0); z-index: 2;}
+                &.prev { transform: translateY(-100%); z-index: 1;}
+                &.next { transform: translateY(100%); z-index: 1;}
+
+                img {
+                    width: 100%; height: 100%; object-fit: cover;
+                    transform-origin: center;
+                    // Dramatic Inverse Parallax effect pushes image against flow direction
+                    transition: transform 1.2s cubic-bezier(0.19, 1, 0.22, 1);
+                }
+
+                &.active img { transform: translateY(0) scale(1); }
+                &.prev img { transform: translateY(50%) scale(1.1); }
+                &.next img { transform: translateY(-50%) scale(1.1); }
+            }
+        }
+    }
+}
+
+// Responsiveness
+@media (max-width: 1024px) {
+    .pour-content-grid {
+        flex-direction: column-reverse;
+        padding: 5vh 5vw;
+        align-items: center;
+
+        .pour-nav-container { flex: none; width: 100%; align-items: center; text-align: center; }
+        .pour-nav li .nav-details { gap: 20px; .title { font-size: 3rem; } }
+        .pour-nav li .desc { margin-left: 0; }
+        
+        .pour-gallery { 
+            position: relative;
+            width: 100%; 
+            height: 35vh; 
+            margin-bottom: 5vh;
+            .gallery-frame { border-radius: 10px; } // Mobile card
+        }
+    }
+}

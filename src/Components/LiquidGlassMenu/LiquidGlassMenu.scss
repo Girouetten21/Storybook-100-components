@@ -1,0 +1,265 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500&family=Playfair+Display:ital,wght@1,400&display=swap');
+
+// Colors
+$glass-text: #ffffff;
+
+.liquid-glass-wrapper {
+    position: relative;
+    z-index: 9999;
+}
+
+// Hovering Glass Pill Toggle
+.glass-toggle {
+    position: fixed;
+    top: 40px; right: 5vw;
+    z-index: 10001;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 40px;
+    padding: 12px 30px;
+    color: $glass-text;
+    cursor: pointer;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 400;
+    font-size: 1rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1), inset 0 0 10px rgba(255,255,255,0.05);
+    transition: background 0.4s ease, transform 0.4s ease, border 0.4s ease;
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.15);
+        transform: translateY(-2px);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+    }
+}
+
+// Ambient Background Logic - Living Liquid
+.ambient-liquid-layer {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100vh;
+    z-index: 9998;
+    pointer-events: none;
+    opacity: 0;
+    display: none;
+    background: #0d0c12; // Base dark space
+    overflow: hidden;
+
+    .ambient-orb {
+        position: absolute;
+        width: 60vw; height: 60vw;
+        border-radius: 50%;
+        filter: blur(120px); // Hyper-soft dispersion of light
+        opacity: 0.55;
+        transition: background-color 1.5s ease-in-out;
+        will-change: transform, background-color; // Performance optimization
+        animation: floatOrb 18s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .orb-top {
+        top: -10%; left: -20%;
+    }
+    .orb-bottom {
+        bottom: -20%; right: -10%;
+        animation-delay: -9s; // Moves out of phase
+    }
+}
+
+@keyframes floatOrb {
+    0% { transform: scale(1) translate(0, 0); }
+    100% { transform: scale(1.4) translate(15%, -10%); }
+}
+
+// Master Glass Pane 
+.glass-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100vh;
+    z-index: 10000;
+    pointer-events: none;
+    
+    // Core Glassmorphism engine
+    background: rgba(15, 15, 20, 0.35); // Translucent smokey dark
+    backdrop-filter: blur(40px) saturate(160%);
+    -webkit-backdrop-filter: blur(40px) saturate(160%);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    
+    &.is-active {
+        pointer-events: auto;
+    }
+
+    .glass-content-grid {
+        display: flex;
+        width: 100%; height: 100%;
+        align-items: center;
+        padding: 0 10vw;
+    }
+
+    // Modern Nav Menu
+    .glass-nav {
+        flex: 1;
+
+        ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 2.5vh;
+            padding: 0;
+        }
+
+        li {
+            a {
+                position: relative;
+                display: flex;
+                align-items: center;
+                text-decoration: none;
+                color: rgba(255,255,255,0.4);
+                transition: color 0.5s ease;
+
+                .glass-num {
+                    font-family: 'Outfit', sans-serif;
+                    font-weight: 300;
+                    font-size: 1.2rem;
+                    margin-right: 3vw;
+                    letter-spacing: 0.1em;
+                }
+
+                .glass-title {
+                    font-family: 'Playfair Display', serif;
+                    font-size: 5.5rem;
+                    font-weight: 400;
+                    font-style: italic; // Ethereal style
+                    line-height: 1;
+                    letter-spacing: 0.02em;
+                    transition: transform 0.6s cubic-bezier(0.19, 1, 0.22, 1), text-shadow 0.6s ease;
+                }
+
+                &:hover {
+                    color: $glass-text;
+                    
+                    .glass-title {
+                        transform: translateX(30px);
+                        text-shadow: 0 0 40px rgba(255,255,255,0.4);
+                    }
+                }
+            }
+        }
+    }
+
+    // THE LIQUID MORPHING VISUALIZER (Right Side)
+    .liquid-window-container {
+        flex: 1;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+
+        .liquid-blob {
+            position: relative;
+            width: 32vw;
+            height: 32vw;
+            overflow: hidden;
+            
+            // The magic CSS liquid shape animation!
+            border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+            animation: liquidFlow 15s infinite alternate ease-in-out;
+            will-change: border-radius, transform;
+            
+            // Outer Glass Frost on the Rim
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(255,255,255,0.2); 
+            
+            .liquid-img {
+                position: absolute;
+                top: -15%; left: -15%; 
+                width: 130%; height: 130%; // Oversize to allow rotating without empty corners
+                object-fit: cover;
+                opacity: 0;
+                
+                // Rotates in opposition to make the liquid feel viscous
+                animation: liquidCounterFlow 15s infinite alternate ease-in-out;
+                transition: opacity 1.2s cubic-bezier(0.19, 1, 0.22, 1);
+
+                &.active {
+                    opacity: 0.9; // Slight fade to blend with gloss
+                }
+            }
+
+            // High-End Inner Refraction Gloss (Mimics curved glass)
+            .liquid-gloss {
+                position: absolute;
+                top: 0; left: 0; width: 100%; height: 100%;
+                box-shadow: inset 20px 20px 50px rgba(255, 255, 255, 0.3), 
+                            inset -20px -20px 50px rgba(0, 0, 0, 0.5);
+                pointer-events: none;
+                z-index: 5;
+            }
+        }
+    }
+}
+
+// Physics Animations
+@keyframes liquidFlow {
+    0%   { border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; transform: rotate(0deg); }
+    34%  { border-radius: 70% 30% 50% 50% / 30% 30% 70% 70%; }
+    67%  { border-radius: 100% 60% 60% 100% / 100% 100% 60% 60%; }
+    100% { border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; transform: rotate(15deg); }
+}
+
+@keyframes liquidCounterFlow {
+    0%   { transform: rotate(0deg) scale(1.1); }
+    100% { transform: rotate(-15deg) scale(1.2); }
+}
+
+// Fluid Responsiveness
+@media (max-width: 1024px) {
+    .glass-overlay {
+        .glass-content-grid {
+            flex-direction: column-reverse; // Stack Window on Top!
+            justify-content: center;
+            gap: 10vh;
+        }
+
+        .liquid-window-container {
+            flex: none;
+            justify-content: center;
+            
+            .liquid-blob {
+                width: 50vw;
+                height: 50vw;
+            }
+        }
+
+        .glass-nav {
+            flex: none;
+            width: 100%;
+            li a {
+                justify-content: center;
+                .glass-title { font-size: 4.5rem; }
+                &:hover .glass-title { transform: translateX(15px); }
+            }
+        }
+    }
+}
+
+@media (max-width: 600px) {
+    .glass-toggle {
+        right: 8vw;
+        padding: 10px 20px;
+        font-size: 0.8rem;
+    }
+    
+    .ambient-liquid-layer .ambient-orb {
+        width: 100vw; height: 100vw;
+    }
+
+    .glass-overlay {
+        .liquid-window-container .liquid-blob {
+            width: 70vw; height: 70vw;
+        }
+        
+        .glass-nav li a {
+            .glass-num { display: none; }
+            .glass-title { font-size: 3rem; }
+        }
+    }
+}

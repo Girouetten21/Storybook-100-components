@@ -1,0 +1,299 @@
+@import url('https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;1,400&display=swap');
+
+$split-bg: #0a0a0c;
+$split-text: #ecebe6;
+$split-accent: #c0b8a0;
+
+.split-menu-wrapper {
+    position: relative;
+    z-index: 9999;
+}
+
+// Cinematic Hamburger
+.split-toggle {
+    position: fixed;
+    top: 40px;
+    right: 5vw;
+    z-index: 10001;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    mix-blend-mode: difference;
+    padding: 10px;
+
+    .split-hamburger {
+        width: 40px;
+        height: 12px;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+        span {
+            display: block;
+            width: 100%;
+            height: 1.5px;
+            background: #fff;
+            transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1), opacity 0.6s ease;
+            transform-origin: center;
+            will-change: transform, opacity;
+        }
+    }
+
+    &.open {
+        .split-hamburger {
+            span:nth-child(1) {
+                transform: translateY(5.25px) rotate(45deg);
+            }
+            span:nth-child(2) {
+                opacity: 0;
+            }
+            span:nth-child(3) {
+                transform: translateY(-5.25px) rotate(-45deg);
+            }
+        }
+    }
+}
+
+// Overlay Architecture
+.split-menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: 10000;
+    visibility: hidden;
+    pointer-events: none;
+    background: $split-bg;
+    display: flex;
+    flex-direction: column;
+    clip-path: circle(0% at 50% 50%); // Spotlight Center Reveal!
+    will-change: clip-path, background-color;
+
+    &.is-active {
+        visibility: visible;
+        pointer-events: auto;
+    }
+
+    .split-menu-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 0; // The spacing is organic via block elements
+        perspective: 1000px; 
+    }
+
+    // THE MAGIC HOVER TEXT COMPONENT
+    .split-menu-item {
+        position: relative;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        margin-bottom: 2vh;
+        
+        // Dim siblings
+        transition: opacity 0.4s ease;
+
+        .split-slice {
+            font-size: 8rem; // Base responsiveness modifier
+            height: 0.5em; /* Mathematical perfection: Cuts text exactly in half */
+            overflow: hidden;
+            position: relative;
+            width: 100%;
+            text-align: center;
+            display: block;
+
+            .title-text {
+                display: block; // crucial for transform
+                font-family: 'Playfair Display', serif;
+                font-size: 1em; // inherits 8rem mathematically
+                font-weight: 400;
+                line-height: 1; // Strict line-height for exact math
+                letter-spacing: -0.01em;
+                text-transform: uppercase;
+                
+                // Outline Effect default
+                color: transparent;
+                -webkit-text-stroke: 1px rgba(255, 255, 255, 0.25);
+                transition: color 0.6s ease, -webkit-text-stroke 0.6s ease;
+                white-space: nowrap;
+            }
+
+            // Slice Alignment Logic
+            // &.top is default behavior (cut off below middle)
+            
+            &.bottom {
+                // Push text entirely UP by half its height so the top is cropped, and bottom is shown!
+                .title-text {
+                    transform: translateY(-50%);
+                }
+            }
+        }
+
+        // The Cinematic Panoramic Gap
+        .split-image-gap {
+            height: 0; // Collapsed!
+            width: 100vw;
+            max-width: 900px;
+            overflow: hidden;
+            transition: height 0.8s cubic-bezier(0.19, 1, 0.22, 1), margin 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+            position: relative;
+            margin: 0; // No margin by default
+            
+            .img-parallax-wrapper {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 100%;
+                height: 180px; // Fixed height container for parallax
+                
+                img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    transform: scale(1.4); // Zoom initially
+                    opacity: 0.4;
+                    filter: saturate(0) blur(4px);
+                    transition: transform 1.2s cubic-bezier(0.19, 1, 0.22, 1), filter 1s ease, opacity 1s ease;
+                }
+
+                // Inner text details overlaying the image
+                .gap-metadata {
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    display: flex;
+                    align-items: center;
+                    gap: 1.5rem;
+                    z-index: 2;
+                    opacity: 0;
+                    margin-top: 10px; // Slide up animation
+                    transition: opacity 0.5s ease, margin 0.5s ease;
+                    
+                    span {
+                        font-family: 'Jost', sans-serif;
+                        color: #fff;
+                        text-transform: uppercase;
+                        letter-spacing: 0.2em;
+                        font-size: 0.8rem;
+                        white-space: nowrap;
+                    }
+                    
+                    .gap-index {
+                        font-weight: 500;
+                        color: $split-accent;
+                        font-style: italic;
+                    }
+
+                    .gap-divider {
+                        width: 40px;
+                        height: 1px;
+                        background: rgba(255,255,255,0.4);
+                    }
+
+                    .gap-category {
+                        font-weight: 300;
+                    }
+                }
+            }
+        }
+
+        // ------------------
+        // THE HOVER PHYSICS!
+        // ------------------
+        &:hover {
+            .split-slice .title-text {
+                color: $split-text; // Fills the outline text solid white!
+                -webkit-text-stroke: 1px transparent;
+            }
+
+            .split-image-gap {
+                // Force open the gap, separating upper and lower text drastically
+                height: 180px; 
+                margin: 5px 0; // Added breathing space between text and panoramic
+                
+                img {
+                    transform: scale(1);
+                    opacity: 1;
+                    filter: saturate(1) blur(0px); // Pop colors
+                }
+                
+                .gap-metadata {
+                    opacity: 1;
+                    margin-top: 0; // Slide perfectly into place
+                    transition-delay: 0.2s; // Staggered entry 
+                }
+            }
+        }
+    }
+
+    // Awwwards Touch: Focusing on one item dims all the rest
+    .split-menu-content:hover .split-menu-item:not(:hover) {
+        opacity: 0.15;
+        // Optional scale down
+        transform: scale(0.98);
+        transition: opacity 0.4s ease, transform 0.6s ease;
+    }
+
+    // Classic Editorial Footer
+    .split-footer {
+        padding: 40px 6vw;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+
+        span {
+            font-family: 'Jost', sans-serif;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+        }
+    }
+}
+
+// Fluid Responsiveness
+@media (max-width: 1400px) {
+    .split-menu-overlay .split-menu-item .split-slice {
+        font-size: 6.5rem;
+    }
+}
+@media (max-width: 1024px) {
+    .split-menu-overlay {
+        .split-menu-item {
+            .split-slice {
+                font-size: 4.5rem;
+            }
+            .split-image-gap {
+                max-width: 90vw;
+                .img-parallax-wrapper {
+                    height: 140px; 
+                }
+            }
+            // Increase gap slightly for touch
+            &:hover .split-image-gap {
+                height: 140px; 
+            }
+        }
+    }
+}
+@media (max-width: 600px) {
+    .split-menu-overlay {
+        .split-menu-item .split-slice {
+            font-size: 3rem;
+        }
+        .split-footer {
+            flex-direction: column;
+            gap: 15px;
+            text-align: center;
+        }
+    }
+}

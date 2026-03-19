@@ -1,0 +1,365 @@
+@import url('https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,600;1,400;1,600&display=swap');
+
+$c-bg: #0d0d0f; // Deep rich velvet black
+$c-text: #f4ecdf; // Elegant warm cream
+$c-accent: #c4a977; // Soft gold
+
+.cascade-menu-wrapper {
+    position: relative;
+    z-index: 9999;
+}
+
+// Elegant Toggle Button
+.cascade-toggle {
+    position: fixed;
+    top: 40px;
+    right: 5vw;
+    z-index: 10001;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    color: #fff;
+    mix-blend-mode: difference;
+    padding: 10px;
+
+    .toggle-label {
+        font-family: 'Jost', sans-serif;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        font-weight: 500;
+    }
+
+    .toggle-circle {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: currentColor;
+        transition: transform 0.6s cubic-bezier(0.19, 1, 0.22, 1), background 0.4s ease;
+    }
+
+    &:hover .toggle-circle {
+        transform: scale(1.5);
+    }
+
+    &.open {
+        .toggle-circle {
+            background: transparent;
+            border: 1px solid currentColor;
+            transform: scale(1.8);
+        }
+    }
+}
+
+// Main Overlay Area
+.cascade-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: 10000;
+    visibility: hidden;
+    pointer-events: none;
+    // No background color here, the bars provide it!
+}
+
+// Cinematic Background Images Behind the Bars
+.cascade-bg-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+
+    .cascade-solid-base {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background-color: $c-bg;
+    }
+
+    .cascade-bg-image {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.8s ease, visibility 0.8s ease;
+
+        &.active {
+            opacity: 1;
+            visibility: visible;
+            
+            img {
+                transform: scale(1);
+            }
+        }
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scale(1.1); // Slow zoom out
+            transition: transform 10s ease-out;
+        }
+
+        .cascade-tint {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.25); // Better visibility for cinematic backgrounds
+        }
+    }
+}
+
+// The Falling Bars Structure
+.cascade-bars {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: 2;
+    display: flex;
+
+    .cascade-bar {
+        flex: 1; // Divides perfectly into 5 columns
+        height: 100%;
+        background-color: $c-bg;
+        will-change: transform;
+        // The transform transitions are strictly for the hover effect (scales)
+        transition: transform 0.8s cubic-bezier(0.19, 1, 0.22, 1), background-color 0.8s ease;
+        transform-origin: center; // Scales compress towards the middle vertically
+        
+        // Add extremely subtle borders to differentiate columns
+        border-right: 1px solid rgba(255, 255, 255, 0.03); 
+        
+        &:last-child {
+            border-right: none;
+        }
+    }
+
+    // THE HOVER REVEAL PHYSICS
+    &.is-revealing {
+        .cascade-bar:nth-child(1) { transform: scaleY(0.7); }
+        .cascade-bar:nth-child(2) { transform: scaleY(0.4); }
+        .cascade-bar:nth-child(3) { transform: scaleY(0.85); }
+        .cascade-bar:nth-child(4) { transform: scaleY(0.3); }
+        .cascade-bar:nth-child(5) { transform: scaleY(0.65); }
+        
+        .cascade-bar {
+            background-color: rgba(13, 13, 15, 0.65); // Clear window for backgrounds
+        }
+    }
+}
+
+// Foreground Menu Content
+.cascade-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 6vh 8vw;
+    pointer-events: none; // Let clicks pass through empty space
+
+    > * {
+        pointer-events: auto; // Re-enable clicks on actual info
+    }
+
+    // Metadata text at top
+    .cascade-meta {
+        display: flex;
+        justify-content: flex-start;
+        gap: 5vw;
+        font-family: 'Jost', sans-serif;
+        color: rgba(244, 236, 223, 0.5);
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+    }
+
+    // Main Navigation
+    .cascade-nav {
+        margin: auto 0;
+        
+        ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 2vh;
+            padding: 0;
+        }
+
+        li {
+            a {
+                display: flex;
+                align-items: center;
+                text-decoration: none;
+                color: $c-text;
+                position: relative;
+            }
+
+            .nav-num {
+                font-family: 'Jost', sans-serif;
+                font-size: 1.2rem;
+                font-weight: 400;
+                margin-right: 4vw;
+                color: rgba(244, 236, 223, 0.4);
+                transition: color 0.4s ease;
+            }
+
+            .nav-name {
+                font-family: 'Playfair Display', serif;
+                font-size: 6rem;
+                font-weight: 400;
+                line-height: 1.1;
+                letter-spacing: -0.01em;
+                transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1), color 0.4s ease;
+                white-space: nowrap;
+            }
+
+            .nav-arrow {
+                font-family: 'Jost', sans-serif;
+                font-size: 3rem;
+                font-weight: 300;
+                margin-left: 2rem;
+                opacity: 0;
+                transform: translateX(-20px) rotate(45deg);
+                transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+            }
+
+            // Interactive Navigation Physics
+            &:hover {
+                .nav-num {
+                    color: $c-accent;
+                }
+                .nav-name {
+                    transform: translateX(20px);
+                    font-style: italic; // Seductive transformation
+                    color: $c-accent;
+                }
+                .nav-arrow {
+                    opacity: 1;
+                    transform: translateX(10px) rotate(0deg);
+                    color: $c-accent;
+                }
+            }
+        }
+    }
+
+    // Footer Links & Vol Metadata
+    .cascade-socials {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        
+        .social-links {
+            display: flex;
+            gap: 3rem;
+        }
+
+        .vol-text {
+            font-family: 'Jost', sans-serif;
+            color: rgba(244, 236, 223, 0.5);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+        }
+
+        a {
+            font-family: 'Jost', sans-serif;
+            color: $c-text;
+            text-decoration: none;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            position: relative;
+            overflow: hidden;
+            
+            &::after {
+                content: '';
+                position: absolute;
+                bottom: -2px;
+                left: 0;
+                width: 100%;
+                height: 1px;
+                background: $c-accent;
+                transform: translateX(-100%);
+                transition: transform 0.4s ease;
+            }
+
+            &:hover::after {
+                transform: translateX(0);
+            }
+        }
+    }
+}
+
+// Highly Responsive Tweaks
+@media (max-width: 1024px) {
+    .cascade-content {
+        .cascade-nav li {
+            .nav-num {
+                font-size: 1rem;
+                margin-right: 6vw;
+            }
+            .nav-name {
+                font-size: 4rem;
+            }
+            .nav-arrow {
+                font-size: 2rem;
+            }
+        }
+    }
+}
+
+@media (max-width: 600px) {
+    .cascade-toggle {
+        right: 8vw;
+    }
+    .cascade-content {
+        padding: 5vh 6vw;
+        .cascade-meta {
+            display: none; // Strip non-essentials on tiny screens
+        }
+        .cascade-nav li {
+            .nav-num {
+                display: none;
+            }
+            .nav-name {
+                font-size: 2.8rem;
+            }
+            &:hover .nav-name {
+                transform: translateX(10px);
+            }
+        }
+        .cascade-socials {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1.5rem;
+            width: 100%;
+            
+            .social-links {
+                gap: 1.5rem;
+                justify-content: space-between;
+                width: 100%;
+            }
+
+            .vol-text {
+                font-size: 0.7rem;
+            }
+
+            a {
+                font-size: 0.75rem;
+            }
+        }
+    }
+}

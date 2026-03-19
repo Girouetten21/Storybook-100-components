@@ -1,0 +1,172 @@
+import React, { useRef, useState, useLayoutEffect, useEffect } from 'react';
+import gsap from 'gsap';
+import './FolioMenu.scss';
+
+import img1 from '../../assets/img/Space_1.webp';
+import img2 from '../../assets/img/Character_2.webp';
+import img3 from '../../assets/img/Space_2.webp';
+import img4 from '../../assets/img/Background_1.webp';
+
+const chapters = [
+    { chapter: 'Chapter I', title: 'The Prologue', desc: 'Origins & Antiquity', image: img1 },
+    { chapter: 'Chapter II', title: 'The Archives', desc: 'Forgotten Collections', image: img2 },
+    { chapter: 'Chapter III', title: 'The Gallery', desc: 'Visual Imagery', image: img3 },
+    { chapter: 'Chapter IV', title: 'The Epilogue', desc: 'Contact & Outcomes', image: img4 },
+];
+
+export const FolioMenu: React.FC = () => {
+    const [isOpen, setIsOpen] = useState(false);
+    const [hoverIndex, setHoverIndex] = useState(0);
+    const containerRef = useRef<HTMLDivElement>(null);
+    const tlRef = useRef<gsap.core.Timeline | null>(null);
+
+    useLayoutEffect(() => {
+        if (!containerRef.current) return;
+        
+        // Architecture of the Book: Establish 3D perspective and hinge logic
+        gsap.set('.folio-book-container', { perspective: 2500 });
+        gsap.set('.folio-cover', { transformOrigin: 'left center', transformStyle: 'preserve-3d' });
+        
+        const ctx = gsap.context(() => {
+            tlRef.current = gsap.timeline({ paused: true })
+                // 1. Hide the trigger button
+                .to('.folio-toggle', { opacity: 0, duration: 0.2 }) 
+                
+                // 2. Prepare rendering frame
+                .set('.folio-overlay', { visibility: 'visible', pointerEvents: 'auto' })
+                
+                // 3. Fade in the dimly lit dark oak/leather table background
+                .fromTo('.folio-leather-bg', { opacity: 0 }, { opacity: 1, duration: 0.4 })
+                
+                // 4. The closed book firmly lands onto the table (Fast)
+                .fromTo('.folio-book-container', 
+                    { y: '10vh', opacity: 0, rotationX: 10 }, 
+                    { y: 0, opacity: 1, rotationX: 0, duration: 0.6, ease: 'power3.out' },
+                    '-=0.2'
+                )
+                
+                // 5. The Cinematic Page Turn: Snappy but majestic sweep
+                .to('.folio-cover', {
+                    rotationY: -180,
+                    duration: 1.2,
+                    ease: 'expo.inOut' // Whiplash acceleration, soft deceleration
+                })
+                // Hide the backface so performance is clean
+                .set('.folio-cover', { visibility: 'hidden' }) 
+                
+                // 6. Typographic Staggering of the Index
+                .fromTo('.folio-index ul li',
+                    { opacity: 0, x: -20 },
+                    { opacity: 1, x: 0, stagger: 0.05, duration: 0.5, ease: 'power2.out' },
+                    '-=0.5' // Starts halfway through the cover flip
+                )
+                
+                // 7. Visual Plate snaps into focus
+                .fromTo('.folio-plate',
+                    { opacity: 0, filter: 'blur(5px)' },
+                    { opacity: 1, filter: 'blur(0px)', duration: 0.6, ease: 'power3.out' },
+                    '-=0.6' // Synchronized with text entrance
+                )
+                
+                // 8. Introduce close button seamlessly
+                .fromTo('.folio-close', { opacity: 0 }, { opacity: 1, duration: 0.3 });
+
+        }, containerRef);
+        
+        return () => ctx.revert();
+    }, []);
+
+    useEffect(() => {
+        if (isOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+        return () => { document.body.style.overflow = ''; };
+    }, [isOpen]);
+
+    const toggleMenu = () => {
+        if (!isOpen) {
+            setIsOpen(true);
+            tlRef.current?.timeScale(1).play();
+        } else {
+            // Speed up reverse gracefully to simulate shutting the book
+            tlRef.current?.timeScale(1.8).reverse().then(() => {
+                setIsOpen(false);
+                setHoverIndex(0); // Reset chapter selection safely
+            });
+        }
+    };
+
+    return (
+        <div ref={containerRef} className="folio-wrapper">
+            
+            {/* Minimalist Tab Button */}
+            <button className={`folio-toggle ${isOpen ? 'open' : ''}`} onClick={toggleMenu} aria-label="Open Book">
+                Index.
+            </button>
+
+            {/* The Fullscreen Book Environment */}
+            <div className={`folio-overlay ${isOpen ? 'is-active' : ''}`}>
+                
+                {/* Desk Background */}
+                <div className="folio-leather-bg"></div>
+                
+                <div className="folio-book-container">
+                     
+                     {/* ---------------- The Inner Pages Spread ---------------- */}
+                     <div className="folio-giant-page">
+                          <button className="folio-close" onClick={toggleMenu} aria-label="Close Book">✕</button>
+
+                          <div className="folio-content-grid">
+                              
+                              {/* Left Page: Table of Contents */}
+                              <div className="folio-index">
+                                 <h2 className="index-header">Table of Contents</h2>
+                                 <ul>
+                                     {chapters.map((ch, i) => (
+                                         <li key={i} onMouseEnter={() => setHoverIndex(i)}>
+                                             <span className="toc-chap">{ch.chapter}</span>
+                                             <span className="toc-title">{ch.title}</span>
+                                             <span className="toc-dots"></span>
+                                             <span className="toc-page">{String(i * 12 + 1).padStart(2, '0')}</span>
+                                         </li>
+                                     ))}
+                                 </ul>
+                              </div>
+
+                              {/* Right Page: The Photographic Plate */}
+                              <div className="folio-plate">
+                                 <div className="plate-frame">
+                                    {chapters.map((ch, i) => (
+                                        <img 
+                                            key={i}
+                                            src={ch.image} 
+                                            className={`plate-img ${hoverIndex === i ? 'active' : ''}`}
+                                            alt={ch.title}
+                                        />
+                                    ))}
+                                 </div>
+                                 <p className="plate-caption">
+                                     <i>Fig {String(hoverIndex + 1).padStart(2, '0')}.</i> — {chapters[hoverIndex].desc}.
+                                 </p>
+                              </div>
+
+                          </div>
+                     </div>
+
+                     {/* ---------------- The Physical Front Cover ---------------- */}
+                     <div className="folio-cover">
+                          <div className="cover-border">
+                              <h1 className="cover-title">The Archives</h1>
+                              <p className="cover-subtitle">Limited First Edition</p>
+                          </div>
+                     </div>
+
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default FolioMenu;

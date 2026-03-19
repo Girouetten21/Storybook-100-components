@@ -1,0 +1,299 @@
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Playfair+Display:ital,wght@1,400&display=swap');
+
+$c-black: #050505;
+$c-crimson: #c80000;
+$c-white: #f5f5f5;
+
+.noir-menu-wrapper {
+    position: relative;
+    z-index: 9999;
+}
+
+// Aggressive Blade Toggle
+.noir-toggle {
+    position: fixed;
+    top: 40px;
+    right: 5vw;
+    z-index: 10001;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: $c-white;
+    mix-blend-mode: difference;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    font-size: 1.2rem;
+    letter-spacing: 0.1em;
+    padding: 10px;
+
+    .toggle-text {
+        transition: color 0.3s ease;
+    }
+
+    .blade-lines {
+        position: relative;
+        width: 30px;
+        height: 2px;
+        background: $c-white;
+        transition: transform 0.4s ease, background 0.4s ease;
+
+        &::after {
+            content: '';
+            position: absolute;
+            top: -6px;
+            right: 0;
+            width: 20px;
+            height: 2px;
+            background: $c-white;
+            transition: transform 0.4s ease, top 0.4s ease, background 0.4s ease;
+        }
+    }
+
+    &:hover {
+        .blade-lines {
+            transform: translateX(-5px);
+            &::after {
+                transform: translateX(5px);
+            }
+        }
+    }
+
+    &.open {
+        .toggle-text {
+            color: $c-crimson;
+        }
+        .blade-lines {
+            background: transparent;
+            transform: rotate(45deg);
+            
+            &::after {
+                width: 30px;
+                top: 0;
+                background: $c-crimson;
+                transform: rotate(-90deg);
+            }
+        }
+    }
+}
+
+.noir-menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: 10000;
+    visibility: hidden;
+    pointer-events: none;
+    background: $c-black;
+    display: flex;
+    flex-direction: column;
+
+    &.is-active {
+        visibility: visible;
+        pointer-events: auto;
+    }
+
+    // Background Image Engine
+    .noir-backgrounds {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        z-index: 1;
+
+        .noir-bg-img {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 1.2s ease, visibility 1.2s ease;
+
+            &.active {
+                opacity: 1;
+                visibility: visible;
+                
+                img {
+                    transform: scale(1.05);
+                }
+            }
+
+            img {
+                width: 100%; height: 100%; object-fit: cover;
+                transform: scale(1.15); // Wait to zoom out
+                transition: transform 15s ease-out; // Seductive extremely slow zoom out
+            }
+
+            .noir-tint {
+                position: absolute;
+                top: 0; left: 0; width: 100%; height: 100%;
+                background: linear-gradient(0deg, rgba(5,5,5,1) 0%, rgba(25,0,0,0.6) 100%);
+                // Dark red gradient overlay so text remains readable and mysterious
+            }
+        }
+    }
+
+    .noir-menu-content {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        flex: 1;
+        padding-left: 10vw;
+    }
+
+    .noir-item {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        padding: 3vh 0;
+        
+        .noir-id {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: rgba(255,255,255,0.25);
+            margin-right: 5vw;
+            transition: color 0.4s ease;
+            transform: translateY(15px); // aligns with baseline of sans
+        }
+
+        .noir-title-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .noir-title-sans {
+            display: block;
+            font-family: 'Oswald', sans-serif;
+            font-size: 8rem;
+            line-height: 1;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: $c-white;
+            transition: color 0.4s ease, -webkit-text-stroke 0.4s ease, transform 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+            will-change: transform;
+        }
+
+        .noir-title-serif {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 200%; // Avoid cropping long words overlapping
+            transform: translateY(-50%) translateX(40px);
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 5rem;
+            color: $c-crimson;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        // --- HOVER LOGIC ---
+        &:hover {
+            .noir-id {
+                color: $c-crimson;
+            }
+
+            .noir-title-sans {
+                color: transparent;
+                -webkit-text-stroke: 1px rgba(255, 255, 255, 0.25);
+                transform: translateX(-40px); // Aggressive shift backward
+            }
+
+            .noir-title-serif {
+                opacity: 1;
+                transform: translateY(-50%) translateX(20px); // Seductive forward offset slide
+            }
+        }
+    }
+
+    // Blurs everything that isn't hovered (Cinematic Focus)
+    .noir-menu-content:hover .noir-item:not(:hover) {
+        opacity: 0.2;
+        transition: opacity 0.4s ease, filter 0.4s ease;
+        filter: blur(4px);
+    }
+
+    // Classic Editorial Footer
+    .noir-footer {
+        position: relative;
+        z-index: 2;
+        padding: 40px 10vw;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        span {
+            font-family: 'Oswald', sans-serif;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.8rem;
+            letter-spacing: 0.2em;
+
+            &.noir-brand {
+                color: $c-crimson;
+            }
+        }
+    }
+}
+
+// Fluid Responsiveness
+@media (max-width: 1400px) {
+    .noir-menu-overlay .noir-item .noir-title-sans {
+        font-size: 6rem;
+    }
+}
+
+@media (max-width: 1024px) {
+    .noir-menu-overlay {
+        .noir-menu-content {
+            padding-left: 5vw;
+        }
+
+        .noir-item {
+            .noir-id {
+                font-size: 1rem;
+                margin-right: 3vw;
+                transform: translateY(5px);
+            }
+            .noir-title-sans {
+                font-size: 4.5rem;
+            }
+            .noir-title-serif {
+                font-size: 3.5rem;
+            }
+        }
+    }
+}
+
+@media (max-width: 600px) {
+    .noir-menu-overlay {
+        .noir-item {
+            padding: 2vh 0;
+            
+            .noir-id {
+                display: none; // remove for space
+            }
+            .noir-title-sans {
+                font-size: 3.5rem;
+            }
+            .noir-title-serif {
+                font-size: 2.5rem;
+            }
+            
+            &:hover .noir-title-serif {
+                transform: translateY(-50%) translateX(0); // less aggressive slide on phone
+            }
+        }
+        .noir-footer {
+            flex-direction: column;
+            gap: 15px;
+            align-items: flex-start;
+            padding: 30px 5vw;
+        }
+    }
+}

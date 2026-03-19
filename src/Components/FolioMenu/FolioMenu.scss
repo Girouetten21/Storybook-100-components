@@ -1,0 +1,348 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400;1,600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,600&display=swap');
+
+// Editorial Palette
+$paper: #f4f1ea;       // Warm cream parchment
+$ink: #2b2927;         // Deep dark charcoal
+$leather: #141210;     // Dark mahogany/black leather desktop
+$accent: #8b1e10;      // Classic cardinal red ink
+
+.folio-wrapper {
+    position: relative;
+    z-index: 9999;
+}
+
+// ----------------------------------------------------
+// THE BOOKMARK TOGGLE BUTTON
+// ----------------------------------------------------
+.folio-toggle {
+    position: fixed;
+    top: 40px; right: 5vw;
+    background: transparent;
+    border: none;
+    color: #fff;
+    mix-blend-mode: difference;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem;
+    font-style: italic;
+    font-weight: 500;
+    cursor: pointer;
+    z-index: 10001;
+    transition: transform 0.3s ease;
+
+    &::after {
+        content: '';
+        position: absolute;
+        bottom: 0px; left: 0; width: 100%; height: 1px;
+        background: currentColor;
+        transform: scaleX(0);
+        transform-origin: right;
+        transition: transform 0.4s ease;
+    }
+
+    &:hover {
+        transform: translateY(-2px);
+        &::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+    }
+}
+
+// ----------------------------------------------------
+// THE THEATER
+// ----------------------------------------------------
+.folio-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    z-index: 10000;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.folio-leather-bg {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    // An expensive looking darkened vignette
+    background: radial-gradient(circle at center, #2a2622 0%, $leather 100%);
+}
+
+// Fixed bounding box imitating a heavy book on a desk
+.folio-book-container {
+    position: absolute;
+    top: 5vh; left: 5vw;
+    width: 90vw; height: 90vh;
+    transform-style: preserve-3d;
+}
+
+// ----------------------------------------------------
+// THE FRONT COVER (Swings out in 3D)
+// ----------------------------------------------------
+.folio-cover {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: #1e1c1a; // Very dark grey/brown leather
+    border-radius: 4px 15px 15px 4px;
+    box-shadow: 15px 15px 50px rgba(0,0,0,0.9), inset 8px 0 20px rgba(0,0,0,0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    
+    // Critical rules to perform a seamless cover hinge
+    // Removed backface-visibility so we see the inside of the cover during the swing!
+    transform-origin: left center !important; 
+    
+    .cover-border {
+        width: 95%; height: 92%;
+        border: 2px solid rgba(212, 194, 163, 0.15); // Fine gold/brass trim
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 50px;
+        text-align: center;
+        
+        .cover-title {
+            font-family: 'Playfair Display', serif;
+            font-weight: 400;
+            font-size: 5rem;
+            color: #d4c2a3; // Dull gold foil stamping
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .cover-subtitle {
+            margin-top: 1.5rem;
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 1.4rem;
+            color: rgba(212, 194, 163, 0.6);
+            letter-spacing: 0.2rem;
+        }
+    }
+}
+
+// ----------------------------------------------------
+// THE INNER SPREAD (TOC + Gallery)
+// ----------------------------------------------------
+.folio-giant-page {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: $paper;
+    // Add ultra subtle noise to emulate textured paper
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+    border-radius: 4px 15px 15px 4px;
+    box-shadow: -5px 0 20px rgba(0,0,0,0.2) inset; 
+    overflow: hidden;
+    
+    // Dynamic Drop Shadow for the "Spine"
+    &::before {
+        content: ''; position: absolute; top: 0; left: 0; width: 80px; height: 100%;
+        background: linear-gradient(to right, rgba(0,0,0,0.12) 0%, rgba(0,0,0,0) 100%);
+        pointer-events: none; z-index: 5;
+    }
+
+    .folio-close {
+        position: absolute;
+        top: 40px; right: 40px;
+        background: transparent;
+        border: none;
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 2.2rem;
+        color: rgba(43, 41, 39, 0.4);
+        cursor: pointer;
+        z-index: 20;
+        transition: color 0.3s ease, transform 0.4s ease;
+        
+        &:hover { 
+            color: $accent; 
+            transform: rotate(90deg);
+        }
+    }
+
+    .folio-content-grid {
+        display: flex;
+        width: 100%; height: 100%;
+
+        // LEFT PAGE
+        .folio-index {
+            flex: 1;
+            padding: 10vh 8vw;
+            border-right: 1px solid rgba(43, 41, 39, 0.15); // The fold
+            box-shadow: inset -20px 0 20px -20px rgba(0,0,0,0.08); // The fold shadow
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+
+            .index-header {
+                font-family: 'Playfair Display', serif;
+                font-weight: 600;
+                font-size: 2.5rem;
+                color: $ink;
+                margin-bottom: 6vh;
+                border-bottom: 2px solid $ink;
+                padding-bottom: 1rem;
+                text-transform: uppercase;
+                letter-spacing: 0.15em;
+                display: inline-block;
+                align-self: flex-start;
+            }
+
+            ul {
+                list-style: none; padding: 0; margin: 0;
+                display: flex; flex-direction: column; gap: 4vh;
+
+                li {
+                    display: flex; align-items: baseline;
+                    cursor: pointer;
+                    color: $ink;
+                    font-family: 'Cormorant Garamond', serif;
+                    
+                    transition: color 0.3s ease, transform 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+
+                    .toc-chap {
+                        font-style: italic;
+                        margin-right: 25px;
+                        font-size: 1.4rem;
+                        opacity: 0.7;
+                    }
+
+                    .toc-title {
+                        font-weight: 600;
+                        font-size: 2.2rem;
+                        letter-spacing: 0.02em;
+                    }
+
+                    .toc-dots {
+                        flex-grow: 1;
+                        border-bottom: 2px dotted rgba(43,41,39,0.3);
+                        margin: 0 20px;
+                        position: relative;
+                        top: -6px; // Baseline alignment
+                        transition: border-color 0.3s ease;
+                    }
+
+                    .toc-page {
+                        font-size: 1.6rem;
+                        font-weight: 500;
+                    }
+
+                    &:hover {
+                        color: $accent; 
+                        transform: translateX(15px);
+                        .toc-dots { border-bottom-color: rgba(139, 30, 16, 0.4); }
+                    }
+                }
+            }
+        } // .folio-index
+
+        // RIGHT PAGE
+        .folio-plate {
+            flex: 1;
+            padding: 8vh 6vw;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            .plate-frame {
+                width: 100%;
+                max-width: 500px;
+                height: 55vh;
+                position: relative;
+                padding: 15px; // The white border margin
+                background: #fdfbf7; // Photo matting color
+                box-shadow: 0 10px 30px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.05); // Physical paper lift
+                overflow: hidden; // Ensures strict clipping borders
+                
+                // Static Vintage Wash Overlay (Performance Cost: 0)
+                &::after {
+                    content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+                    background: rgba(139, 30, 16, 0.08); // Classic archive warmth
+                    mix-blend-mode: color-burn;
+                    pointer-events: none; z-index: 10;
+                }
+
+                .plate-img {
+                    position: absolute; top: 15px; left: 15px; 
+                    width: calc(100% - 30px); height: calc(100% - 30px);
+                    object-fit: cover;
+                    
+                    // Invisible base state, pushed back slightly
+                    opacity: 0; 
+                    transform: scale(1.05) translateZ(0); 
+                    will-change: transform, opacity; // Strict GPU calculation
+                    
+                    z-index: 1; 
+                    
+                    // The most performant animation possible: Only Composite Properties
+                    transition: opacity 0.6s ease-in-out, transform 1.2s cubic-bezier(0.19, 1, 0.22, 1);
+
+                    &.active {
+                        opacity: 1;
+                        transform: scale(1) translateZ(0); 
+                        z-index: 5; 
+                    }
+                }
+            }
+
+            .plate-caption {
+                margin-top: 4vh;
+                font-family: 'Cormorant Garamond', serif;
+                font-style: italic;
+                font-size: 1.4rem;
+                color: rgba(43, 41, 39, 0.7);
+                text-align: center;
+                max-width: 80%;
+
+                i {
+                    font-weight: 600;
+                    color: $ink;
+                }
+            }
+        } // .folio-plate
+    }
+}
+
+// Fluid Responsiveness
+@media (max-width: 1200px) {
+    .folio-giant-page .folio-content-grid {
+        .folio-index {
+            padding: 5vh 4vw;
+            .index-header { font-size: 2rem; }
+            ul li .toc-title { font-size: 1.6rem; }
+        }
+        .folio-plate .plate-frame {
+            height: 45vh;
+        }
+    }
+}
+
+@media (max-width: 800px) {
+    .folio-book-container {
+        width: 100vw; height: 100vh;
+        top: 0; left: 0;
+    }
+    .folio-giant-page {
+        border-radius: 0;
+        
+        .folio-content-grid {
+            flex-direction: column; // Stack pages on mobile
+            overflow-y: auto;
+            
+            .folio-index {
+                border-right: none;
+                border-bottom: 1px solid rgba(43, 41, 39, 0.15);
+                padding: 10vh 8vw;
+                
+                ul li {
+                    .toc-dots { display: none; }
+                    .toc-page { margin-left: auto; }
+                }
+            }
+            .folio-plate {
+                padding: 6vh 8vw;
+            }
+        }
+    }
+}
