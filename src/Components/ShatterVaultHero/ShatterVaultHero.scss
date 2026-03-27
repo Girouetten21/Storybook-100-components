@@ -1,0 +1,207 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;600&family=Playfair+Display:ital,wght@1,400;1,600&display=swap');
+
+$bg-sha: #0a0a0a; // Matte Obsidian
+$iris-accent: #ffffff;
+$gold-light: #fbe6b3;
+
+.shatter-vault-container {
+    position: fixed; // Back to fixed for the PIN effect
+    top: 0; left: 0;
+    width: 100%; height: 100vh;
+    overflow: hidden;
+    background: #000;
+    z-index: 9999;
+    perspective: 2500px; 
+    overscroll-behavior: none;
+
+    &.is-stable {
+        position: relative; // Released into flow at the end
+        z-index: 10;
+        overflow: visible;
+        min-height: 100vh;
+    }
+
+    // ----- THE WORLD BEHIND (THE REVEAL) -----
+    .shatter-bg-layer {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        background-size: cover;
+        background-position: center;
+        z-index: 10;
+        opacity: 0; // Controlled by GSAP
+        transform: scale(0.85); // Cinematic zoom out prep
+        
+        .shatter-reveal-inner {
+            padding: 0 10vw;
+            
+            .shatter-eyebrow {
+                font-family: 'Outfit', sans-serif;
+                font-weight: 300;
+                text-transform: uppercase;
+                letter-spacing: 0.85em;
+                color: $gold-light;
+                font-size: 0.8rem;
+                display: block;
+                margin-bottom: 35px;
+            }
+
+            h2 {
+                font-family: 'Playfair Display', serif;
+                font-style: italic;
+                font-size: 9.5vw;
+                color: #fff;
+                margin: 0; line-height: 0.8;
+                text-shadow: 0 40px 120px rgba(0,0,0,1);
+            }
+
+            p {
+                font-family: 'Outfit', sans-serif;
+                font-weight: 200;
+                color: rgba(255, 255, 255, 0.6);
+                max-width: 620px;
+                margin: 45px auto 0;
+                line-height: 1.8;
+                letter-spacing: 0.18em;
+                font-size: 1rem;
+            }
+        }
+    }
+
+    // ----- THE MECHANICAL VAULT QUADRANTS -----
+    .shatter-gate {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        z-index: 50;
+        pointer-events: none;
+        transform-style: preserve-3d;
+        will-change: transform;
+
+        div {
+            position: absolute;
+            background-color: $bg-sha;
+            width: 50%;
+            height: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                             linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 50px 50px; // Engineering grid detail
+            
+            // Quad markers (Industrial detail)
+            .quad-marker {
+                position: absolute; padding: 20px;
+                font-family: 'Outfit', sans-serif; font-size: 0.6rem; color: rgba(255,255,255,0.08);
+                letter-spacing: 0.3em;
+            }
+        }
+
+        .quad-tl { top: 0; left: 0; transform-origin: top left; .quad-marker { top: 0; left: 0; } }
+        .quad-tr { top: 0; right: 0; transform-origin: top right; .quad-marker { top: 0; right: 0; } }
+        .quad-bl { bottom: 0; left: 0; transform-origin: bottom left; .quad-marker { bottom: 0; left: 0; } }
+        .quad-br { bottom: 0; right: 0; transform-origin: bottom right; .quad-marker { bottom: 0; right: 0; } }
+    }
+
+    // ----- CENTRIC NEXUS UI LAYER -----
+    .shatter-ui-layer {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        z-index: 100;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        pointer-events: none;
+
+        .nexus-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            pointer-events: auto;
+
+            .nexus-header {
+                display: flex; align-items: center; gap: 18px;
+                margin-bottom: 5vh;
+                .dot { width: 5px; height: 5px; background: $gold-light; border-radius: 50%; }
+                .txt { font-family: 'Outfit', sans-serif; letter-spacing: 0.6em; font-size: 0.8rem; text-transform: uppercase; color: $gold-light; }
+            }
+
+            .nexus-title {
+                font-family: 'Playfair Display', serif;
+                font-style: italic;
+                font-size: 13vw;
+                color: #fff;
+                margin: 0 0 5vh;
+                letter-spacing: -0.06em;
+                line-height: 1;
+                opacity: 0.95;
+            }
+
+            .nexus-btn-trigger {
+                background: transparent;
+                border: 1px solid rgba(255,255,255,0.22);
+                padding: 28px 65px; // Larger, more robust
+                color: #fff;
+                font-family: 'Outfit', sans-serif;
+                font-size: 0.85rem;
+                letter-spacing: 0.5em;
+                text-transform: uppercase;
+                cursor: pointer;
+                position: relative;
+                overflow: visible;
+                transition: border-color 0.4s ease, background 0.4s ease;
+
+                .pulse-aura {
+                    position: absolute; top: 50%; left: 50%; width: 100%; height: 100%;
+                    transform: translate(-50%, -50%);
+                    border: 1px solid rgba(212, 175, 55, 0.4);
+                    animation: aura-expand 2s infinite ease-out;
+                    pointer-events: none;
+                }
+
+                &:hover {
+                    border-color: #fff;
+                    background: rgba(255,255,255,0.01);
+                    .btn-label { color: $gold-light; }
+                    .pulse-aura { animation-play-state: paused; opacity: 1; transform: translate(-50%, -50%) scale(1.1); border-color: $gold-light;}
+                }
+            }
+
+            .nexus-footer {
+                margin-top: 5vh;
+                font-family: 'Outfit', sans-serif;
+                font-size: 0.65rem;
+                letter-spacing: 0.8em;
+                color: rgba(255,255,255,0.2);
+                text-transform: uppercase;
+            }
+        }
+    }
+
+    .shatter-film-fx {
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        background-color: rgba(5, 5, 5, 0.3);
+        background-image: 
+            radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.85) 120%),
+            url("https://www.transparenttextures.com/patterns/carbon-fibre.png");
+        opacity: 0.08;
+        z-index: 101;
+        pointer-events: none;
+    }
+}
+
+@keyframes aura-expand {
+    0% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.8; }
+    100% { transform: translate(-50%, -50%) scale(1.6); opacity: 0; }
+}
+
+@media (max-width: 1024px) {
+    .shatter-vault-container {
+        .shatter-bg-layer h2 { font-size: 16vw; }
+        .shatter-ui-layer .nexus-box .nexus-title { font-size: 22vw; }
+    }
+}

@@ -1,18 +1,17 @@
-import ProductFeatureGallery from './Components/ProductFeatureGallery/ProductFeatureGallery'
-import CelestialVectorMenu from './Components/CelestialVectorMenu/CelestialVectorMenu'
+import AetheriaMonolithHero from './Components/AetheriaMonolithHero/AetheriaMonolithHero'
+import BlossomGateHero from './Components/BlossomGateHero/BlossomGateHero'
+
 
 function App() {
   return (
     <div className="app-container">
-      {/* Global Navigation */}
-      <CelestialVectorMenu />
+      {/* THE PORTAL GATE PHASE 9 (THE FINAL AETHERIA MONOLITH) */}
+      <BlossomGateHero />
 
       {/* Testing Section before Gallery */}
       <section style={{ height: '100vh', background: '#0a0a0c', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>
         <h1 style={{ fontSize: '3rem', textTransform: 'uppercase', letterSpacing: '0.2em' }}>Scroll Down</h1>
       </section>
-
-      <ProductFeatureGallery />
 
       {/* Testing Section after Gallery */}
       <section style={{ height: '100vh', background: '#e0e0e0', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#1a1a1a' }}>

@@ -1,0 +1,150 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap');
+
+$void-black: #000000;
+$aether-gold: #c0b8a0;
+$off-white: #f5f5f7;
+
+.aether-threshold-container {
+    position: fixed; // Back to fixed for the PIN effect
+    top: 0; left: 0;
+    width: 100%; height: 100vh;
+    overflow: hidden;
+    background: #000;
+    z-index: 9999;
+    overscroll-behavior: none;
+
+    &.is-stable {
+        position: relative; // Released into flow at the end
+        z-index: 10;
+        overflow: hidden; // CRITICAL: Stop the background from overflowing
+        height: 100vh;
+    }
+
+    // ----- THE FINAL EDITORIAL REVEAL -----
+    .aether-final-reveal {
+        position: absolute;
+        top:0; left: 0; width: 100%; height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        opacity: 0;
+        visibility: hidden;
+        z-index: 10;
+
+        &.is-visible {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        .aether-hero-bg {
+            position: absolute; top:0; left: 0; width: 100%; height: 100%;
+            background-size: cover; background-position: center;
+            will-change: transform, opacity;
+        }
+
+        .aether-reveal-content {
+            z-index: 2;
+            padding: 0 10vw;
+            will-change: transform, opacity;
+
+            .eyebrow { 
+                font-family: 'Outfit', sans-serif; text-transform: uppercase; 
+                letter-spacing: 0.8em; font-size: 0.7rem; color: $aether-gold; 
+                margin-bottom: 30px; display: block;
+            }
+            h2 { 
+                font-family: 'Playfair Display', serif; font-size: 11vw; color: $off-white; 
+                margin: 0; line-height: 0.9; letter-spacing: -0.05em;
+            }
+            p { 
+                font-family: 'Outfit', sans-serif; font-weight: 200; color: rgba(255, 255, 255, 0.7); 
+                max-width: 500px; margin: 40px auto 0; line-height: 1.8; font-size: 1rem;
+            }
+        }
+    }
+
+    // ----- THE DUAL PANEL GATE -----
+    .aether-gate-layer {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        z-index: 100;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        .aether-panel {
+            position: absolute; width: 100%; height: 50%; 
+            background: $void-black;
+            z-index: 1;
+
+            &.top { top: 0; border-bottom: 0.5px solid rgba(255,255,255,0.08); }
+            &.bottom { bottom: 0; border-top: 0.5px solid rgba(255,255,255,0.08); }
+        }
+
+        .gate-interaction-area {
+            position: absolute; // Full screen trigger
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            cursor: pointer;
+            z-index: 10;
+
+            .radiant-line {
+                width: 120px; height: 1px;
+                background: $aether-gold;
+                position: absolute;
+                top: 50%; left: 50%;
+                transform: translate(-50%, -50%);
+                z-index: 15;
+                
+                .line-glow {
+                    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+                    box-shadow: 0 0 25px $aether-gold;
+                    animation: pulse-glow 3s infinite ease-in-out;
+                }
+            }
+
+            .interaction-label {
+                position: absolute;
+                top: calc(50% + 60px); // Fixed distance from center
+                font-family: 'Outfit', sans-serif; font-size: 0.65rem; color: #fff;
+                text-transform: uppercase; letter-spacing: 0.6em; opacity: 0.2;
+                transition: all 0.5s ease;
+            }
+
+            &:hover {
+                .interaction-label { opacity: 0.6; letter-spacing: 0.8em; }
+                .radiant-line { width: 180px; transition: width 0.6s cubic-bezier(0.19, 1, 0.22, 1); }
+            }
+        }
+
+        .gate-branding {
+            position: absolute; bottom: 8vh;
+            font-family: 'Outfit', sans-serif; font-size: 0.55rem; color: rgba(255,255,255,0.1);
+            text-transform: uppercase; letter-spacing: 0.4em;
+            z-index: 2;
+        }
+    }
+
+    .aether-overlay-fx {
+        position: absolute; top:0; left: 0; width: 100%; height: 100%; pointer-events: none;
+        background-image: radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.85) 120%);
+        z-index: 101;
+    }
+}
+
+@keyframes pulse-glow {
+    0%, 100% { opacity: 0.3; transform: scaleX(1); }
+    50% { opacity: 0.8; transform: scaleX(1.1); }
+}
+
+@media (max-width: 1024px) {
+    .aether-threshold-container {
+        .aether-reveal-content h2 { font-size: 16vw; }
+        .radiant-line { width: 80px; }
+    }
+}

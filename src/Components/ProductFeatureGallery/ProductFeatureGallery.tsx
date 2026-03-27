@@ -1,3 +1,5 @@
+// Revisar con calma para resolver algunos bugs.
+
 import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -210,11 +212,11 @@ export const ProductFeatureGallery: React.FC = () => {
             // Drag Observer: Captures mouse drag ONLY on the images column
             const dragObserver = Observer.create({
                 target: sectionRef.current?.querySelector(".showcase-images-col") || window,
-                type: "pointer", 
+                type: "pointer",
                 preventDefault: true, // Prevents text selection loops when swiping
                 tolerance: 15,
-                onDown: () => handleDirection(1), 
-                onUp: () => handleDirection(-1)  
+                onDown: () => handleDirection(1),
+                onUp: () => handleDirection(-1)
             });
 
             const enableObservers = () => {

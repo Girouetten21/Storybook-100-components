@@ -1,0 +1,181 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;600&family=Playfair+Display:ital,wght@1,400;1,600&display=swap');
+
+$bg-iris: #0d0d0d; // Obsidian Black
+$iris-accent: #ffffff;
+$gold-light: #fbe6b3;
+
+.iris-reveal-container {
+    position: fixed; // Back to fixed for the PIN effect
+    top: 0; left: 0;
+    width: 100%; height: 100vh;
+    overflow: hidden;
+    background: #000;
+    z-index: 9999;
+    overscroll-behavior: none;
+
+    &.is-stable {
+        position: relative; // Released into flow at the end
+        z-index: 10;
+        overflow: visible;
+        height: 100vh;
+    }
+
+    // ----- THE CONTENT REVEALED (BEYOND THE GATE) -----
+    .iris-content-layer {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        background-size: cover;
+        background-position: center;
+        z-index: 10;
+        will-change: clip-path, transform;
+
+        // The Iris Mask (starts closed)
+        clip-path: circle(0% at 50% 50%); 
+        
+        .iris-content-inner {
+            padding: 0 10vw;
+            position: relative; z-index: 20;
+
+            .iris-eyebrow {
+                font-family: 'Outfit', sans-serif;
+                font-weight: 300;
+                text-transform: uppercase;
+                letter-spacing: 0.6em;
+                color: $gold-light;
+                font-size: 0.8rem;
+                display: block;
+                margin-bottom: 30px;
+            }
+
+            h2 {
+                font-family: 'Playfair Display', serif;
+                font-style: italic;
+                font-size: 8vw;
+                color: #fff;
+                margin: 0;
+                line-height: 1.0;
+                text-shadow: 0 20px 80px rgba(0,0,0,0.8);
+            }
+
+            p {
+                font-family: 'Outfit', sans-serif;
+                font-weight: 200;
+                color: rgba(255, 255, 255, 0.7);
+                max-width: 550px;
+                margin: 40px auto 0;
+                line-height: 1.7;
+                letter-spacing: 0.1em;
+                font-size: 1rem;
+            }
+        }
+    }
+
+    // ----- THE GATE UI (THE COVER) -----
+    .iris-gate {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background-color: $bg-iris;
+        z-index: 50;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        transition: opacity 1s cubic-bezier(0.19, 1, 0.22, 1);
+
+        &.is-hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .gate-instruction {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 200;
+            color: rgba(255, 255, 255, 0.4);
+            letter-spacing: 0.8em; // Extremely spaced for luxury
+            text-transform: uppercase;
+            font-size: 0.65rem;
+            margin-bottom: 40px;
+            pointer-events: none;
+        }
+
+        // The Interaction Nexus
+        .interaction-point {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border-radius: 50%;
+            user-select: none;
+            will-change: transform;
+
+            .dot-core {
+                width: 6px; height: 6px;
+                background: #fff;
+                border-radius: 50%;
+                transition: transform 0.2s ease, box-shadow 0.2s ease;
+                box-shadow: 0 0 10px rgba(255,255,255,0.2);
+            }
+
+            // The Physical Circular Progress
+            .progress-ring {
+                position: absolute;
+                top: 0; left: 0; width: 100%; height: 100%;
+
+                .svg-ring {
+                    width: 100%; height: 100%;
+                    transform: rotate(-90deg);
+                    
+                    .ring-path {
+                        fill: none;
+                        stroke: $iris-accent;
+                        stroke-width: 1.5;
+                        stroke-dasharray: 301.59; // Circumference (2 * pi * r)
+                        stroke-dashoffset: 301.59; // Starts empty
+                        transition: stroke-dashoffset 0.1s linear;
+                        stroke-linecap: round;
+                    }
+                }
+
+                // Subtle static background ring
+                &::before {
+                    content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+                    border: 1px solid rgba(255,255,255,0.06);
+                    border-radius: 50%;
+                }
+            }
+
+            &:active .dot-core {
+                box-shadow: 0 0 25px rgba(255,255,255,0.6);
+            }
+        }
+
+        .gate-meta {
+            position: absolute; bottom: 8vh;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 200;
+            color: rgba(255,255,255,0.15);
+            font-size: 0.6rem;
+            letter-spacing: 0.5em;
+            text-transform: uppercase;
+        }
+    }
+
+    // Cinematic Finishing layer
+    .iris-overlay-fx {
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        background-image: 
+            radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.4) 100%),
+            url("https://www.transparenttextures.com/patterns/carbon-fibre.png");
+        opacity: 0.04;
+        z-index: 100;
+        pointer-events: none;
+    }
+}

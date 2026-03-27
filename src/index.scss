@@ -20,17 +20,23 @@
     box-sizing: border-box;
 }
 
-html, body {
+html {
     margin: 0;
     padding: 0;
-    /* Removed overflow-x: hidden as per instruction 1 */
+    width: 100%;
+    height: 100%;
+    scrollbar-gutter: stable; // CRITICAL: Reserves space globally
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 body {
+    margin: 0;
+    padding: 0;
     width: 100%;
-    // We remove the global overflow-x: hidden from here as it interferes with GSAP ScrollTrigger's calc
+    min-height: 100%;
     font-family: var(--font-sans);
-    background-color: #0f172a;
+    background-color: #000;
     color: var(--color-white);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -53,4 +59,10 @@ body {
 
 main {
     min-height: 100vh;
+}
+
+.app-container {
+    width: 100%;
+    position: relative;
+    // No overflow-x here to allow scrollbar-gutter to work perfectly
 }
