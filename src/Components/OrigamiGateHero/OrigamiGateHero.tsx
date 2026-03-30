@@ -1,9 +1,12 @@
 import React, { useRef, useState, useLayoutEffect } from 'react';
 import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 import './OrigamiGateHero.scss';
 
 // Import cinematic background
 import bgHero from '../../assets/img/Background_3.webp';
+
+gsap.registerPlugin(useGSAP);
 
 export const OrigamiGateHero: React.FC = () => {
     const [isOpened, setIsOpened] = useState(false);
@@ -12,14 +15,15 @@ export const OrigamiGateHero: React.FC = () => {
     const contentRef = useRef<HTMLDivElement>(null);
     const panelsRef = useRef<HTMLDivElement>(null);
 
+    // POWERED BY GSAP-SKILLS: Safe interaction logic and scoped selectors
+    const { contextSafe } = useGSAP({ scope: containerRef });
+
     // Scroll Lock Logic
     useLayoutEffect(() => {
         const preventDefault = (e: Event) => e.preventDefault();
 
         if (!isOpened) {
             document.body.style.overflow = 'hidden';
-
-            // Force zero-scroll and block events
             window.scrollTo(0, 0);
             window.addEventListener('wheel', preventDefault, { passive: false });
             window.addEventListener('touchmove', preventDefault, { passive: false });
@@ -36,7 +40,7 @@ export const OrigamiGateHero: React.FC = () => {
         };
     }, [isOpened]);
 
-    const handleOrigamiOpen = () => {
+    const handleOrigamiOpen = contextSafe(() => {
         if (isAnimating.current || isOpened) return;
         isAnimating.current = true;
 
@@ -48,31 +52,31 @@ export const OrigamiGateHero: React.FC = () => {
 
         // 1. Hide instruction UI
         tl.to('.origami-ui-layer', { 
-            opacity: 0, 
+            autoAlpha: 0, 
             y: -40,
             duration: 0.8, 
             ease: 'power3.inOut' 
         })
 
         // 2. THE UNFOLD: Triangles peeling back in 3D
-        .to('.panel-top', { rotationX: 110, opacity: 0, duration: 2, ease: 'expo.inOut' }, '-=0.4')
-        .to('.panel-bottom', { rotationX: -110, opacity: 0, duration: 2, ease: 'expo.inOut' }, '<')
-        .to('.panel-left', { rotationY: -110, opacity: 0, duration: 2, ease: 'expo.inOut' }, '<')
-        .to('.panel-right', { rotationY: 110, opacity: 0, duration: 2, ease: 'expo.inOut' }, '<')
+        .to('.panel-top', { rotationX: 110, autoAlpha: 0, duration: 2, ease: 'expo.inOut' }, '-=0.4')
+        .to('.panel-bottom', { rotationX: -110, autoAlpha: 0, duration: 2, ease: 'expo.inOut' }, '<')
+        .to('.panel-left', { rotationY: -110, autoAlpha: 0, duration: 2, ease: 'expo.inOut' }, '<')
+        .to('.panel-right', { rotationY: 110, autoAlpha: 0, duration: 2, ease: 'expo.inOut' }, '<')
 
         // 3. Cinematic reveal of content
         .fromTo(contentRef.current, 
-            { opacity: 0, scale: 1.15, filter: 'blur(20px)' },
-            { opacity: 1, scale: 1, filter: 'blur(0px)', duration: 2.2, ease: 'power4.out' },
+            { autoAlpha: 0, scale: 1.15, filter: 'blur(20px)' },
+            { autoAlpha: 1, scale: 1, filter: 'blur(0px)', duration: 2.2, ease: 'power4.out' },
             '-=1.6'
         )
         
         // 4. Elegant text entrance (STABLE VERSION)
         .fromTo('.origami-reveal-inner *',
-            { y: 60, opacity: 0, filter: 'blur(15px)' },
+            { y: 60, autoAlpha: 0, filter: 'blur(15px)' },
             { 
                 y: 0, 
-                opacity: 1, 
+                autoAlpha: 1, 
                 filter: 'blur(0px)', 
                 duration: 1.4, 
                 stagger: 0.15, 
@@ -81,7 +85,7 @@ export const OrigamiGateHero: React.FC = () => {
             },
             '-=1.5'
         );
-    };
+    });
 
     return (
         <div ref={containerRef} className={`origami-gate-container ${isOpened ? 'is-stable' : ''}`}>

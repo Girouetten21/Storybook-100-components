@@ -1,0 +1,183 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,400;1,700&family=Outfit:wght@200;400;800&display=swap');
+
+.editorial-wrapper {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    background: #0d0d0d;
+}
+
+.editorial-section {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #ffffff !important; // Global force
+
+    .reveal-mask {
+        position: absolute;
+        width: 100%; height: 100%;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    // MAIN BACKGROUND PARALLAX
+    .main-parallax-container {
+        position: absolute;
+        top: -10%; left: 0; width: 100%; height: 120%;
+        z-index: 1;
+
+        .main-parallax-img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            filter: grayscale(0.5) brightness(0.6); // Slightly darker for white text pop
+            transition: filter 0.8s ease;
+        }
+
+        .vignette-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, transparent 30%, rgba(0,0,0,0.6) 100%);
+            z-index: 2;
+        }
+    }
+
+    // FLOATING ELEMENT (The Detail WOW)
+    .floating-detail-container {
+        position: absolute;
+        bottom: 15%; right: 10%;
+        width: 25vw; height: 35vw;
+        z-index: 10;
+        box-shadow: 0 50px 100px rgba(0,0,0,0.6);
+        border: 1px solid rgba(255,255,255, 0.2);
+        overflow: hidden;
+        background: #000;
+        transform: rotate(2deg); // Subtle editorial tilt
+        transition: transform 0.6s cubic-bezier(0.19, 1, 0.22, 1), box-shadow 0.6s ease;
+        cursor: pointer;
+
+        .float-meta {
+            position: absolute;
+            top: 50%; left: 15px;
+            transform: translateY(-50%) rotate(-90deg);
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.5rem; letter-spacing: 0.5em;
+            font-weight: 800; color: rgba(255,255,255, 0.4);
+            z-index: 20;
+            white-space: nowrap;
+            transition: color 0.6s ease, opacity 0.6s ease;
+        }
+
+        .floating-detail-img {
+            position: absolute;
+            top: -30%; left: 0;
+            width: 100%; height: 160%;
+            object-fit: cover;
+            will-change: transform;
+            filter: brightness(0.85);
+            transition: transform 0.8s cubic-bezier(0.19, 1, 0.22, 1), filter 0.8s ease;
+        }
+
+        // HOVER STATES
+        &:hover {
+            transform: rotate(4deg) scale(1.02);
+            box-shadow: 0 70px 140px rgba(0,0,0,0.8);
+
+            .floating-detail-img {
+                filter: brightness(1);
+            }
+
+            .float-meta {
+                color: #fff;
+                opacity: 1;
+            }
+        }
+    }
+
+    // MAIN IMAGE PAN EFFECT ON SECTION HOVER
+    &:hover {
+        .main-parallax-img {
+            filter: grayscale(0.2) brightness(0.8) scale(1.05);
+        }
+    }
+
+    // ALTERNATE FOR EVEN
+    &:nth-child(even) {
+        .floating-detail-container { 
+            transform: rotate(-2deg); 
+            bottom: 15%; left: 10%; right: auto; 
+            
+            &:hover { transform: rotate(-4deg) scale(1.02); }
+        }
+    }
+
+    // TEXT & CONTENT LAYER
+    .editorial-content {
+        position: relative;
+        z-index: 20;
+        width: 100%; height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding-left: 8vw;
+        pointer-events: none;
+        color: #ffffff !important;
+
+        .meta-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            color: #ffffff !important;
+            
+            .id-num { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 1rem; opacity: 0.5; color: #ffffff !important; }
+            .category { font-family: 'Outfit', sans-serif; letter-spacing: 0.8em; font-size: 0.7rem; color: #ffffff !important; }
+        }
+
+        .text-container {
+            max-width: 500px;
+            color: #ffffff !important;
+            
+            .editorial-subtitle {
+                font-family: 'Outfit', sans-serif; font-weight: 200; font-size: 1.2rem;
+                text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 10px;
+                color: #ffffff !important; 
+            }
+
+            .editorial-title {
+                font-family: 'Playfair Display', serif; font-size: 10vw; 
+                font-style: italic; font-weight: 700; line-height: 0.8;
+                letter-spacing: -0.04em; margin-bottom: 30px;
+                will-change: transform;
+                color: #ffffff !important;
+            }
+
+            .editorial-desc {
+                font-family: 'Outfit', sans-serif; font-weight: 400; font-size: 1rem;
+                line-height: 1.8; opacity: 0.7; max-width: 400px;
+                color: #ffffff !important;
+            }
+        }
+    }
+
+    // ALTERNATE LAYOUT (EVEN SECTIONS)
+    &:nth-child(even) {
+        .editorial-content { padding-left: 0; padding-right: 8vw; align-items: flex-end; text-align: right; }
+        .text-container { display: flex; flex-direction: column; align-items: flex-end; }
+        .floating-detail-container { bottom: 10%; left: 10%; right: auto; }
+        .main-parallax-img { filter: sepia(0.2) brightness(0.8); }
+    }
+}
+
+// FULLSCREEN OPTIMIZATION
+@media (max-width: 1024px) {
+    .editorial-section {
+        .editorial-content .text-container .editorial-title { font-size: 15vw; }
+        .floating-detail-container { width: 40vw; height: 50vw; bottom: 5%; }
+    }
+}

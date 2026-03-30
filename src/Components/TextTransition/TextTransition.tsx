@@ -1,54 +1,51 @@
-import { useLayoutEffect, useRef } from 'react';
+import { useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useGSAP } from '@gsap/react';
 import './TextTransition.scss';
 
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 export const TextTransition = () => {
     const wrapperRef = useRef<HTMLDivElement>(null);
     const sectionRef = useRef<HTMLDivElement>(null);
-    const textRef = useRef<HTMLHeadingElement>(null);
+    const textRef = useRef<SVGSVGElement>(null);
     const nextContentRef = useRef<HTMLDivElement>(null);
 
-    useLayoutEffect(() => {
+    // POWERED BY GSAP-SKILLS: Scoped massive zoom and bridge transition
+    useGSAP(() => {
         // Reset scroll memory for consistency
         window.history.scrollRestoration = 'manual';
-        window.scrollTo(0, 0);
 
-        const ctx = gsap.context(() => {
-            const tl = gsap.timeline({
-                scrollTrigger: {
-                    trigger: sectionRef.current,
-                    start: "top top",
-                    end: "+=2500",
-                    scrub: 1.5,
-                    pin: true,
-                    anticipatePin: 1,
-                    invalidateOnRefresh: true,
-                }
-            });
+        const tl = gsap.timeline({
+            scrollTrigger: {
+                trigger: sectionRef.current,
+                start: "top top",
+                end: "+=2500",
+                scrub: 1.5,
+                pin: true,
+                anticipatePin: 1,
+                invalidateOnRefresh: true,
+            }
+        });
 
-            // Zoom the text until it fills everything
-            // Scale needs to be very large (e.g., 60-100) to effectively "enter" the letter
-            tl.to(textRef.current, {
-                scale: 80,
-                opacity: 2, // Keep it solid
-                ease: "power2.in",
-            });
+        // Zoom the text until it fills everything
+        tl.to(textRef.current, {
+            scale: 80,
+            autoAlpha: 2, 
+            ease: "power2.in",
+            force3D: true
+        });
 
-            // Fade in the content of the next section as we zoom into the transition color
-            tl.to(nextContentRef.current, {
-                opacity: 1,
-                y: 0,
-                duration: 0.5,
-                ease: "power2.out"
-            }, "-=0.2");
+        // Fade in the content of the next section
+        tl.to(nextContentRef.current, {
+            autoAlpha: 1,
+            y: 0,
+            duration: 0.5,
+            ease: "power2.out"
+        }, "-=0.2");
 
-        }, wrapperRef);
-
-        return () => ctx.revert();
-    }, []);
+    }, { scope: wrapperRef });
 
     return (
         <div ref={wrapperRef} className="text-transition-wrapper">

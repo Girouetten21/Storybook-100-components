@@ -1,9 +1,8 @@
-// Revisar con calma para resolver algunos bugs.
-
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Observer } from 'gsap/all';
+import { useGSAP } from '@gsap/react';
 import './ProductFeatureGallery.scss';
 
 // Let's use 3 distinct images to act as variations/angles of a product
@@ -11,7 +10,7 @@ import img1 from '../../assets/img/Space_1.webp';
 import img2 from '../../assets/img/Background_1.webp';
 import img3 from '../../assets/img/Space_2.webp';
 
-gsap.registerPlugin(ScrollTrigger, Observer);
+gsap.registerPlugin(ScrollTrigger, Observer, useGSAP);
 
 const productFeatures = [
     {
@@ -64,210 +63,190 @@ const productFeatures = [
 export const ProductFeatureGallery: React.FC = () => {
     const sectionRef = useRef<HTMLDivElement>(null);
 
-    useEffect(() => {
-        if (!sectionRef.current) return;
+    // POWERED BY GSAP-SKILLS: Scoped product trap and intent-based navigation
+    useGSAP(() => {
+        let currentIndex = 0;
+        let isAnimating = false;
 
-        const ctx = gsap.context(() => {
-            let currentIndex = 0;
-            let isAnimating = false;
+        // 1. Setup Initial States for all elements
+        productFeatures.forEach((_, i) => {
+            if (i !== 0) {
+                gsap.set(`.wrapper-${i}`, { clipPath: 'polygon(0 100%, 100% 100%, 100% 100%, 0 100%)', pointerEvents: 'none' });
+                gsap.set(`.text-${i}`, { y: 150, autoAlpha: 0, pointerEvents: 'none' });
+            } else {
+                gsap.set(`.wrapper-0`, { clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)', pointerEvents: 'auto' });
+                gsap.set(`.text-0`, { yPercent: -50, y: 0, autoAlpha: 1, pointerEvents: 'auto' });
+            }
+            gsap.set(`.hotspot-group-${i}`, { scale: 0, autoAlpha: 0 });
+            gsap.set(`.hotspot-group-${i} .line`, { width: 0 });
+        });
 
-            // 1. Setup Initial States for all elements
-            productFeatures.forEach((_, i) => {
-                if (i !== 0) {
-                    gsap.set(`.wrapper-${i}`, { clipPath: 'polygon(0 100%, 100% 100%, 100% 100%, 0 100%)', pointerEvents: 'none' });
-                    gsap.set(`.text-${i}`, { y: 150, opacity: 0, pointerEvents: 'none' });
-                } else {
-                    gsap.set(`.wrapper-0`, { clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)', pointerEvents: 'auto' });
-                    gsap.set(`.text-0`, { yPercent: -50, y: 0, opacity: 1, pointerEvents: 'auto' });
+        // Animate first hotspots automatically upon page load
+        gsap.to(`.hotspot-group-0`, { scale: 1, autoAlpha: 1, duration: 0.8, delay: 0.5, ease: "back.out(1.7)", stagger: 0.2 });
+        gsap.to(`.hotspot-group-0 .line`, { width: 60, duration: 0.8, delay: 0.8, ease: "power2.out", stagger: 0.2 });
+
+        const gotoSlide = (index: number, direction: number) => {
+            if (index < 0 || index >= productFeatures.length || isAnimating) return;
+            isAnimating = true;
+
+            const tl = gsap.timeline({
+                onComplete: () => {
+                    setTimeout(() => {
+                        isAnimating = false;
+                    }, 1000); 
                 }
-                gsap.set(`.hotspot-group-${i}`, { scale: 0, opacity: 0 });
-                gsap.set(`.hotspot-group-${i} .line`, { width: 0 });
             });
 
-            // Animate first hotspots automatically upon page load
-            gsap.to(`.hotspot-group-0`, { scale: 1, opacity: 1, duration: 0.8, delay: 0.5, ease: "back.out(1.7)", stagger: 0.2 });
-            gsap.to(`.hotspot-group-0 .line`, { width: 60, duration: 0.8, delay: 0.8, ease: "power2.out", stagger: 0.2 });
+            const outIdx = currentIndex;
 
-            const gotoSlide = (index: number, direction: number) => {
-                if (index < 0 || index >= productFeatures.length || isAnimating) return;
-                isAnimating = true;
-
-                // Create a standalone timeline for the transition (Not bound to scrolling!)
-                const tl = gsap.timeline({
-                    onComplete: () => {
-                        // The user requested a PAUSE or DELAY before allowing the next scroll!
-                        // This timeout completely blocks fast-scrolling from 1 to 3
-                        setTimeout(() => {
-                            isAnimating = false;
-                        }, 1000); // 1 full second of cooldown strictly enforced
-                    }
-                });
-
-                const outIdx = currentIndex;
-
-                // Animate Out Current
-                tl.to(`.wrapper-${outIdx}`, {
-                    yPercent: direction > 0 ? -15 : 15,
-                    opacity: 0,
-                    pointerEvents: 'none',
-                    filter: "blur(10px)",
-                    scale: 0.95,
+            // Animate Out Current
+            tl.to(`.wrapper-${outIdx}`, {
+                yPercent: direction > 0 ? -15 : 15,
+                autoAlpha: 0,
+                pointerEvents: 'none',
+                filter: "blur(10px)",
+                scale: 0.95,
+                duration: 0.8,
+            }, 0)
+                .to(`.text-${outIdx}`, {
+                    y: direction > 0 ? -150 : 150,
+                    autoAlpha: 0,
+                    pointerEvents: 'none', 
+                    filter: "blur(5px)",
                     duration: 0.8,
                 }, 0)
-                    .to(`.text-${outIdx}`, {
-                        y: direction > 0 ? -150 : 150,
-                        opacity: 0,
-                        pointerEvents: 'none', // Prevents invisible texts from blocking button hovers underneath
-                        filter: "blur(5px)",
-                        duration: 0.8,
-                    }, 0)
-                    .to(`.hotspot-group-${outIdx}`, {
-                        scale: 0,
-                        opacity: 0,
-                        duration: 0.4
-                    }, 0);
+                .to(`.hotspot-group-${outIdx}`, {
+                    scale: 0,
+                    autoAlpha: 0,
+                    duration: 0.4
+                }, 0);
 
-                // Animate In Next
-                tl.fromTo(`.wrapper-${index}`,
-                    { opacity: 1, filter: "blur(0px)", scale: 1, yPercent: direction > 0 ? 15 : -15, clipPath: direction > 0 ? 'polygon(0 100%, 100% 100%, 100% 100%, 0 100%)' : 'polygon(0 0, 100% 0, 100% 0, 0 0)', pointerEvents: 'none' },
-                    { clipPath: 'polygon(0 0%, 100% 0%, 100% 100%, 0 100%)', yPercent: 0, duration: 1, ease: "power3.inOut", pointerEvents: 'auto' },
-                    0
+            // Animate In Next
+            tl.fromTo(`.wrapper-${index}`,
+                { autoAlpha: 1, filter: "blur(0px)", scale: 1, yPercent: direction > 0 ? 15 : -15, clipPath: direction > 0 ? 'polygon(0 100%, 100% 100%, 100% 100%, 0 100%)' : 'polygon(0 0, 100% 0, 100% 0, 0 0)', pointerEvents: 'none' },
+                { clipPath: 'polygon(0 0%, 100% 0%, 100% 100%, 0 100%)', yPercent: 0, duration: 1, ease: "power3.inOut", pointerEvents: 'auto' },
+                0
+            )
+                .fromTo(`.text-${index}`,
+                    { y: direction > 0 ? 150 : -150, yPercent: -50, autoAlpha: 0, filter: "blur(5px)", pointerEvents: 'none' },
+                    { y: 0, autoAlpha: 1, pointerEvents: 'auto', filter: "blur(0px)", duration: 1, ease: "power3.out" },
+                    0.2
                 )
-                    .fromTo(`.text-${index}`,
-                        { y: direction > 0 ? 150 : -150, yPercent: -50, opacity: 0, filter: "blur(5px)", pointerEvents: 'none' },
-                        { y: 0, opacity: 1, pointerEvents: 'auto', filter: "blur(0px)", duration: 1, ease: "power3.out" },
-                        0.2
-                    )
-                    .fromTo(`.hotspot-group-${index}`,
-                        { scale: 0, opacity: 0 },
-                        { scale: 1, opacity: 1, stagger: 0.2, duration: 0.6, ease: "back.out(2)" },
-                        0.5
-                    )
-                    .fromTo(`.hotspot-group-${index} .line`,
-                        { width: 0 },
-                        { width: 60, stagger: 0.2, duration: 0.6 },
-                        0.6
-                    );
+                .fromTo(`.hotspot-group-${index}`,
+                    { scale: 0, autoAlpha: 0 },
+                    { scale: 1, autoAlpha: 1, stagger: 0.2, duration: 0.6, ease: "back.out(2)" },
+                    0.5
+                )
+                .fromTo(`.hotspot-group-${index} .line`,
+                    { width: 0 },
+                    { width: 60, stagger: 0.2, duration: 0.6 },
+                    0.6
+                );
 
-                currentIndex = index;
-            };
+            currentIndex = index;
+        };
 
-            const forceSlide = (index: number) => {
-                isAnimating = false;
-                currentIndex = index;
-                productFeatures.forEach((_, i) => {
-                    if (i === index) {
-                        gsap.set(`.wrapper-${i}`, { clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)', yPercent: 0, opacity: 1, scale: 1, filter: "blur(0px)", pointerEvents: 'auto' });
-                        gsap.set(`.text-${i}`, { y: 0, yPercent: -50, opacity: 1, filter: "blur(0px)", pointerEvents: 'auto' });
-                        gsap.set(`.hotspot-group-${i}`, { scale: 1, opacity: 1 });
-                        gsap.set(`.hotspot-group-${i} .line`, { width: 60 });
-                    } else {
-                        // Position previous items above and future items below
-                        gsap.set(`.wrapper-${i}`, { clipPath: i < index ? 'polygon(0 0, 100% 0, 100% 0, 0 0)' : 'polygon(0 100%, 100% 100%, 100% 100%, 0 100%)', yPercent: i < index ? -15 : 15, opacity: 0, scale: 0.95, filter: "blur(10px)", pointerEvents: 'none' });
-                        gsap.set(`.text-${i}`, { y: i < index ? -150 : 150, opacity: 0, filter: "blur(5px)", pointerEvents: 'none' });
-                        gsap.set(`.hotspot-group-${i}`, { scale: 0, opacity: 0 });
-                    }
-                });
-            };
-
-            const handleDirection = (dir: number) => {
-                if (isAnimating) return;
-
-                if (dir > 0) {
-                    // Scrolling DOWN
-                    if (currentIndex < productFeatures.length - 1) {
-                        gotoSlide(currentIndex + 1, 1);
-                    } else {
-                        disableObservers(); // Free the native scroll downwards
-                        const st = ScrollTrigger.getById("productPin");
-                        if (st) {
-                            // Instantly teleport out bypassing any smooth-scroller
-                            window.scrollTo({ top: st.end + 50, behavior: 'instant' });
-                        }
-                    }
+        const forceSlide = (index: number) => {
+            isAnimating = false;
+            currentIndex = index;
+            productFeatures.forEach((_, i) => {
+                if (i === index) {
+                    gsap.set(`.wrapper-${i}`, { clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)', yPercent: 0, autoAlpha: 1, scale: 1, filter: "blur(0px)", pointerEvents: 'auto' });
+                    gsap.set(`.text-${i}`, { y: 0, yPercent: -50, autoAlpha: 1, filter: "blur(0px)", pointerEvents: 'auto' });
+                    gsap.set(`.hotspot-group-${i}`, { scale: 1, autoAlpha: 1 });
+                    gsap.set(`.hotspot-group-${i} .line`, { width: 60 });
                 } else {
-                    // Scrolling UP
-                    if (currentIndex > 0) {
-                        gotoSlide(currentIndex - 1, -1);
-                    } else {
-                        disableObservers(); // Free the native scroll upwards
-                        const st = ScrollTrigger.getById("productPin");
-                        if (st) {
-                            window.scrollTo({ top: Math.max(0, st.start - 50), behavior: 'instant' });
-                        }
-                    }
-                }
-            };
-
-            // Intent-Based Observer: Captures mouse wheel exactly like a presentation deck
-            const intentObserver = Observer.create({
-                target: window,
-                type: "wheel,touch", // Removed 'pointer' so dragging the mouse globally doesn't swipe
-                preventDefault: true, // Crucial: Halts smooth scrolling entirely while trapped in the section
-                tolerance: 15,
-                onDown: () => handleDirection(1), // Wheel rotates down -> go next
-                onUp: () => handleDirection(-1)   // Wheel rotates up -> go prev
-            });
-
-            // Drag Observer: Captures mouse drag ONLY on the images column
-            const dragObserver = Observer.create({
-                target: sectionRef.current?.querySelector(".showcase-images-col") || window,
-                type: "pointer",
-                preventDefault: true, // Prevents text selection loops when swiping
-                tolerance: 15,
-                onDown: () => handleDirection(1),
-                onUp: () => handleDirection(-1)
-            });
-
-            const enableObservers = () => {
-                intentObserver.enable();
-                dragObserver.enable();
-            };
-
-            const disableObservers = () => {
-                intentObserver.disable();
-                dragObserver.disable();
-            };
-
-            disableObservers();
-
-            // ScrollTrigger serves strictly to PIN the gallery in place and route the wheel events to Observer
-            ScrollTrigger.create({
-                id: "productPin",
-                trigger: sectionRef.current,
-                pin: true,
-                start: "top top",
-                end: "+=3000", // A massive invincible buffer so fast scrolls always land safely inside it, never skipping
-                anticipatePin: 1, // Pre-calculates the pin to catch high velocity scrolls before they arrive physically
-                onEnter: (self) => {
-                    if (intentObserver.isEnabled) return;
-                    // Sink precisely to the core of the safe-zone making it impervious to momentum escapes
-                    self.scroll(self.start + 1500);
-                    forceSlide(0);
-                    enableObservers();
-                },
-                onEnterBack: (self) => {
-                    if (intentObserver.isEnabled) return;
-                    // Sink precisely to the core of the safe zone
-                    self.scroll(self.start + 1500);
-                    forceSlide(productFeatures.length - 1);
-                    enableObservers();
-                },
-                onUpdate: (self) => {
-                    if (!intentObserver.isEnabled) return;
-                    // THE INFINITE TRAP: If aggressive scroll momentum tries to eat through the 3000px buffer
-                    // while animations are cooling down, we silently teleport the scrollbar back to the middle.
-                    // This mathematically guarantees they can NEVER skip slides by out-scrolling the pin.
-                    if (self.progress > 0.85 || self.progress < 0.15) {
-                        self.scroll(self.start + 1500);
-                    }
+                    gsap.set(`.wrapper-${i}`, { clipPath: i < index ? 'polygon(0 0, 100% 0, 100% 0, 0 0)' : 'polygon(0 100%, 100% 100%, 100% 100%, 0 100%)', yPercent: i < index ? -15 : 15, autoAlpha: 0, scale: 0.95, filter: "blur(10px)", pointerEvents: 'none' });
+                    gsap.set(`.text-${i}`, { y: i < index ? -150 : 150, autoAlpha: 0, filter: "blur(5px)", pointerEvents: 'none' });
+                    gsap.set(`.hotspot-group-${i}`, { scale: 0, autoAlpha: 0 });
                 }
             });
+        };
 
-        }, sectionRef);
+        const handleDirection = (dir: number) => {
+            if (isAnimating) return;
 
-        return () => ctx.revert();
-    }, []);
+            if (dir > 0) {
+                if (currentIndex < productFeatures.length - 1) {
+                    gotoSlide(currentIndex + 1, 1);
+                } else {
+                    disableObservers();
+                    const st = ScrollTrigger.getById("productPin");
+                    if (st) {
+                        window.scrollTo({ top: st.end + 50, behavior: 'instant' });
+                    }
+                }
+            } else {
+                if (currentIndex > 0) {
+                    gotoSlide(currentIndex - 1, -1);
+                } else {
+                    disableObservers();
+                    const st = ScrollTrigger.getById("productPin");
+                    if (st) {
+                        window.scrollTo({ top: Math.max(0, st.start - 50), behavior: 'instant' });
+                    }
+                }
+            }
+        };
+
+        const intentObserver = Observer.create({
+            target: window,
+            type: "wheel,touch",
+            preventDefault: true, 
+            tolerance: 15,
+            onDown: () => handleDirection(1),
+            onUp: () => handleDirection(-1)
+        });
+
+        const dragObserver = Observer.create({
+            target: sectionRef.current?.querySelector(".showcase-images-col") || window,
+            type: "pointer",
+            preventDefault: true, 
+            tolerance: 15,
+            onDown: () => handleDirection(1),
+            onUp: () => handleDirection(-1)
+        });
+
+        const enableObservers = () => {
+            intentObserver.enable();
+            dragObserver.enable();
+        };
+
+        const disableObservers = () => {
+            intentObserver.disable();
+            dragObserver.disable();
+        };
+
+        disableObservers();
+
+        ScrollTrigger.create({
+            id: "productPin",
+            trigger: sectionRef.current,
+            pin: true,
+            start: "top top",
+            end: "+=3000", 
+            anticipatePin: 1,
+            onEnter: (self) => {
+                if (intentObserver.isEnabled) return;
+                self.scroll(self.start + 1500);
+                forceSlide(0);
+                enableObservers();
+            },
+            onEnterBack: (self) => {
+                if (intentObserver.isEnabled) return;
+                self.scroll(self.start + 1500);
+                forceSlide(productFeatures.length - 1);
+                enableObservers();
+            },
+            onUpdate: (self) => {
+                if (!intentObserver.isEnabled) return;
+                if (self.progress > 0.85 || self.progress < 0.15) {
+                    self.scroll(self.start + 1500);
+                }
+            }
+        });
+
+    }, { scope: sectionRef });
 
     return (
         <section className="product-showcase-wrapper" ref={sectionRef}>

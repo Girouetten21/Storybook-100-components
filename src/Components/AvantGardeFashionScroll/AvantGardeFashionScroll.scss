@@ -1,0 +1,200 @@
+.avant-garde-wrapper {
+  position: relative;
+  width: 100%;
+  background-color: #080808; // Deep noir fashion background
+  color: #e5e5e5;
+  overflow: hidden;
+  font-family: 'Inter', sans-serif;
+
+  .avant-pin {
+    height: 100vh;
+    width: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  // LAYER 1: The Giant Index Numbers
+  .avant-index-layer {
+    position: absolute;
+    top: 0;
+    left: -5%; // Bleeding off the left edge for avant-garde look
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+
+    .massive-index {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      margin: 0;
+      padding: 0;
+      will-change: transform, opacity;
+
+      span {
+        font-family: 'Playfair Display', Times, serif;
+        font-size: 55vw; // MASSIVE
+        font-style: italic;
+        font-weight: 300;
+        color: rgba(255, 255, 255, 0.04); // Barely visible watermark
+        line-height: 0.8;
+        letter-spacing: -0.06em;
+      }
+    }
+  }
+
+  // LAYER 2: The Stacking Images
+  .avant-image-stack {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; 
+    padding-right: 12vw; 
+    
+    .avant-slide {
+      position: absolute;
+      width: 38vw; 
+      height: 75vh;
+      top: 50%;
+      transform: translateY(-50%);
+      will-change: transform; // NO overflow hidden here!
+
+      .avant-img-container {
+        width: 100%;
+        height: 100%;
+        overflow: hidden; // We clip the image container, not the whole slide
+        border-radius: 2px;
+        box-shadow: -30px 40px 80px rgba(0,0,0,0.7); // Deeper, more aggressive exhibition shadow
+        position: relative;
+        will-change: clip-path;
+        background-color: #151515; // Elegant physical frame color (passepartout)
+        padding: 1.5rem; // Creates the gallery-art print border
+
+        // Outer glass edge
+        &::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        // Delicate inner structural framework line (high-end fashion detail)
+        &::after {
+            content: '';
+            position: absolute;
+            top: 2rem; left: 2rem; right: 2rem; bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .img-inner-mask {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            position: relative;
+            background-color: #000; // Base darkness for fluid out-transition fade
+
+            img {
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+              transform: scale(1.05);
+              will-change: transform, opacity;
+            }
+        }
+      }
+    }
+  }
+
+  // LAYER 3: The Always-On-Top Metadata Stack
+  .avant-meta-stack {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 20; // EXTREMELY HIGH Z-INDEX
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 12vw; // Matches the image stack exactly
+    pointer-events: none; // Let clicks pass down to the image
+
+    .avant-meta-container {
+      position: absolute;
+      width: 38vw; // Matches image stack exactly
+      height: 75vh;
+      top: 50%;
+      transform: translateY(-50%);
+
+      // The Asymmetrical Floating Metadata Box
+      .avant-meta {
+        position: absolute;
+        bottom: 8%;
+        left: -35%; // Hanging drastically off the left side
+        width: 60%; 
+        background: #080808; 
+        padding: 2.5rem 3rem;
+        z-index: 10;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 40px 60px rgba(0,0,0,0.8);
+        will-change: transform, opacity;
+        pointer-events: auto; // Restore clicks inside the metadatabox
+
+        .meta-header {
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+          margin-bottom: 2.5rem;
+          
+          .meta-id {
+            font-family: 'Playfair Display', Times, serif;
+            font-style: italic;
+            font-size: 1.5rem;
+            color: #d4af37; 
+          }
+          
+          .meta-collection {
+            font-size: 0.65rem;
+            letter-spacing: 0.4em;
+            text-transform: uppercase;
+            color: #888;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            padding-bottom: 4px;
+          }
+        }
+
+        .meta-title {
+          font-family: 'Playfair Display', Times, serif;
+          font-size: 3rem;
+          font-weight: 300;
+          letter-spacing: -0.02em;
+          margin-bottom: 1.2rem;
+          line-height: 1.1;
+        }
+
+        .meta-desc {
+          font-size: 0.95rem;
+          line-height: 1.7;
+          color: rgba(255, 255, 255, 0.6);
+          font-weight: 300;
+        }
+      }
+    }
+  }
+}

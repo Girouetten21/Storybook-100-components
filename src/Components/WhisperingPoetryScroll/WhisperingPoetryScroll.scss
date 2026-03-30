@@ -1,0 +1,155 @@
+$paper-bone: #ecece6; // Slightly deeper for better contrast
+$ink-black: #111111;
+$accent-line: rgba(12, 12, 12, 0.15);
+
+.poetry-wrapper {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    background: $paper-bone;
+}
+
+// THE CINEMATIC FILM GRAIN (Atmosphere)
+.poetry-grain {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 50;
+    pointer-events: none;
+    background-image: url('https://grainy-gradients.vercel.app/noise.svg');
+    opacity: 0.18;
+    mix-blend-mode: overlay;
+}
+
+.poetry-stanza {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    transition: background-color 2s cubic-bezier(0.19, 1, 0.22, 1);
+
+    .content-box {
+        position: relative;
+        z-index: 10;
+        width: 100vw;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 120px 0;
+
+        .poetry-frame {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70vw; height: 75vh;
+            border: 1px solid rgba($ink-black, 0.15); // Tripled visibility
+            z-index: -1;
+            pointer-events: none;
+            
+            // Corner details 
+            &::before, &::after {
+                content: ""; position: absolute; width: 40px; height: 40px;
+                border-color: rgba($ink-black, 0.4); border-style: solid; // Bolder corners
+            }
+            &::before { top: -1px; left: -1px; border-width: 1.5px 0 0 1.5px; }
+            &::after { bottom: -1px; right: -1px; border-width: 0 1.5px 1.5px 0; }
+        }
+
+        .stanza-num {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 1rem;
+            color: rgba($ink-black, 0.8);
+            margin-bottom: 40px;
+            letter-spacing: 0.1em;
+            
+            // Decorative Circle
+            border: 1.5px solid rgba($ink-black, 0.2);
+            width: 60px; height: 60px;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 50%;
+            background: rgba($ink-black, 0.05);
+        }
+
+        .poetry-word {
+            font-family: 'Playfair Display', serif;
+            font-size: 7vw;
+            font-style: italic;
+            color: $ink-black;
+            margin: 0;
+            line-height: normal;
+            will-change: filter, letter-spacing, opacity;
+            text-transform: uppercase;
+            white-space: nowrap; // No wrapping
+            display: inline-block;
+            // Balance the trailing letter-spacing for perfect centering
+            padding-left: 0.1em; 
+        }
+
+        .poetry-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: rgba($ink-black, 0.6);
+            margin-top: 60px;
+            font-style: italic;
+            line-height: 2.2;
+            font-weight: 300;
+            letter-spacing: 0.05em;
+            max-width: 600px;
+            text-align: center;
+        }
+    }
+
+    // ARCHITECTURAL LAYERS
+    .poetry-meta {
+        position: absolute;
+        top: 50%; right: 60px;
+        transform: translate3d(0, -50%, 0) rotate(90deg);
+        will-change: transform;
+        backface-visibility: hidden;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        
+        font-family: 'Outfit', sans-serif;
+        font-size: 0.7rem; 
+        letter-spacing: 0.5em;
+        font-weight: 700; 
+        color: rgba($ink-black, 0.75); 
+        z-index: 10;
+        pointer-events: none;
+        text-transform: uppercase;
+    }
+
+    .poetry-margins {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        z-index: 2; pointer-events: none;
+        
+        .line-left, .line-right {
+            position: absolute; top: 0; width: 1px; height: 100%;
+            background: linear-gradient(to bottom, transparent, rgba($ink-black, 0.15), transparent); // Consistent strong guides
+        }
+        .line-left { left: 80px; }
+        .line-right { right: 80px; }
+    }
+
+    // THE DELICATE LINE
+    .poetry-connector {
+        position: absolute;
+        bottom: -25vh; // Offset to next section
+        left: 50%;
+        width: 1px;
+        height: 50vh;
+        background: linear-gradient(to bottom, $accent-line 0%, transparent 100%);
+        z-index: 5;
+    }
+}
+
+// MOBILE REFINEMENT
+@media (max-width: 768px) {
+    .poetry-stanza .content-box .poetry-word { font-size: 14vw; letter-spacing: 0.2em !important; }
+    .poetry-stanza .content-box .poetry-text { font-size: 1.1rem; line-height: 1.8; margin-top: 40px; }
+}

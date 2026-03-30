@@ -1,5 +1,6 @@
-import React, { useRef, useState, useLayoutEffect, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 import './LiquidGlassMenu.scss';
 
 import img1 from '../../assets/img/Space_1.webp';
@@ -14,43 +15,38 @@ const menuItems = [
     { num: 'IV', title: 'Prism', image: img4, colorTop: '#cfd9df', colorBot: '#e2ebf0' },
 ];
 
+gsap.registerPlugin(useGSAP);
+
 export const LiquidGlassMenu: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [activeIndex, setActiveIndex] = useState<number>(0);
     const containerRef = useRef<HTMLDivElement>(null);
     const tlRef = useRef<gsap.core.Timeline | null>(null);
 
-    useLayoutEffect(() => {
-        if (!containerRef.current) return;
-        
-        const ctx = gsap.context(() => {
-            tlRef.current = gsap.timeline({ paused: true })
-                .set('.ambient-liquid-layer', { display: 'block' })
-                .fromTo('.ambient-liquid-layer', 
-                    { opacity: 0 }, 
-                    { opacity: 1, duration: 0.8, ease: 'power2.inOut' }
-                )
-                .fromTo('.glass-overlay',
-                    // The Liquid Expansion Drop Reveal! Starts from the toggle button location
-                    { clipPath: 'circle(0% at 90% 10%)' },
-                    { clipPath: 'circle(150% at 90% 10%)', duration: 1.2, ease: 'power3.inOut' },
-                    '-=0.6'
-                )
-                .fromTo('.glass-nav li',
-                    { y: 50, opacity: 0 },
-                    { y: 0, opacity: 1, duration: 0.8, stagger: 0.1, ease: 'power3.out' },
-                    '-=0.6'
-                )
-                .fromTo('.liquid-window-container',
-                    { scale: 0.7, opacity: 0 },
-                    // Viscous Elastic Pop!
-                    { scale: 1, opacity: 1, duration: 1.2, ease: 'elastic.out(1, 0.7)' },
-                    '-=0.8'
-                );
-        }, containerRef);
-        
-        return () => ctx.revert();
-    }, []);
+    // POWERED BY GSAP-SKILLS: Scoped liquid expansion and elastic pops
+    useGSAP(() => {
+        tlRef.current = gsap.timeline({ paused: true })
+            .set('.ambient-liquid-layer', { display: 'block' })
+            .fromTo('.ambient-liquid-layer', 
+                { autoAlpha: 0 }, 
+                { autoAlpha: 1, duration: 0.8, ease: 'power2.inOut' }
+            )
+            .fromTo('.glass-overlay',
+                { clipPath: 'circle(0% at 90% 10%)' },
+                { clipPath: 'circle(150% at 90% 10%)', duration: 1.2, ease: 'power3.inOut' },
+                '-=0.6'
+            )
+            .fromTo('.glass-nav li',
+                { y: 50, autoAlpha: 0 },
+                { y: 0, autoAlpha: 1, duration: 0.8, stagger: 0.1, ease: 'power3.out' },
+                '-=0.6'
+            )
+            .fromTo('.liquid-window-container',
+                { scale: 0.7, autoAlpha: 0 },
+                { scale: 1, autoAlpha: 1, duration: 1.2, ease: 'elastic.out(1, 0.7)' },
+                '-=0.8'
+            );
+    }, { scope: containerRef });
 
     useEffect(() => {
         if (isOpen) {
@@ -66,18 +62,19 @@ export const LiquidGlassMenu: React.FC = () => {
         };
     }, [isOpen]);
 
-    const toggleMenu = () => {
+    const { contextSafe } = useGSAP({ scope: containerRef });
+
+    const toggleMenu = contextSafe(() => {
         if (!isOpen) {
             setIsOpen(true);
             tlRef.current?.timeScale(1).play();
         } else {
-            // Accelerate closure 
             tlRef.current?.timeScale(1.8).reverse().then(() => {
                 setIsOpen(false);
-                setTimeout(() => setActiveIndex(0), 400); // Reset safely
+                setTimeout(() => setActiveIndex(0), 400); 
             });
         }
-    };
+    });
 
     const currentItem = menuItems[activeIndex];
 

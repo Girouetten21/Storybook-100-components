@@ -1,14 +1,20 @@
 import React, { useRef, useState, useLayoutEffect } from 'react';
 import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 import './BlossomGateHero.scss';
 
 // Import soft backgrounds
 import bgFloral from '../../assets/img/Background_2.webp';
 
+gsap.registerPlugin(useGSAP);
+
 export const BlossomGateHero: React.FC = () => {
     const [isRevealed, setIsRevealed] = useState(false);
     const isAnimating = useRef(false);
     const containerRef = useRef<HTMLDivElement>(null);
+
+    // POWERED BY GSAP-SKILLS: Safe interaction logic
+    const { contextSafe } = useGSAP({ scope: containerRef });
 
     // Sync Scroll Lock 
     useLayoutEffect(() => {
@@ -16,8 +22,6 @@ export const BlossomGateHero: React.FC = () => {
 
         if (!isRevealed) {
             document.body.style.overflow = 'hidden';
-
-            // Force zero-scroll and block events
             window.scrollTo(0, 0);
             window.addEventListener('wheel', preventDefault, { passive: false });
             window.addEventListener('touchmove', preventDefault, { passive: false });
@@ -34,7 +38,7 @@ export const BlossomGateHero: React.FC = () => {
         };
     }, [isRevealed]);
 
-    const runBlossomTransition = () => {
+    const runBlossomTransition = contextSafe(() => {
         if (isAnimating.current || isRevealed) return;
         isAnimating.current = true;
 
@@ -48,7 +52,7 @@ export const BlossomGateHero: React.FC = () => {
         tl.set('.blossom-final-reveal', { autoAlpha: 1 });
 
         // 1. Initial UI fade out
-        tl.to('.blossom-gate-content', { opacity: 0, scale: 0.98, duration: 0.7, ease: 'power2.inOut' });
+        tl.to('.blossom-gate-content', { autoAlpha: 0, scale: 0.98, duration: 0.7, ease: 'power2.inOut' });
 
         // 2. The Organic Petal Reveal (SVG Path expansion)
         tl.to('.blossom-panel-top', { 
@@ -64,18 +68,18 @@ export const BlossomGateHero: React.FC = () => {
 
         // 3. Reveal Background with soft zoom
         .fromTo('.blossom-hero-bg', 
-            { scale: 1.1, filter: 'blur(15px) brightness(1.2)' },
-            { scale: 1, filter: 'blur(0px) brightness(1)', duration: 2.2, ease: 'power2.out' },
+            { scale: 1.1, filter: 'blur(15px) brightness(1.2)', autoAlpha: 0 },
+            { scale: 1, filter: 'blur(0px) brightness(1)', autoAlpha: 1, duration: 2.2, ease: 'power2.out' },
             '-=1.5'
         )
 
         // 4. Staggered text reveal
         .fromTo('.blossom-reveal-inner *', 
-            { y: 30, opacity: 0 },
-            { y: 0, opacity: 1, duration: 1.4, stagger: 0.15, ease: 'power3.out' },
+            { y: 30, autoAlpha: 0 },
+            { y: 0, autoAlpha: 1, duration: 1.4, stagger: 0.15, ease: 'power3.out' },
             '-=1.4'
         );
-    };
+    });
 
     return (
         <div ref={containerRef} className={`blossom-gate-container ${isRevealed ? 'is-stable' : ''}`}>

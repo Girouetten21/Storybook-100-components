@@ -1,11 +1,14 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 import './ActivityList.scss';
 
 // Import local photos
 import photo1 from './Photos/1.webp';
 import photo2 from './Photos/2.webp';
 import photo3 from './Photos/3.webp';
+
+gsap.registerPlugin(useGSAP);
 
 interface Activity {
     id: number;
@@ -44,56 +47,46 @@ const activities: Activity[] = [
 export const ActivityList: React.FC = () => {
     const [activeImage, setActiveImage] = useState<string | null>(null);
     const [hoveredId, setHoveredId] = useState<number | null>(null);
+    const containerRef = useRef<HTMLDivElement>(null);
     const imageContainerRef = useRef<HTMLDivElement>(null);
-    const mousePos = useRef({ x: 0, y: 0 });
 
-    useEffect(() => {
+    // POWERED BY GSAP-SKILLS: Scoped mouse tracking with quickTo
+    useGSAP(() => {
+        if (!imageContainerRef.current) return;
+
+        const xTo = gsap.quickTo(imageContainerRef.current, "x", { duration: 0.6, ease: "power3" });
+        const yTo = gsap.quickTo(imageContainerRef.current, "y", { duration: 0.6, ease: "power3" });
+
         const handleMouseMove = (e: MouseEvent) => {
-            mousePos.current = { x: e.clientX, y: e.clientY };
-
-            if (activeImage && imageContainerRef.current) {
-                gsap.to(imageContainerRef.current, {
-                    x: mousePos.current.x,
-                    y: mousePos.current.y,
-                    duration: 0.6,
-                    ease: "power3.out"
-                });
-            }
-        };
-
-        const handleWindowMouseLeave = () => {
-            handleMouseLeave();
-            setHoveredId(null);
+            xTo(e.clientX);
+            yTo(e.clientY);
         };
 
         window.addEventListener('mousemove', handleMouseMove);
-        window.addEventListener('mouseleave', handleWindowMouseLeave);
+        return () => window.removeEventListener('mousemove', handleMouseMove);
+    }, { scope: containerRef });
 
-        return () => {
-            window.removeEventListener('mousemove', handleMouseMove);
-            window.removeEventListener('mouseleave', handleWindowMouseLeave);
-        };
-    }, [activeImage]);
+    const { contextSafe } = useGSAP({ scope: containerRef });
 
-    const handleMouseEnter = (id: number, image: string) => {
+    const handleMouseEnter = contextSafe((id: number, image: string) => {
         setActiveImage(image);
         setHoveredId(id);
         if (imageContainerRef.current) {
             gsap.to(imageContainerRef.current, {
-                opacity: 1,
+                autoAlpha: 1,
                 scale: 1,
                 duration: 0.4,
                 ease: "power2.out",
                 overwrite: "auto"
             });
         }
-    };
+    });
 
-    const handleMouseLeave = () => {
+    const handleMouseLeave = contextSafe(() => {
         setHoveredId(null);
         if (imageContainerRef.current) {
             gsap.to(imageContainerRef.current, {
-                opacity: 0,
+                autoAlpha: 0,
                 scale: 0.8,
                 duration: 0.3,
                 ease: "power2.in",
@@ -105,10 +98,10 @@ export const ActivityList: React.FC = () => {
         } else {
             setActiveImage(null);
         }
-    };
+    });
 
     return (
-        <div className="activity-list-container" onMouseLeave={handleMouseLeave}>
+        <div ref={containerRef} className="activity-list-container" onMouseLeave={handleMouseLeave}>
             <div className="list-wrapper">
                 {activities.map((activity) => (
                     <div

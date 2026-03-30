@@ -1,51 +1,49 @@
-import { useLayoutEffect, useRef } from 'react';
+import { useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useGSAP } from '@gsap/react';
 import './CircleTransition.scss';
 
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 export const CircleTransition = () => {
     const sectionRef = useRef<HTMLDivElement>(null);
     const circleRef = useRef<HTMLDivElement>(null);
     const letterRef = useRef<HTMLDivElement>(null);
 
-    useLayoutEffect(() => {
+    // POWERED BY GSAP-SKILLS: Scoped ScrollTrigger and expansion logic
+    useGSAP(() => {
         // Ensure manual scroll restoration to avoid flickering on refresh
         window.history.scrollRestoration = 'manual';
         window.scrollTo(0, 0);
 
-        const ctx = gsap.context(() => {
-            const tl = gsap.timeline({
-                scrollTrigger: {
-                    trigger: sectionRef.current,
-                    start: "top top",
-                    end: "+=2000",
-                    scrub: 1,
-                    pin: true,
-                    anticipatePin: 1,
-                    invalidateOnRefresh: true
-                }
-            });
+        const tl = gsap.timeline({
+            scrollTrigger: {
+                trigger: sectionRef.current,
+                pin: true,
+                start: "top top",
+                end: "+=2000",
+                scrub: 1,
+                anticipatePin: 1,
+                invalidateOnRefresh: true
+            }
+        });
 
-            // Animation: Circle grows to cover the whole screen
-            tl.to(circleRef.current, {
-                scale: 40,
-                ease: "power2.inOut",
-                duration: 3
-            });
+        // Animation: Circle grows to cover the whole screen
+        tl.to(circleRef.current, {
+            scale: 40,
+            ease: "power2.inOut",
+            duration: 3
+        });
 
-            // Letter behavior: Starts fading gradually much earlier
-            tl.to(letterRef.current, {
-                opacity: 0,
-                duration: 2.5,
-                ease: "power1.out"
-            }, 0.2); // Starts much almost at the beginning (0.5s into the 3s total)
+        // Letter behavior: Starts fading gradually much earlier
+        tl.to(letterRef.current, {
+            autoAlpha: 0,
+            duration: 2.5,
+            ease: "power1.out"
+        }, 0.2); 
 
-        }, sectionRef);
-
-        return () => ctx.revert();
-    }, []);
+    }, { scope: sectionRef });
 
     return (
         <div className="circle-transition-wrapper">

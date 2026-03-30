@@ -1,9 +1,12 @@
 import React, { useRef, useState, useLayoutEffect } from 'react';
 import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 import './SplitCurtainHero.scss';
 
 // Import cinematic background from project assets
 import bgHero from '../../assets/img/Background_4.webp';
+
+gsap.registerPlugin(useGSAP);
 
 export const SplitCurtainHero: React.FC = () => {
     const [isStarted, setIsStarted] = useState(false);
@@ -15,14 +18,15 @@ export const SplitCurtainHero: React.FC = () => {
     const contentRef = useRef<HTMLDivElement>(null);
     const heroTitleRef = useRef<HTMLHeadingElement>(null);
 
+    // POWERED BY GSAP-SKILLS: Safe interaction logic and scoped selectors
+    const { contextSafe } = useGSAP({ scope: containerRef });
+
     // CRITICAL: Prevent scrolling until the 'Gate' is opened
     useLayoutEffect(() => {
         const preventDefault = (e: Event) => e.preventDefault();
 
         if (!isStarted) {
             document.body.style.overflow = 'hidden';
-
-            // Force zero-scroll and block events
             window.scrollTo(0, 0);
             window.addEventListener('wheel', preventDefault, { passive: false });
             window.addEventListener('touchmove', preventDefault, { passive: false });
@@ -39,7 +43,7 @@ export const SplitCurtainHero: React.FC = () => {
         };
     }, [isStarted]);
 
-    const handleEnter = () => {
+    const handleEnter = contextSafe(() => {
         if (isAnimating.current || isStarted) return;
         isAnimating.current = true;
 
@@ -51,7 +55,7 @@ export const SplitCurtainHero: React.FC = () => {
 
         // 1. Hide the button and gate UI
         tl.to(interactionRef.current, {
-            opacity: 0,
+            autoAlpha: 0,
             y: -20,
             duration: 0.6,
             ease: 'power2.inOut'
@@ -71,21 +75,21 @@ export const SplitCurtainHero: React.FC = () => {
 
         // 3. Reveal the deeper layer with cinematic zoom
         .fromTo(contentRef.current, 
-            { opacity: 0, scale: 1.15 },
-            { opacity: 1, scale: 1, duration: 2.2, ease: 'power3.out' },
+            { autoAlpha: 0, scale: 1.15 },
+            { autoAlpha: 1, scale: 1, duration: 2.2, ease: 'power3.out' },
             '-=1.5'
         )
         
         // 4. Staggered reveal of the inner elements
         .fromTo('.hero-inner *', 
-            { y: 40, opacity: 0 },
-            { y: 0, opacity: 1, duration: 1.2, stagger: 0.2, ease: 'power4.out' },
+            { y: 40, autoAlpha: 0 },
+            { y: 0, autoAlpha: 1, duration: 1.2, stagger: 0.2, ease: 'power4.out' },
             '-=1.2'
         )
         
         // 5. CRITICAL FIX: To prevent horizontal scroll artifacts from off-screen panels
         .set('.curtain-gate', { visibility: 'hidden' });
-    };
+    });
 
     return (
         <div ref={containerRef} className={`split-curtain-container ${isStarted ? 'is-stable' : ''}`}>

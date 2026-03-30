@@ -1,5 +1,6 @@
-import React, { useRef, useState, useLayoutEffect, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 import './CelestialVectorMenu.scss';
 
 const menuItems = [
@@ -9,66 +10,63 @@ const menuItems = [
     { num: 'XIV.', title: 'Labyrinth', tag: 'The Atelier' },
 ];
 
+gsap.registerPlugin(useGSAP);
+
 export const CelestialVectorMenu: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [hoverIndex, setHoverIndex] = useState<number | null>(null);
     const containerRef = useRef<HTMLDivElement>(null);
     const tlRef = useRef<gsap.core.Timeline | null>(null);
 
-    useLayoutEffect(() => {
-        if (!containerRef.current) return;
-        
-        const ctx = gsap.context(() => {
-            tlRef.current = gsap.timeline({ paused: true })
-                .set('.celestial-overlay', { visibility: 'visible', pointerEvents: 'auto' })
-                .to('.c-toggle-wrapper', { opacity: 0, scale: 0.8, duration: 0.4 })
-                
-                // 1. Dark Void Background
-                .fromTo('.celestial-overlay', 
-                    { backgroundColor: 'rgba(6, 5, 5, 0)' },
-                    { backgroundColor: 'rgba(6, 5, 5, 1)', duration: 0.8 }
-                )
-                
-                // 2. The Golden Lines drawing from centers
-                .fromTo('.v-line',
-                    { scaleY: 0 },
-                    { scaleY: 1, duration: 1.4, stagger: 0.1, ease: 'expo.inOut' },
-                    '-=0.4'
-                )
-                .fromTo('.h-line',
-                    { scaleX: 0 },
-                    { scaleX: 1, duration: 1.4, stagger: 0.1, ease: 'expo.inOut' },
-                    '-=1.2'
-                )
-                
-                // 3. Astrolabe Orbits expand from the void
-                .fromTo('.orbit',
-                    { scale: 0.2, opacity: 0 },
-                    { scale: 1, opacity: 1, duration: 2.2, stagger: 0.15, ease: 'power3.out' },
-                    '-=1.0'
-                )
-                
-                // 4. Center Geometric Diamond
-                .fromTo('.c-diamond',
-                    { scale: 0, rotation: -90 },
-                    { scale: 1, rotation: 45, duration: 1.2, ease: 'back.out(2)' },
-                    '-=1.5'
-                )
-                
-                // 5. Typography rises symmetrically
-                .fromTo('.celestial-nav li',
-                    { opacity: 0, y: 40, filter: 'blur(10px)' },
-                    { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.9, stagger: 0.08, ease: 'power2.out' },
-                    '-=1.2'
-                )
-                
-                // 6. Close button fades in softly
-                .fromTo('.c-close-btn', { opacity: 0 }, { opacity: 1, duration: 0.6 }, '-=0.5');
+    // POWERED BY GSAP-SKILLS: Scoped timeline and secure event handling
+    useGSAP(() => {
+        tlRef.current = gsap.timeline({ paused: true })
+            .set('.celestial-overlay', { visibility: 'visible', pointerEvents: 'auto' })
+            .to('.c-toggle-wrapper', { autoAlpha: 0, scale: 0.8, duration: 0.4 })
+            
+            // 1. Dark Void Background
+            .fromTo('.celestial-overlay', 
+                { backgroundColor: 'rgba(6, 5, 5, 0)' },
+                { backgroundColor: 'rgba(6, 5, 5, 1)', duration: 0.8 }
+            )
+            
+            // 2. The Golden Lines drawing from centers
+            .fromTo('.v-line',
+                { scaleY: 0 },
+                { scaleY: 1, duration: 1.4, stagger: 0.1, ease: 'expo.inOut' },
+                '-=0.4'
+            )
+            .fromTo('.h-line',
+                { scaleX: 0 },
+                { scaleX: 1, duration: 1.4, stagger: 0.1, ease: 'expo.inOut' },
+                '-=1.2'
+            )
+            
+            // 3. Astrolabe Orbits expand from the void
+            .fromTo('.orbit',
+                { scale: 0.2, autoAlpha: 0 },
+                { scale: 1, autoAlpha: 1, duration: 2.2, stagger: 0.15, ease: 'power3.out' },
+                '-=1.0'
+            )
+            
+            // 4. Center Geometric Diamond
+            .fromTo('.c-diamond',
+                { scale: 0, rotation: -90 },
+                { scale: 1, rotation: 45, duration: 1.2, ease: 'back.out(2)' },
+                '-=1.5'
+            )
+            
+            // 5. Typography rises symmetrically
+            .fromTo('.celestial-nav li',
+                { autoAlpha: 0, y: 40, filter: 'blur(10px)' },
+                { autoAlpha: 1, y: 0, filter: 'blur(0px)', duration: 0.9, stagger: 0.08, ease: 'power2.out' },
+                '-=1.2'
+            )
+            
+            // 6. Close button fades in softly
+            .fromTo('.c-close-btn', { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.6 }, '-=0.5');
 
-        }, containerRef);
-        
-        return () => ctx.revert();
-    }, []);
+    }, { scope: containerRef });
 
     useEffect(() => {
         if (isOpen) {
@@ -85,7 +83,9 @@ export const CelestialVectorMenu: React.FC = () => {
         };
     }, [isOpen]);
 
-    const toggleMenu = () => {
+    const { contextSafe } = useGSAP({ scope: containerRef });
+
+    const toggleMenu = contextSafe(() => {
         if (!isOpen) {
             setIsOpen(true);
             tlRef.current?.timeScale(1).play();
@@ -95,7 +95,7 @@ export const CelestialVectorMenu: React.FC = () => {
                 setHoverIndex(null); 
             });
         }
-    };
+    });
 
     return (
         <div ref={containerRef} className="celestial-wrapper">

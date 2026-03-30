@@ -1,5 +1,6 @@
-import React, { useRef, useState, useLayoutEffect, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 import './NoirMenu.scss';
 
 import img1 from '../../assets/img/Background_1.webp';
@@ -14,36 +15,32 @@ const menuItems = [
     { id: '04', title: 'Midnight', italicTitle: 'Evening', image: img4 },
 ];
 
+gsap.registerPlugin(useGSAP);
+
 export const NoirMenu: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [activeImg, setActiveImg] = useState<string>(menuItems[0].image);
     const containerRef = useRef<HTMLDivElement>(null);
     const tlRef = useRef<gsap.core.Timeline | null>(null);
 
-    useLayoutEffect(() => {
-        if (!containerRef.current) return;
-
-        const ctx = gsap.context(() => {
-            tlRef.current = gsap.timeline({ paused: true })
-                .fromTo('.noir-menu-overlay',
-                    // Brutal sideways slice reveal from right to left (Faster & Lighter)
-                    { clipPath: 'polygon(100% 0%, 100% 0%, 100% 100%, 100% 100%)' },
-                    { clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)', duration: 0.6, ease: 'power4.inOut' }
-                )
-                .fromTo('.noir-backgrounds',
-                    { scale: 1.05, opacity: 0 },
-                    { scale: 1, opacity: 1, duration: 0.8, ease: 'power2.out' },
-                    '-=0.4'
-                )
-                .fromTo('.noir-item',
-                    { x: 80, autoAlpha: 0, skewX: -10 },
-                    { x: 0, autoAlpha: 1, skewX: 0, duration: 0.6, stagger: 0.05, ease: 'power3.out' },
-                    '-=0.6'
-                );
-        }, containerRef);
-
-        return () => ctx.revert();
-    }, []);
+    // POWERED BY GSAP-SKILLS: Scoped noir opening and brutalist slide
+    useGSAP(() => {
+        tlRef.current = gsap.timeline({ paused: true })
+            .fromTo('.noir-menu-overlay',
+                { clipPath: 'polygon(100% 0%, 100% 0%, 100% 100%, 100% 100%)' },
+                { clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)', duration: 0.6, ease: 'power4.inOut' }
+            )
+            .fromTo('.noir-backgrounds',
+                { scale: 1.05, autoAlpha: 0 },
+                { scale: 1, autoAlpha: 1, duration: 0.8, ease: 'power2.out' },
+                '-=0.4'
+            )
+            .fromTo('.noir-item',
+                { x: 80, autoAlpha: 0, skewX: -10 },
+                { x: 0, autoAlpha: 1, skewX: 0, duration: 0.6, stagger: 0.05, ease: 'power3.out' },
+                '-=0.6'
+            );
+    }, { scope: containerRef });
 
     useEffect(() => {
         if (isOpen) {
@@ -59,16 +56,17 @@ export const NoirMenu: React.FC = () => {
         };
     }, [isOpen]);
 
-    const toggleMenu = () => {
+    const { contextSafe } = useGSAP({ scope: containerRef });
+
+    const toggleMenu = contextSafe(() => {
         if (!isOpen) {
             setIsOpen(true);
             tlRef.current?.timeScale(1).play();
         } else {
             tlRef.current?.timeScale(1.6).reverse().then(() => setIsOpen(false));
-            // Cautiously reset background
             setTimeout(() => setActiveImg(menuItems[0].image), 500);
         }
-    };
+    });
 
     return (
         <div ref={containerRef} className="noir-menu-wrapper">

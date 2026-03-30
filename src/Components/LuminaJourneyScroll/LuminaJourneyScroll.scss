@@ -1,0 +1,124 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+$void-black: #0a0a0c;
+$accent-gold: #c0b8a0;
+$soft-white: #f5f5f7;
+
+.lumina-journey-wrapper {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    background: $void-black;
+    perspective: 1500px;
+}
+
+.lumina-journey-container {
+    display: flex;
+    flex-wrap: nowrap;
+    width: 400%; // Adjusted based on number of slides (4 slides = 400vw)
+    height: 100vh;
+    will-change: transform;
+
+    .journey-slide {
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+
+        .slide-content-split {
+            width: 85%; height: 75%;
+            display: flex;
+            align-items: center;
+            gap: 5vw;
+        }
+
+        .slide-img-box {
+            flex: 0 0 50%;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+            border-radius: 2px;
+            box-shadow: 0 30px 100px rgba(0,0,0,0.8);
+
+            .slide-img {
+                position: absolute; top: 0; left: -10%;
+                width: 120%; height: 100%;
+                background-size: cover; background-position: center;
+                filter: grayscale(0.5) brightness(0.8);
+                transition: filter 1.2s ease;
+                will-change: transform;
+            }
+
+            .slide-img-overlay {
+                position: absolute; top:0; left: 0; width: 100%; height: 100%;
+                background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.4));
+            }
+        }
+
+        .slide-text-box {
+            flex: 1;
+            padding-right: 5vw;
+            position: relative;
+            
+            .slide-subtitle {
+                font-family: 'Outfit', sans-serif; text-transform: uppercase;
+                letter-spacing: 0.6em; font-size: 0.65rem; color: $accent-gold;
+                margin-bottom: 25px; display: block;
+            }
+
+            .slide-title {
+                font-family: 'Playfair Display', serif; font-size: 8.5vw; color: $soft-white;
+                line-height: 0.9; margin: 0; font-style: italic;
+                letter-spacing: -0.04em;
+                transform-origin: left bottom;
+            }
+
+            .slide-desc {
+                font-family: 'Outfit', sans-serif; font-weight: 200; font-size: 1.1rem;
+                color: rgba(255,255,255,0.6); line-height: 1.8;
+                max-width: 400px; margin-top: 40px;
+            }
+
+            .slide-number {
+                position: absolute; bottom: -10vh; right: 0;
+                font-family: 'Playfair Display', serif; font-size: 15rem;
+                color: rgba(255,255,255,0.035); pointer-events: none;
+                z-index: -1; line-height: 1;
+            }
+        }
+
+        // Hover effect for elite touch
+        &:hover {
+            .slide-img { filter: grayscale(0) brightness(1); }
+            .slide-title { transform: skewX(-5deg); transition: transform 0.8s cubic-bezier(0.19, 1, 0.22, 1); }
+        }
+    }
+}
+
+// THE STICKY PROGRESS INDICATOR
+.journey-progress-bar {
+    position: absolute; bottom: 5vh; left: 50%;
+    transform: translateX(-50%);
+    width: 15vw; height: 1px;
+    background: rgba(255,255,255,0.1);
+    z-index: 100;
+
+    .bar-fill {
+        position: absolute; top: 0; left: 0;
+        width: 0%; height: 100%;
+        background: $accent-gold;
+        box-shadow: 0 0 10px rgba($accent-gold, 0.5);
+    }
+}
+
+// MOBILE REFINEMENT
+@media (max-width: 1024px) {
+    .lumina-journey-container .journey-slide .slide-content-split {
+        flex-direction: column; gap: 5vh; width: 90%;
+    }
+    .lumina-journey-container .journey-slide .slide-text-box .slide-title { font-size: 15vw; }
+    .lumina-journey-container .journey-slide .slide-img-box { flex: 0 0 45vh; width: 100%; }
+}

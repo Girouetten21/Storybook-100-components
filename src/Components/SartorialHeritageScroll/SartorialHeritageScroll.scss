@@ -1,0 +1,194 @@
+.sartorial-wrapper {
+  position: relative;
+  width: 100%;
+  background-color: #0b0d10; // Extremely dark charcoal navy, classic bespoke suit color
+  color: #dfdbd2; // Natural linen/silk tone
+  overflow: hidden;
+  font-family: 'Inter', sans-serif;
+
+  .sartorial-pin {
+    height: 100vh;
+    width: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  // == 1. The Tailor's Grid Framework ==
+  .tailor-grid {
+    position: absolute;
+    top: 5vh;
+    left: 8vw;
+    right: 8vw;
+    bottom: 5vh;
+    pointer-events: none;
+    z-index: 2;
+
+    .frame-line {
+      position: absolute;
+      background-color: rgba(212, 175, 55, 0.15); // Bespoke Gold thread
+      transform-origin: center;
+
+      &.horizontal {
+        height: 1px;
+        left: 0;
+        right: 0;
+        &.top { top: 0; }
+        &.bottom { bottom: 0; }
+      }
+
+      &.vertical {
+        width: 1px;
+        top: 0;
+        bottom: 0;
+        &.left { left: 0; }
+        &.right { right: 0; }
+      }
+    }
+
+    .crosshair {
+      position: absolute;
+      width: 15px;
+      height: 15px;
+      
+      &::before, &::after {
+        content: '';
+        position: absolute;
+        background-color: #d4af37; // Sharp gold
+      }
+      &::before { width: 100%; height: 1px; top: 50%; left: 0; }
+      &::after { width: 1px; height: 100%; left: 50%; top: 0; }
+
+      // Positioning crosshairs precisely on the grid intersections
+      &.tl { top: -7px; left: -7px; }
+      &.tr { top: -7px; right: -7px; }
+      &.bl { bottom: -7px; left: -7px; }
+      &.br { bottom: -7px; right: -7px; }
+    }
+  }
+
+  // == 2. Floating Identifiers / Rulers ==
+  .ruler-text {
+    position: absolute;
+    font-size: 0.65rem;
+    letter-spacing: 0.4em;
+    color: rgba(223, 219, 210, 0.4);
+    pointer-events: none;
+    z-index: 3;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    transform: rotate(180deg);
+    
+    &.left { left: 3vw; top: 50%; transform: translateY(-50%) rotate(180deg); }
+    &.right { right: 3vw; top: 50%; transform: translateY(-50%); }
+  }
+
+  // == 3. Central Canvas Workspace ==
+  .canvas-workspace {
+    position: relative;
+    width: 65vw;
+    height: 70vh;
+    z-index: 10;
+    // Inner border forming the image container bounds
+    border: 1px solid rgba(255,255,255,0.05);
+    background: transparent;
+
+    .sartorial-image-stack {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      z-index: 1;
+
+      .sartorial-slide {
+        position: absolute;
+        width: 100%; height: 100%;
+        top: 0; left: 0;
+
+        .sartorial-img-mask {
+          width: 100%; height: 100%;
+          overflow: hidden;
+          position: relative;
+          background: transparent;
+
+          img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            transform: scale(1.05);
+            opacity: 0.85; // Slight mood dimming natively
+          }
+        }
+      }
+    }
+
+    // == 4. The Strict Metadata Layer ==
+    .sartorial-meta-stack {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      z-index: 20; // Highest Z-Index
+      pointer-events: none;
+      display: flex;
+      align-items: flex-end; // Lock to bottom
+      padding: 3rem;
+
+      .sartorial-meta-container {
+        position: absolute;
+        width: 100%;
+        height: auto;
+        left: 0; bottom: 0;
+        padding: 3rem 4rem;
+
+        .sartorial-meta-group {
+          max-width: 500px;
+          background: rgba(11, 13, 16, 0.85); // Frosted navy box
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
+          padding: 2.5rem;
+          border-left: 1px solid #d4af37; // Sharp gold tailored edge
+          will-change: transform, opacity;
+
+          .meta-mark {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+
+            .step {
+              font-family: 'Playfair Display', Times, serif;
+              font-style: italic;
+              font-size: 1.2rem;
+              color: #dfdbd2;
+            }
+
+            .thread-line {
+              flex-grow: 1;
+              height: 1px;
+              background-color: rgba(212, 175, 55, 0.3); // Gold thread
+            }
+
+            .mark {
+              font-size: 0.65rem;
+              letter-spacing: 0.3em;
+              color: #d4af37;
+            }
+          }
+
+          .title {
+            font-family: 'Playfair Display', Times, serif;
+            font-size: 2.5rem;
+            font-weight: 300;
+            margin-bottom: 1rem;
+            line-height: 1.1;
+          }
+
+          .desc {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: rgba(223, 219, 210, 0.7); // Linen grey
+            font-weight: 300;
+          }
+        }
+      }
+    }
+  }
+}

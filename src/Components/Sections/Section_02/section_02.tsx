@@ -1,9 +1,10 @@
-import { useLayoutEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import gsap from 'gsap'
 import { Observer } from 'gsap/all'
+import { useGSAP } from '@gsap/react'
 import './section_02.scss'
 
-gsap.registerPlugin(Observer)
+gsap.registerPlugin(Observer, useGSAP)
 
 const housesData = [
   {
@@ -151,60 +152,60 @@ export const Section_02 = () => {
   const currentIndexRef = useRef(0);
   const animating = useRef(false);
 
-  useLayoutEffect(() => {
+  // POWERED BY GSAP-SKILLS: Scoped Observation and House transitions
+  const { contextSafe } = useGSAP({ scope: sectionRef });
+
+  const goToSection = contextSafe((index: number, direction: number, slides: HTMLElement[]) => {
+    if (animating.current || index < 0 || index >= slides.length) return;
+
+    animating.current = true;
+    const prevIndex = currentIndexRef.current;
+    currentIndexRef.current = index;
+    
+    const tl = gsap.timeline({
+      onComplete: () => {
+        animating.current = false;
+        setCurrentIndex(index);
+      }
+    });
+
+    tl.to(slides[prevIndex] as HTMLElement, {
+      yPercent: direction > 0 ? -100 : 100,
+      autoAlpha: 0,
+      duration: 0.8,
+      ease: 'power2.inOut'
+    })
+    .fromTo(slides[index] as HTMLElement, 
+      { yPercent: direction > 0 ? 100 : -100, autoAlpha: 0 },
+      { yPercent: 0, autoAlpha: 1, duration: 0.8, ease: 'power2.inOut' },
+      "<"
+    );
+  });
+
+  useGSAP(() => {
     const slides = gsap.utils.toArray<HTMLElement>('.house-slide');
     
-    // Reset initial state
-    gsap.set(slides, { yPercent: 100, opacity: 0, visibility: 'hidden' });
+    gsap.set(slides, { yPercent: 100, autoAlpha: 0 });
     if (slides[0]) {
-      gsap.set(slides[0], { yPercent: 0, opacity: 1, visibility: 'visible' });
+      gsap.set(slides[0], { yPercent: 0, autoAlpha: 1 });
     }
-
-    const goToSection = (index: number, direction: number) => {
-      if (animating.current || index < 0 || index >= slides.length) return;
-
-      animating.current = true;
-      const prevIndex = currentIndexRef.current;
-      currentIndexRef.current = index;
-      
-      const tl = gsap.timeline({
-        onComplete: () => {
-          animating.current = false;
-          setCurrentIndex(index);
-        }
-      });
-
-      // Animación de salida y entrada más rápida y directa
-      tl.to(slides[prevIndex] as HTMLElement, {
-        yPercent: direction > 0 ? -100 : 100,
-        opacity: 0,
-        duration: 0.8,
-        ease: 'power2.inOut',
-        autoAlpha: 0
-      })
-      .fromTo(slides[index] as HTMLElement, 
-        { yPercent: direction > 0 ? 100 : -100, opacity: 0, autoAlpha: 0 },
-        { yPercent: 0, opacity: 1, autoAlpha: 1, duration: 0.8, ease: 'power2.inOut' },
-        "<"
-      );
-    };
 
     const obs = Observer.create({
       target: sectionRef.current,
       type: "wheel,touch,pointer",
       wheelSpeed: -1,
-      onUp: () => goToSection(currentIndexRef.current + 1, 1),
-      onDown: () => goToSection(currentIndexRef.current - 1, -1),
+      onUp: () => goToSection(currentIndexRef.current + 1, 1, slides),
+      onDown: () => goToSection(currentIndexRef.current - 1, -1, slides),
       tolerance: 20,
       preventDefault: true
     });
 
     return () => obs.kill();
-  }, []); // Solo se ejecuta una vez al montar
+  }, { scope: sectionRef });
 
   return (
     <section ref={sectionRef} className="section-02">
-      {/* Texto decorativo de fondo - Movido fuera de los slides para que sea siempre visible */}
+      {/* Texto decorativo de fondo */}
       <div className="background-text">
         Houses
       </div>

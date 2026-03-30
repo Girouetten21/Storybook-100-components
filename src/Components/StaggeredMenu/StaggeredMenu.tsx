@@ -1,11 +1,14 @@
-import React, { useRef, useState, useLayoutEffect, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 import './StaggeredMenu.scss';
 
 import img1 from '../../assets/img/Space_1.webp';
 import img2 from '../../assets/img/Character_2.webp';
 import img3 from '../../assets/img/Space_2.webp';
 import img4 from '../../assets/img/Background_2.webp';
+
+gsap.registerPlugin(useGSAP);
 
 const menuItems = [
     { id: '01', title: 'PORTFOLIO', image: img1 },
@@ -18,35 +21,45 @@ export const StaggeredMenu: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
     const tlRef = useRef<gsap.core.Timeline | null>(null);
-    
-    // For hovering image effect
     const floatingImageRef = useRef<HTMLDivElement>(null);
     const [hoveredImg, setHoveredImg] = useState<string | null>(null);
-    
-    useLayoutEffect(() => {
-        if (!containerRef.current) return;
-        
-        const ctx = gsap.context(() => {
-            tlRef.current = gsap.timeline({ paused: true })
-                .set('.staggered-menu-overlay', { pointerEvents: 'auto' })
-                .fromTo('.menu-blind', 
-                    { scaleY: 0 },
-                    { scaleY: 1, duration: 0.8, stagger: 0.05, ease: 'power4.inOut', transformOrigin: 'top' }
-                )
-                .fromTo('.menu-link-inner', 
-                    { yPercent: 120, opacity: 0 },
-                    { yPercent: 0, opacity: 1, duration: 0.8, stagger: 0.1, ease: 'power3.out' },
-                    '-=0.4'
-                )
-                .fromTo('.secondary-title, .secondary-link',
-                    { opacity: 0, y: 30 },
-                    { opacity: 1, y: 0, duration: 0.5, stagger: 0.05, ease: 'power2.out' },
-                    '-=0.6'
-                );
-        }, containerRef);
-        
-        return () => ctx.revert();
-    }, []);
+
+    // POWERED BY GSAP-SKILLS: Scoped timeline and quickTo mouse tracking
+    const { contextSafe } = useGSAP(() => {
+        // 1. Setup the main toggle animation
+        tlRef.current = gsap.timeline({ paused: true })
+            .set('.staggered-menu-overlay', { pointerEvents: 'auto' })
+            .fromTo('.menu-blind', 
+                { scaleY: 0 },
+                { scaleY: 1, duration: 0.8, stagger: 0.05, ease: 'power4.inOut', transformOrigin: 'top' }
+            )
+            .fromTo('.menu-link-inner', 
+                { yPercent: 120, autoAlpha: 0 },
+                { yPercent: 0, autoAlpha: 1, duration: 0.8, stagger: 0.1, ease: 'power3.out' },
+                '-=0.4'
+            )
+            .fromTo('.secondary-title, .secondary-link',
+                { autoAlpha: 0, y: 30 },
+                { autoAlpha: 1, y: 0, duration: 0.5, stagger: 0.05, ease: 'power2.out' },
+                '-=0.6'
+            );
+
+        // 2. Setup the mouse follower if floatingImageRef is available
+        if (floatingImageRef.current) {
+            const xTo = gsap.quickTo(floatingImageRef.current, "x", { duration: 0.4, ease: "power3" });
+            const yTo = gsap.quickTo(floatingImageRef.current, "y", { duration: 0.4, ease: "power3" });
+
+            const handleMouseMove = (e: MouseEvent) => {
+                xTo(e.clientX - 150); 
+                yTo(e.clientY - 200); 
+            };
+
+            if (isOpen) {
+                window.addEventListener('mousemove', handleMouseMove);
+            }
+            return () => window.removeEventListener('mousemove', handleMouseMove);
+        }
+    }, { scope: containerRef, dependencies: [isOpen] });
 
     useEffect(() => {
         if (isOpen) {
@@ -55,7 +68,7 @@ export const StaggeredMenu: React.FC = () => {
         } else {
             document.body.style.overflow = '';
             document.documentElement.style.overflow = '';
-            setHoveredImg(null); // Reset floating image safely
+            setHoveredImg(null); 
         }
         return () => {
             document.body.style.overflow = '';
@@ -63,24 +76,7 @@ export const StaggeredMenu: React.FC = () => {
         };
     }, [isOpen]);
 
-    // Track mouse for the floating image using quickTo for buttery smooth performance
-    useEffect(() => {
-        if (!isOpen || !floatingImageRef.current) return;
-        
-        const xTo = gsap.quickTo(floatingImageRef.current, "x", { duration: 0.4, ease: "power3" });
-        const yTo = gsap.quickTo(floatingImageRef.current, "y", { duration: 0.4, ease: "power3" });
-
-        const handleMouseMove = (e: MouseEvent) => {
-            // Center the image heavily offset from the cursor so it floats nicely
-            xTo(e.clientX - 150); 
-            yTo(e.clientY - 200); 
-        };
-
-        window.addEventListener('mousemove', handleMouseMove);
-        return () => window.removeEventListener('mousemove', handleMouseMove);
-    }, [isOpen]);
-
-    const toggleMenu = () => {
+    const toggleMenu = contextSafe(() => {
         if (!isOpen) {
             setIsOpen(true);
             tlRef.current?.play();
@@ -88,7 +84,7 @@ export const StaggeredMenu: React.FC = () => {
             tlRef.current?.reverse().then(() => setIsOpen(false));
             setHoveredImg(null);
         }
-    };
+    });
 
     return (
         <div ref={containerRef} className="staggered-menu-wrapper">

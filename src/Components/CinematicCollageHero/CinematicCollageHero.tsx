@@ -1,5 +1,6 @@
 import React, { useRef, useState, useLayoutEffect } from 'react';
 import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 import './CinematicCollageHero.scss';
 
 // Import cinematic images
@@ -28,6 +29,8 @@ interface Fragment {
     rotation: number;
 }
 
+gsap.registerPlugin(useGSAP);
+
 export const CinematicCollageHero: React.FC = () => {
     const [isSequencePlaying, setIsSequencePlaying] = useState(false);
     const [isRevealed, setIsRevealed] = useState(false);
@@ -35,15 +38,15 @@ export const CinematicCollageHero: React.FC = () => {
 
     const containerRef = useRef<HTMLDivElement>(null);
 
-    // CRITICAL FIX: useLayoutEffect prevents the 'reload tremor' by locking the body 
-    // synchronously before the browser paints the first frame.
+    // POWERED BY GSAP-SKILLS: Using contextSafe for event-based timelines
+    const { contextSafe } = useGSAP({ scope: containerRef });
+
+    // CRITICAL FIX: useLayoutEffect for scroll locking
     useLayoutEffect(() => {
         const preventDefault = (e: Event) => e.preventDefault();
 
         if (!isRevealed) {
             document.body.style.overflow = 'hidden';
-
-            // Force zero-scroll and block events
             window.scrollTo(0, 0);
             window.addEventListener('wheel', preventDefault, { passive: false });
             window.addEventListener('touchmove', preventDefault, { passive: false });
@@ -60,7 +63,7 @@ export const CinematicCollageHero: React.FC = () => {
         };
     }, [isRevealed]);
 
-    const triggerCollageSequence = () => {
+    const triggerCollageSequence = contextSafe(() => {
         if (isSequencePlaying || isRevealed) return;
         setIsSequencePlaying(true);
         setFragments([]);
@@ -74,7 +77,7 @@ export const CinematicCollageHero: React.FC = () => {
         });
 
         // 1. Initial Gate Fade-out
-        tl.to('.collage-gate-ui', { opacity: 0, scale: 0.9, duration: 0.5, ease: 'power3.in' });
+        tl.to('.collage-gate-ui', { autoAlpha: 0, scale: 0.9, duration: 0.5, ease: 'power3.in' });
 
         // 2. THE PERSISTENT COLLAGE BURST (Stacking 3-4 images at a time)
         const burstCount = 20;
@@ -102,9 +105,9 @@ export const CinematicCollageHero: React.FC = () => {
         }
 
         // 3. The Final Impact Strike (HYPER FAST)
-        tl.to('.collage-flash-overlay', { opacity: 1, duration: 0.05, ease: 'none' })
+        tl.to('.collage-flash-overlay', { autoAlpha: 1, duration: 0.05, ease: 'none' })
         .to('.collage-flash-overlay', { 
-            opacity: 0, 
+            autoAlpha: 0, 
             duration: 0.3, 
             ease: 'power1.out',
             onStart: () => setFragments([]) // Clear stack exactly on the flash
@@ -112,11 +115,11 @@ export const CinematicCollageHero: React.FC = () => {
         
         // 4. Reveal Final content (INSTANT)
         .fromTo('.collage-reveal-inner *',
-            { y: 30, opacity: 0, filter: 'blur(10px)', scale: 0.98 },
-            { y: 0, opacity: 1, filter: 'blur(0px)', scale: 1, duration: 0.8, stagger: 0.07, ease: 'power4.out' },
+            { y: 30, autoAlpha: 0, filter: 'blur(10px)', scale: 0.98 },
+            { y: 0, autoAlpha: 1, filter: 'blur(0px)', scale: 1, duration: 0.8, stagger: 0.07, ease: 'power4.out' },
             '-=0.45'
         );
-    };
+    });
 
     return (
         <div ref={containerRef} className={`cinematic-collage-container ${isRevealed ? 'is-stable' : ''}`}>

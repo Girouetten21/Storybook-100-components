@@ -1,5 +1,6 @@
-import React, { useRef, useState, useLayoutEffect, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 import './MinimalistMenu.scss';
 
 import img1 from '../../assets/img/Space_1.webp';
@@ -14,48 +15,43 @@ const menuItems = [
     { title: 'Boutiques', subtitle: 'Global Flagships', image: img4 },
 ];
 
+gsap.registerPlugin(useGSAP);
+
 export const MinimalistMenu: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
     const tlRef = useRef<gsap.core.Timeline | null>(null);
-    
-    // State for the editorial image reveal
     const [activeImage, setActiveImage] = useState(menuItems[0].image);
 
-    useLayoutEffect(() => {
-        if (!containerRef.current) return;
-        
-        const ctx = gsap.context(() => {
-            tlRef.current = gsap.timeline({ paused: true })
-                .set('.minimalist-menu-overlay', { pointerEvents: 'auto' })
-                .fromTo('.minimalist-menu-bg',
-                    { clipPath: 'inset(100% 0% 0% 0%)' },
-                    { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.2, ease: 'power4.inOut' }
-                )
-                .fromTo('.editorial-image-wrapper',
-                    { opacity: 0, scale: 0.95, filter: 'blur(10px)' },
-                    { opacity: 1, scale: 1, filter: 'blur(0px)', duration: 1.5, ease: 'power2.out' },
-                    '-=0.6'
-                )
-                .fromTo('.menu-line-item',
-                    { y: 50, opacity: 0 },
-                    { y: 0, opacity: 1, duration: 0.8, stagger: 0.1, ease: 'power3.out' },
-                    '-=1'
-                )
-                .fromTo('.menu-footer-item',
-                    { opacity: 0 },
-                    { opacity: 1, duration: 1, stagger: 0.2, ease: 'power2.out' },
-                    '-=0.5'
-                )
-                .fromTo('.rotating-badge, .editorial-meta, .frame-corner',
-                    { opacity: 0, scale: 0.9 },
-                    { opacity: 1, scale: 1, duration: 1.2, stagger: 0.1, ease: 'power2.out' },
-                    '-=0.2'
-                );
-        }, containerRef);
-        
-        return () => ctx.revert();
-    }, []);
+    // POWERED BY GSAP-SKILLS: Scoped minimalist opening and editorial crossfade
+    useGSAP(() => {
+        tlRef.current = gsap.timeline({ paused: true })
+            .set('.minimalist-menu-overlay', { pointerEvents: 'auto' })
+            .fromTo('.minimalist-menu-bg',
+                { clipPath: 'inset(100% 0% 0% 0%)' },
+                { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.2, ease: 'power4.inOut' }
+            )
+            .fromTo('.editorial-image-wrapper',
+                { autoAlpha: 0, scale: 0.95, filter: 'blur(10px)' },
+                { autoAlpha: 1, scale: 1, filter: 'blur(0px)', duration: 1.5, ease: 'power2.out' },
+                '-=0.6'
+            )
+            .fromTo('.menu-line-item',
+                { y: 50, autoAlpha: 0 },
+                { y: 0, autoAlpha: 1, duration: 0.8, stagger: 0.1, ease: 'power3.out' },
+                '-=1'
+            )
+            .fromTo('.menu-footer-item',
+                { autoAlpha: 0 },
+                { autoAlpha: 1, duration: 1, stagger: 0.2, ease: 'power2.out' },
+                '-=0.5'
+            )
+            .fromTo('.rotating-badge, .editorial-meta, .frame-corner',
+                { autoAlpha: 0, scale: 0.9 },
+                { autoAlpha: 1, scale: 1, duration: 1.2, stagger: 0.1, ease: 'power2.out' },
+                '-=0.2'
+            );
+    }, { scope: containerRef });
 
     useEffect(() => {
         if (isOpen) {
@@ -71,37 +67,37 @@ export const MinimalistMenu: React.FC = () => {
         };
     }, [isOpen]);
 
-    const toggleMenu = () => {
+    const { contextSafe } = useGSAP({ scope: containerRef });
+
+    const toggleMenu = contextSafe(() => {
         if (!isOpen) {
             setIsOpen(true);
             tlRef.current?.timeScale(1).play();
         } else {
             tlRef.current?.timeScale(1.7).reverse().then(() => setIsOpen(false));
-            // Reset image cautiously after closing
             setTimeout(() => setActiveImage(menuItems[0].image), 1000); 
         }
-    };
+    });
 
-    const handleHover = (image: string) => {
+    const handleHover = contextSafe((image: string) => {
         if (activeImage === image) return;
         
-        // Gentle editorial image crossfade
         gsap.to('.editorial-image', {
-            opacity: 0,
+            autoAlpha: 0,
             scale: 0.98,
             duration: 0.4,
             ease: "power2.inOut",
             onComplete: () => {
                 setActiveImage(image);
                 gsap.to('.editorial-image', {
-                    opacity: 1,
+                    autoAlpha: 1,
                     scale: 1,
                     duration: 0.6,
                     ease: "power2.out"
                 });
             }
         });
-    };
+    });
 
     return (
         <div ref={containerRef} className="minimalist-menu-wrapper">

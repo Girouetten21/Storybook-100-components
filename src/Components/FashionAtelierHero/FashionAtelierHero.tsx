@@ -1,22 +1,26 @@
 import React, { useRef, useState, useLayoutEffect } from 'react';
 import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 import './FashionAtelierHero.scss';
 
 // Import high-end editorial image
 import bgFashion from '../../assets/img/Background_1.webp';
+
+gsap.registerPlugin(useGSAP);
 
 export const FashionAtelierHero: React.FC = () => {
     const [isRevealed, setIsRevealed] = useState(false);
     const isAnimating = useRef(false);
     const containerRef = useRef<HTMLDivElement>(null);
 
+    // POWERED BY GSAP-SKILLS: Safe interaction logic and scoped selectors
+    const { contextSafe } = useGSAP({ scope: containerRef });
+
     useLayoutEffect(() => {
         const preventDefault = (e: Event) => e.preventDefault();
 
         if (!isRevealed) {
             document.body.style.overflow = 'hidden';
-            
-            // Force zero-scroll and block events
             window.scrollTo(0, 0);
             window.addEventListener('wheel', preventDefault, { passive: false });
             window.addEventListener('touchmove', preventDefault, { passive: false });
@@ -33,7 +37,7 @@ export const FashionAtelierHero: React.FC = () => {
         };
     }, [isRevealed]);
 
-    const runFashionTransition = () => {
+    const runFashionTransition = contextSafe(() => {
         if (isAnimating.current || isRevealed) return;
         isAnimating.current = true;
 
@@ -47,9 +51,9 @@ export const FashionAtelierHero: React.FC = () => {
         tl.set('.atelier-reveal-content', { autoAlpha: 1 });
 
         // 1. Initial UI Departure & Silk Flash
-        tl.to('.atelier-gate-ui', { opacity: 0, scale: 0.95, duration: 0.5, ease: 'power2.in' })
-          .to('.atelier-silk-flash', { opacity: 0.8, duration: 0.3, ease: 'power2.out' }, '-=0.2')
-          .to('.atelier-silk-flash', { opacity: 0, duration: 0.6, ease: 'sine.in' });
+        tl.to('.atelier-gate-ui', { autoAlpha: 0, scale: 0.95, duration: 0.5, ease: 'power2.in' })
+          .to('.atelier-silk-flash', { autoAlpha: 0.8, duration: 0.3, ease: 'power2.out' }, '-=0.2')
+          .to('.atelier-silk-flash', { autoAlpha: 0, duration: 0.6, ease: 'sine.in' });
 
         // 2. THE GEOMETRIC SHUTTER (Locked until completion)
         tl.to('.atelier-panel.tl', { x: '-100%', y: '-100%', duration: 1.6, ease: 'expo.inOut' }, '-=0.4');
@@ -66,11 +70,11 @@ export const FashionAtelierHero: React.FC = () => {
 
         // 4. Hero Content Reveal
         tl.fromTo('.atelier-reveal-text *',
-            { opacity: 0, y: 50, rotateX: -20, filter: 'blur(20px)' },
-            { opacity: 1, y: 0, rotateX: 0, filter: 'blur(0px)', duration: 1.4, stagger: 0.1, ease: 'power4.out' },
+            { autoAlpha: 0, y: 50, rotateX: -20, filter: 'blur(20px)' },
+            { autoAlpha: 1, y: 0, rotateX: 0, filter: 'blur(0px)', duration: 1.4, stagger: 0.1, ease: 'power4.out' },
             '-=1.2'
         );
-    };
+    });
 
     return (
         <div ref={containerRef} className={`atelier-gate-container ${isRevealed ? 'is-stable' : ''}`}>

@@ -1,11 +1,14 @@
-import React, { useRef, useState, useLayoutEffect, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 import './CascadeMenu.scss';
 
 import img1 from '../../assets/img/Background_1.webp';
 import img2 from '../../assets/img/Character_2.webp';
 import img3 from '../../assets/img/Background_3.webp';
 import img4 from '../../assets/img/Character_1.webp';
+
+gsap.registerPlugin(useGSAP);
 
 const menuItems = [
     { title: 'Essence', image: img1 },
@@ -20,36 +23,30 @@ export const CascadeMenu: React.FC = () => {
     const containerRef = useRef<HTMLDivElement>(null);
     const tlRef = useRef<gsap.core.Timeline | null>(null);
 
-    useLayoutEffect(() => {
-        if (!containerRef.current) return;
-        
-        const ctx = gsap.context(() => {
-            tlRef.current = gsap.timeline({ paused: true })
-                .set('.cascade-overlay', { visibility: 'visible', pointerEvents: 'auto' })
-                .fromTo('.cascade-bar',
-                    { yPercent: -100 },
-                    // Staggering creates the "falling at different rhythms" effect
-                    { yPercent: 0, duration: 0.75, stagger: 0.05, ease: 'power4.inOut' }
-                )
-                .fromTo('.cascade-solid-base',
-                    { opacity: 0 },
-                    { opacity: 1, duration: 0.2 },
-                    '-=0.2'
-                )
-                .fromTo('.cascade-nav li',
-                    { y: 40, opacity: 0 },
-                    { y: 0, opacity: 1, duration: 0.6, stagger: 0.1, ease: 'power2.out' },
-                    '-=0.3'
-                )
-                .fromTo('.cascade-meta, .cascade-socials',
-                    { opacity: 0, y: 20 },
-                    { opacity: 1, y: 0, duration: 0.6, stagger: 0.1, ease: 'power2.out' },
-                    '-=0.4'
-                );
-        }, containerRef);
-        
-        return () => ctx.revert();
-    }, []);
+    // POWERED BY GSAP-SKILLS: Scoped timeline and safe interaction logic
+    useGSAP(() => {
+        tlRef.current = gsap.timeline({ paused: true })
+            .set('.cascade-overlay', { visibility: 'visible', pointerEvents: 'auto' })
+            .fromTo('.cascade-bar',
+                { yPercent: -100 },
+                { yPercent: 0, duration: 0.75, stagger: 0.05, ease: 'power4.inOut' }
+            )
+            .fromTo('.cascade-solid-base',
+                { autoAlpha: 0 },
+                { autoAlpha: 1, duration: 0.2 },
+                '-=0.2'
+            )
+            .fromTo('.cascade-nav li',
+                { y: 40, autoAlpha: 0 },
+                { y: 0, autoAlpha: 1, duration: 0.6, stagger: 0.1, ease: 'power2.out' },
+                '-=0.3'
+            )
+            .fromTo('.cascade-meta, .cascade-socials',
+                { autoAlpha: 0, y: 20 },
+                { autoAlpha: 1, y: 0, duration: 0.6, stagger: 0.1, ease: 'power2.out' },
+                '-=0.4'
+            );
+    }, { scope: containerRef });
 
     useEffect(() => {
         if (isOpen) {
@@ -65,7 +62,9 @@ export const CascadeMenu: React.FC = () => {
         };
     }, [isOpen]);
 
-    const toggleMenu = () => {
+    const { contextSafe } = useGSAP({ scope: containerRef });
+
+    const toggleMenu = contextSafe(() => {
         if (!isOpen) {
             setIsOpen(true);
             tlRef.current?.timeScale(1).play();
@@ -76,7 +75,7 @@ export const CascadeMenu: React.FC = () => {
                 setHoveredIndex(null);
             });
         }
-    };
+    });
 
     return (
         <div ref={containerRef} className="cascade-menu-wrapper">

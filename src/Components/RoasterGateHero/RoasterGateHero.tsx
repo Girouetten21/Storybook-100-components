@@ -1,22 +1,26 @@
 import React, { useRef, useState, useLayoutEffect } from 'react';
 import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 import './RoasterGateHero.scss';
 
 // Cinematic backgrounds
 import bgCoffee from '../../assets/img/Background_3.webp';
+
+gsap.registerPlugin(useGSAP);
 
 export const RoasterGateHero: React.FC = () => {
     const [isRevealed, setIsRevealed] = useState(false);
     const isAnimating = useRef(false);
     const containerRef = useRef<HTMLDivElement>(null);
 
+    // POWERED BY GSAP-SKILLS: Scoped animations and safe event triggers
+    const { contextSafe } = useGSAP({ scope: containerRef });
+
     useLayoutEffect(() => {
         const preventDefault = (e: Event) => e.preventDefault();
 
         if (!isRevealed) {
             document.body.style.overflow = 'hidden';
-
-            // Force zero-scroll and block events
             window.scrollTo(0, 0);
             window.addEventListener('wheel', preventDefault, { passive: false });
             window.addEventListener('touchmove', preventDefault, { passive: false });
@@ -33,7 +37,7 @@ export const RoasterGateHero: React.FC = () => {
         };
     }, [isRevealed]);
 
-    const runRoasterTransition = () => {
+    const runRoasterTransition = contextSafe(() => {
         if (isAnimating.current || isRevealed) return;
         isAnimating.current = true;
 
@@ -49,12 +53,12 @@ export const RoasterGateHero: React.FC = () => {
         // 1. Initial UI ejection
         tl.to('.roaster-gate-content', { 
             y: -50, 
-            opacity: 0, 
+            autoAlpha: 0, 
             duration: 0.7, 
             ease: 'power3.in' 
         });
 
-        // 2. The GRINDER EFFECT (Pillars fall + Texture rises)
+        // 2. THE GRINDER EFFECT (Pillars fall + Texture rises)
         tl.to('.roaster-pillar', {
             yPercent: 100,
             duration: 2,
@@ -75,18 +79,18 @@ export const RoasterGateHero: React.FC = () => {
 
         // 3. Reveal Content with Amber Strike
         .fromTo('.roaster-hero-bg', 
-            { scale: 1.2, filter: 'sepia(0.8) brightness(2) contrast(1.5)' },
-            { scale: 1, filter: 'sepia(0) brightness(1) contrast(1)', duration: 2.5, ease: 'power3.out' },
+            { scale: 1.2, filter: 'sepia(0.8) brightness(2) contrast(1.5)', autoAlpha: 0 },
+            { scale: 1, filter: 'sepia(0) brightness(1) contrast(1)', autoAlpha: 1, duration: 2.5, ease: 'power3.out' },
             '-=1.5'
         )
 
         // 4. Robust Text Reveal
         .fromTo('.roaster-reveal-inner *', 
-            { y: 50, opacity: 0, filter: 'blur(10px)' },
-            { y: 0, opacity: 1, filter: 'blur(0px)', duration: 1.6, stagger: 0.15, ease: 'power4.out' },
+            { y: 50, autoAlpha: 0, filter: 'blur(10px)' },
+            { y: 0, autoAlpha: 1, filter: 'blur(0px)', duration: 1.6, stagger: 0.15, ease: 'power4.out' },
             '-=1.8'
         );
-    };
+    });
 
     return (
         <div ref={containerRef} className={`roaster-gate-container ${isRevealed ? 'is-stable' : ''}`}>

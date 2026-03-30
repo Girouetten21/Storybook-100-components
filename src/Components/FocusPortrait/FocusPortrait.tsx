@@ -1,5 +1,6 @@
-import { useRef, useLayoutEffect, useState, useCallback } from 'react';
+import { useRef, useState } from 'react';
 import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 import photo1 from './Photos/1.webp';
 import './FocusPortrait.scss';
 
@@ -12,6 +13,8 @@ export interface FocusPortraitProps {
   zoomedWidth?: number;
   zoomedHeight?: number;
 }
+
+gsap.registerPlugin(useGSAP);
 
 export const FocusPortrait = ({
   title,
@@ -27,22 +30,22 @@ export const FocusPortrait = ({
   const frameRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
   const closeHintRef = useRef<HTMLDivElement>(null);
+  const isAnimating = useRef(false);
 
-  useLayoutEffect(() => {
+  // POWERED BY GSAP-SKILLS: Scoped layout and secure interactions
+  const { contextSafe } = useGSAP(() => {
     // Initial state for desktop placement
-    gsap.set(textRef.current, { opacity: 0, x: 40 });
+    gsap.set(textRef.current, { autoAlpha: 0, x: 40 });
     gsap.set(closeHintRef.current, {
-      opacity: 0,
+      autoAlpha: 0,
       y: 20,
       left: "calc(50% - 250px)",
       xPercent: -50,
       bottom: "48px"
     });
-  }, []);
+  }, { scope: comp });
 
-  const isAnimating = useRef(false);
-
-  const handleFrameClick = useCallback(() => {
+  const handleFrameClick = contextSafe(() => {
     if (isAnimating.current) return;
 
     const nextZoomedState = !isZoomed;
@@ -63,21 +66,21 @@ export const FocusPortrait = ({
         ease: "power3.inOut"
       })
         .to(textRef.current, {
-          opacity: 1,
+          autoAlpha: 1,
           x: 0,
           duration: animationDuration * 0.66,
           ease: "power2.out"
         }, "-=0.2")
         .to(closeHintRef.current, {
-          opacity: 1,
+          autoAlpha: 1,
           y: 0,
           duration: 0.6,
           ease: "power2.out"
         }, "-=0.3");
     } else {
-      tl.to(closeHintRef.current, { opacity: 0, y: 20, duration: 0.3 })
+      tl.to(closeHintRef.current, { autoAlpha: 0, y: 20, duration: 0.3 })
         .to(textRef.current, {
-          opacity: 0,
+          autoAlpha: 0,
           x: 40,
           duration: animationDuration * 0.4
         }, "-=0.2")
@@ -90,7 +93,7 @@ export const FocusPortrait = ({
           ease: "power3.inOut"
         }, "-=0.4");
     }
-  }, [isZoomed, animationDuration, initialWidth, initialHeight, zoomedWidth, zoomedHeight]);
+  });
 
   return (
     <div ref={comp} className="focus-portrait-single">

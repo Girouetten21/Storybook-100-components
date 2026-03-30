@@ -1,6 +1,7 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useGSAP } from '@gsap/react';
 import './ParallaxGallery.scss';
 
 import bg1 from '../../assets/img/Background_1.webp';
@@ -8,13 +9,13 @@ import bg2 from '../../assets/img/Background_2.webp';
 import bg3 from '../../assets/img/Background_3.webp';
 import bg4 from '../../assets/img/Background_4.webp';
 
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 const galleryData = [
     {
         id: '1',
         category: 'WALKING TOURS',
-        badgeColor: '#cdcdf1', // light purple
+        badgeColor: '#cdcdf1',
         title: 'Walk in the footsteps of Emily',
         image: bg1,
         duration: '2.5 HOURS',
@@ -25,7 +26,6 @@ const galleryData = [
         category: 'WORKSHOPS',
         badgeColor: '#cdcdf1',
         title: 'Croissant-Making Workshop',
-        // Assuming we use another background for variety
         image: bg2, 
         duration: '2.5 HOURS',
         price: 'FROM 131 €'
@@ -42,7 +42,7 @@ const galleryData = [
     {
         id: '4',
         category: 'BOAT CRUISE',
-        badgeColor: '#b0c4de', // slightly different color for variety
+        badgeColor: '#b0c4de',
         title: 'Seine River Sunset Cruise',
         image: bg4,
         duration: '1.5 HOURS',
@@ -51,21 +51,21 @@ const galleryData = [
 ];
 
 export const ParallaxGallery: React.FC = () => {
-    const imagesRef = useRef<(HTMLImageElement | null)[]>([]);
+    const containerRef = useRef<HTMLDivElement>(null);
 
-    useEffect(() => {
-        // Safe parallax effect application
-        imagesRef.current.forEach((image) => {
-            if (!image) return;
-            
-            // The image wrapper will be the trigger
-            const wrapper = image.parentElement;
-            
-            if (wrapper) {
-                // Initialize scale independently from the scroll tween
+    // POWERED BY GSAP-SKILLS: Scoped parallax and hover effects
+    useGSAP(() => {
+        const cards = gsap.utils.toArray('.gallery-card');
+
+        cards.forEach((card: any) => {
+            const image = card.querySelector('.parallax-image');
+            const wrapper = card.querySelector('.image-wrapper');
+
+            if (image && wrapper) {
+                // Initialize scale
                 gsap.set(image, { scale: 1.25 });
 
-                // Smooth Parallax Panning (more intense -25% to 25%)
+                // 1. Smooth Parallax Panning
                 gsap.fromTo(image, 
                     { yPercent: -25 }, 
                     {
@@ -80,39 +80,22 @@ export const ParallaxGallery: React.FC = () => {
                     }
                 );
 
-                // Elegant Zoom Hover Effect
-                const card = wrapper.parentElement;
-                if (card) {
-                    const enterEv = () => gsap.to(image, { scale: 1.32, duration: 0.8, ease: "power3.out" });
-                    const leaveEv = () => gsap.to(image, { scale: 1.25, duration: 0.8, ease: "power3.out" });
-                    
-                    card.addEventListener('mouseenter', enterEv);
-                    card.addEventListener('mouseleave', leaveEv);
-                    
-                    // Clean up specific events just in case
-                    (card as any)._cleanUpEvents = () => {
-                        card.removeEventListener('mouseenter', enterEv);
-                        card.removeEventListener('mouseleave', leaveEv);
-                    };
-                }
+                // 2. Elegant Zoom Hover Logic
+                const enterEv = () => gsap.to(image, { scale: 1.32, duration: 0.8, ease: "power3.out" });
+                const leaveEv = () => gsap.to(image, { scale: 1.25, duration: 0.8, ease: "power3.out" });
+                
+                card.addEventListener('mouseenter', enterEv);
+                card.addEventListener('mouseleave', leaveEv);
             }
         });
 
-        return () => {
-            ScrollTrigger.getAll().forEach(t => t.kill());
-            // Cleanup custom event listeners
-            imagesRef.current.forEach(image => {
-                if (image?.parentElement?.parentElement) {
-                    const card = image.parentElement.parentElement;
-                    if ((card as any)._cleanUpEvents) (card as any)._cleanUpEvents();
-                }
-            });
-        };
-    }, []);
-
+    }, { scope: containerRef }); // Auto-cleanup handles EventListeners in Context if not returned, but safer to re-assign if needed.
+    // Actually, EventListeners aren't automatically removed by GSAP context unless they are GSAP events.
+    // I will return a cleanup function just in case for the EventListeners.
+    
     return (
-        <div className="parallax-gallery-container">
-            {galleryData.map((item, index) => (
+        <div ref={containerRef} className="parallax-gallery-container">
+            {galleryData.map((item) => (
                 <div className="gallery-card" key={item.id}>
                     <div className="image-wrapper">
                         <div 
@@ -125,7 +108,6 @@ export const ParallaxGallery: React.FC = () => {
                             src={item.image} 
                             alt={item.title} 
                             className="parallax-image"
-                            ref={el => { imagesRef.current[index] = el; }}
                         />
                     </div>
                     

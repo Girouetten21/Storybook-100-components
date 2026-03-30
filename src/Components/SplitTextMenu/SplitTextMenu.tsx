@@ -1,5 +1,6 @@
-import React, { useRef, useState, useLayoutEffect, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 import './SplitTextMenu.scss';
 
 import img1 from '../../assets/img/Character_1.webp';
@@ -14,35 +15,31 @@ const menuItems = [
     { title: 'Boutiques', category: 'Global Presence', image: img4 },
 ];
 
+gsap.registerPlugin(useGSAP);
+
 export const SplitTextMenu: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
     const tlRef = useRef<gsap.core.Timeline | null>(null);
 
-    useLayoutEffect(() => {
-        if (!containerRef.current) return;
-
-        const ctx = gsap.context(() => {
-            tlRef.current = gsap.timeline({ paused: true })
-                .fromTo('.split-menu-overlay',
-                    // Dramatic spotlight reveal from the very center of the page expanding into a circle
-                    { clipPath: 'circle(0% at 50% 50%)', backgroundColor: '#000' },
-                    { clipPath: 'circle(150% at 50% 50%)', backgroundColor: '#0a0a0c', duration: 1.2, ease: 'power4.inOut' }
-                )
-                .fromTo('.split-menu-item',
-                    { y: 50, opacity: 0, rotateX: -15 },
-                    { y: 0, opacity: 1, rotateX: 0, duration: 1, stagger: 0.1, ease: 'power3.out' },
-                    '-=0.7'
-                )
-                .fromTo('.split-footer',
-                    { opacity: 0, y: 20 },
-                    { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' },
-                    '-=0.5'
-                );
-        }, containerRef);
-
-        return () => ctx.revert();
-    }, []);
+    // POWERED BY GSAP-SKILLS: Scoped spotlight reveal and split-item entrance
+    useGSAP(() => {
+        tlRef.current = gsap.timeline({ paused: true })
+            .fromTo('.split-menu-overlay',
+                { clipPath: 'circle(0% at 50% 50%)', backgroundColor: '#000' },
+                { clipPath: 'circle(150% at 50% 50%)', backgroundColor: '#0a0a0c', duration: 1.2, ease: 'power4.inOut' }
+            )
+            .fromTo('.split-menu-item',
+                { y: 50, autoAlpha: 0, rotateX: -15 },
+                { y: 0, autoAlpha: 1, rotateX: 0, duration: 1, stagger: 0.1, ease: 'power3.out' },
+                '-=0.7'
+            )
+            .fromTo('.split-footer',
+                { autoAlpha: 0, y: 20 },
+                { autoAlpha: 1, y: 0, duration: 0.8, ease: 'power2.out' },
+                '-=0.5'
+            );
+    }, { scope: containerRef });
 
     useEffect(() => {
         if (isOpen) {
@@ -58,14 +55,16 @@ export const SplitTextMenu: React.FC = () => {
         };
     }, [isOpen]);
 
-    const toggleMenu = () => {
+    const { contextSafe } = useGSAP({ scope: containerRef });
+
+    const toggleMenu = contextSafe(() => {
         if (!isOpen) {
             setIsOpen(true);
             tlRef.current?.timeScale(1).play();
         } else {
             tlRef.current?.timeScale(1.8).reverse().then(() => setIsOpen(false));
         }
-    };
+    });
 
     return (
         <div ref={containerRef} className="split-menu-wrapper">

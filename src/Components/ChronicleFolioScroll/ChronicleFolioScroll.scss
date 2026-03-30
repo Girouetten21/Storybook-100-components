@@ -1,0 +1,149 @@
+.chronicle-wrapper {
+  position: relative;
+  width: 100%;
+  // Warm, organic parchment color simulating aged paper
+  background-color: #F8F5EF; 
+  color: #2F2D2A; // Rich dark ink color, softer than pure black
+  font-family: 'Playfair Display', Times, serif; // Elegant literary serif
+  overflow: hidden;
+
+  .chronicle-pin {
+    height: 100vh;
+    width: 100%;
+    position: relative;
+    display: flex;
+    overflow: hidden;
+  }
+
+  // == THE SPINE ==
+  // Simulating the folding valley in the center of an open book
+  .book-spine {
+    position: absolute;
+    top: 0;
+    left: 55vw; // Dividing line
+    bottom: 0;
+    width: 40px;
+    transform: translateX(-50%);
+    background: linear-gradient(
+      to right,
+      rgba(0,0,0,0) 0%,
+      rgba(0,0,0,0.08) 40%,
+      rgba(0,0,0,0.15) 50%,
+      rgba(0,0,0,0.08) 60%,
+      rgba(0,0,0,0) 100%
+    );
+    z-index: 50; // Sits above pages
+    pointer-events: none;
+  }
+
+  // == LEFT FOLIO (Text) ==
+  .left-folio {
+    width: 55vw;
+    height: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 6vw 8vw;
+    background: #F8F5EF; // Matches paper
+
+    .folio-header, .folio-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: 'Inter', sans-serif; // Subtle modern contrast
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(47, 45, 42, 0.4); // Faded ink
+    }
+
+    .folio-footer {
+      margin-top: auto;
+      justify-content: center;
+    }
+
+    .text-stack {
+      position: relative;
+      flex-grow: 1;
+      display: flex;
+      align-items: center; // Center the typography block vertically
+      margin-top: 4rem;
+
+      .text-slide {
+        position: absolute;
+        width: 100%;
+        will-change: transform, opacity;
+
+        .chapter-marker {
+          font-family: 'Inter', sans-serif;
+          font-size: 0.75rem;
+          font-weight: 600;
+          letter-spacing: 0.25em;
+          color: #B54E3A; // A regal, academic brick red ink
+          margin-bottom: 1rem;
+        }
+
+        .chapter-title {
+          font-size: 3.5rem;
+          font-weight: 400;
+          letter-spacing: -0.02em;
+          line-height: 1.1;
+          margin-bottom: 3rem;
+        }
+
+        .manuscript-text {
+          font-size: 1.1rem;
+          line-height: 1.9;
+          position: relative;
+          color: rgba(47, 45, 42, 0.85);
+          padding-left: 0.5rem;
+
+          // The Classic Drop Cap
+          .drop-cap {
+            float: left;
+            font-size: 5rem;
+            line-height: 0.8;
+            padding-right: 0.8rem;
+            padding-top: 0.4rem;
+            color: #2F2D2A;
+            font-weight: 500;
+          }
+        }
+      }
+    }
+  }
+
+  // == RIGHT FOLIO (Illustrations) ==
+  .right-folio {
+    width: 45vw;
+    height: 100%;
+    position: relative;
+    background: #EBE7DE; // Slightly darker tone for graphic side
+    overflow: hidden; // Critical to hide the sliding pages on the right
+
+    .img-stack {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      
+      .img-slide {
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        overflow: hidden; // Prevents the image scale(1.05) from bleeding out
+        box-shadow: -20px 0 50px rgba(0,0,0,0.25); // Gives the sweeping paper thickness and shadow
+        will-change: transform;
+
+        // An inner beige border mimicking photo mounts inside old books
+        border-left: 1px solid rgba(255,255,255,0.4);
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          opacity: 0.95; // Emulates slight ink fading into the paper without hardware-broken multiply logic
+          transform: scale(1.05);
+        }
+      }
+    }
+  }
+}

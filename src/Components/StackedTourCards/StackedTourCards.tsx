@@ -1,14 +1,13 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useGSAP } from '@gsap/react';
 import './StackedTourCards.scss';
 
 import bg1 from '../../assets/img/Background_1.webp';
 import bg2 from '../../assets/img/Background_2.webp';
 import bg3 from '../../assets/img/Background_3.webp';
 import bg4 from '../../assets/img/Background_4.webp';
-
-gsap.registerPlugin(ScrollTrigger);
 
 const toursData = [
     {
@@ -45,24 +44,24 @@ const toursData = [
     }
 ];
 
+gsap.registerPlugin(ScrollTrigger, useGSAP);
+
 export const StackedTourCards: React.FC = () => {
+    const wrapperRef = useRef<HTMLDivElement>(null);
     const containersRef = useRef<(HTMLDivElement | null)[]>([]);
     const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
 
-    useEffect(() => {
-        // Kill previous triggers to prevent duplication on HMR
-        ScrollTrigger.getAll().forEach(t => t.kill());
-
+    // POWERED BY GSAP-SKILLS: Scoped stacking and optical blur orchestration
+    useGSAP(() => {
         containersRef.current.forEach((container, i) => {
             if (!container) return;
             const card = cardsRef.current[i];
             
-            // 1. Zoom Out and True Optical Blur Effect when being covered
+            // 1. Zoom Out and True Optical Blur Effect
             if (card) {
-                // Scrub animation: tied directly to scroll progress
                 gsap.to(card, {
                     scale: 0.88,
-                    filter: "blur(8px)", // Reduced blur intensity, removed brightness drop
+                    filter: "blur(8px)",
                     ease: "none",
                     scrollTrigger: {
                         trigger: container,
@@ -73,32 +72,28 @@ export const StackedTourCards: React.FC = () => {
                 });
             }
 
-            // 2. Entrance Animation for Texts when scrolling into view
+            // 2. Entrance Animation for Texts
             const elementsToAnimate = container.querySelectorAll(
                 '.category-tag, .title, .details-pills .pill, .actions button'
             );
             
             gsap.fromTo(elementsToAnimate, 
-                { y: 60, opacity: 0 },
+                { y: 60, autoAlpha: 0 },
                 {
                     y: 0,
-                    opacity: 1,
+                    autoAlpha: 1,
                     duration: 0.8,
                     stagger: 0.05,
                     ease: "power3.out",
                     scrollTrigger: {
                         trigger: container,
-                        start: "top 80%", // Animates slightly before reaching the center
+                        start: "top 80%", 
                         toggleActions: "play none none reverse"
                     }
                 }
             );
         });
-
-        return () => {
-            ScrollTrigger.getAll().forEach(t => t.kill());
-        };
-    }, []);
+    }, { scope: wrapperRef });
 
     return (
         <div className="stacked-tours-wrapper">

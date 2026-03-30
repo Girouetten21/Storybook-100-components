@@ -1,9 +1,12 @@
 import React, { useRef, useState, useLayoutEffect } from 'react';
 import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 import './ShatterVaultHero.scss';
 
 // Import cinematic background
 import bgHero from '../../assets/img/Background_1.webp';
+
+gsap.registerPlugin(useGSAP);
 
 export const ShatterVaultHero: React.FC = () => {
     const [isOpened, setIsOpened] = useState(false);
@@ -12,14 +15,15 @@ export const ShatterVaultHero: React.FC = () => {
     const contentRef = useRef<HTMLDivElement>(null);
     const quadrantsRef = useRef<HTMLDivElement>(null);
 
+    // POWERED BY GSAP-SKILLS: Safe interaction logic and scoped selectors
+    const { contextSafe } = useGSAP({ scope: containerRef });
+
     // CRITICAL: Scroll Lock Logic
     useLayoutEffect(() => {
         const preventDefault = (e: Event) => e.preventDefault();
 
         if (!isOpened) {
             document.body.style.overflow = 'hidden';
-
-            // Force zero-scroll and block events
             window.scrollTo(0, 0);
             window.addEventListener('wheel', preventDefault, { passive: false });
             window.addEventListener('touchmove', preventDefault, { passive: false });
@@ -36,7 +40,7 @@ export const ShatterVaultHero: React.FC = () => {
         };
     }, [isOpened]);
 
-    const handleShatterReveal = () => {
+    const handleShatterReveal = contextSafe(() => {
         if (isAnimating.current || isOpened) return;
         isAnimating.current = true;
 
@@ -48,32 +52,32 @@ export const ShatterVaultHero: React.FC = () => {
 
         // 1. Hide the triggering UI layer aggressively
         tl.to('.shatter-ui-layer', { 
-            opacity: 0, 
+            autoAlpha: 0, 
             scale: 0.85, 
             duration: 0.6, 
             ease: 'expo.inOut' 
         })
 
         // 2. THE MECHANICAL SHATTER: 4 quadrants fly towards the viewer and outwards
-        .to('.quad-tl', { rotationY: -110, rotationX: 45, xPercent: -60, yPercent: -60, opacity: 0, duration: 2, ease: 'power4.inOut' }, '-=0.3')
-        .to('.quad-tr', { rotationY: 110, rotationX: 45, xPercent: 60, yPercent: -60, opacity: 0, duration: 2, ease: 'power4.inOut' }, '<')
-        .to('.quad-bl', { rotationY: -110, rotationX: -45, xPercent: -60, yPercent: 60, opacity: 0, duration: 2, ease: 'power4.inOut' }, '<')
-        .to('.quad-br', { rotationY: 110, rotationX: -45, xPercent: 60, yPercent: 60, opacity: 0, duration: 2, ease: 'power4.inOut' }, '<')
+        .to('.quad-tl', { rotationY: -110, rotationX: 45, xPercent: -60, yPercent: -60, autoAlpha: 0, duration: 2, ease: 'power4.inOut' }, '-=0.3')
+        .to('.quad-tr', { rotationY: 110, rotationX: 45, xPercent: 60, yPercent: -60, autoAlpha: 0, duration: 2, ease: 'power4.inOut' }, '<')
+        .to('.quad-bl', { rotationY: -110, rotationX: -45, xPercent: -60, yPercent: 60, autoAlpha: 0, duration: 2, ease: 'power4.inOut' }, '<')
+        .to('.quad-br', { rotationY: 110, rotationX: -45, xPercent: 60, yPercent: 60, autoAlpha: 0, duration: 2, ease: 'power4.inOut' }, '<')
 
         // 3. Reveal the world behind with a counter-surge
         .fromTo(contentRef.current, 
-            { opacity: 0, scale: 0.8, filter: 'brightness(0) blur(20px)' },
-            { opacity: 1, scale: 1, filter: 'brightness(1) blur(0px)', duration: 2.5, ease: 'expo.out' },
+            { autoAlpha: 0, scale: 0.8, filter: 'brightness(0) blur(20px)' },
+            { autoAlpha: 1, scale: 1, filter: 'brightness(1) blur(0px)', duration: 2.5, ease: 'expo.out' },
             '-=1.6'
         )
         
         // 4. Staggered reveal of internal typography
         .fromTo('.shatter-reveal-inner *',
-            { y: 100, opacity: 0, skewY: 5 },
-            { y: 0, opacity: 1, skewY: 0, duration: 1.4, stagger: 0.15, ease: 'power4.out' },
+            { y: 100, autoAlpha: 0, skewY: 5 },
+            { y: 0, autoAlpha: 1, skewY: 0, duration: 1.4, stagger: 0.15, ease: 'power4.out' },
             '-=1.6'
         );
-    };
+    });
 
     return (
         <div ref={containerRef} className={`shatter-vault-container ${isOpened ? 'is-stable' : ''}`}>

@@ -1,5 +1,6 @@
-import React, { useRef, useState, useLayoutEffect, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 import './MagazineAccordionMenu.scss';
 
 import img1 from '../../assets/img/Space_1.webp';
@@ -14,40 +15,36 @@ const strips = [
     { title: 'Boutiques', num: '04', image: img4, links: ['Paris Flagship', 'Milan', 'New York', 'Tokyo'] }
 ];
 
+gsap.registerPlugin(useGSAP);
+
 export const MagazineAccordionMenu: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
     const tlRef = useRef<gsap.core.Timeline | null>(null);
 
-    useLayoutEffect(() => {
-        if (!containerRef.current) return;
-        
-        const ctx = gsap.context(() => {
-            tlRef.current = gsap.timeline({ paused: true })
-                .fromTo('.mag-overlay', 
-                    // Dramatic "elevator door" upwards clip
-                    { clipPath: 'polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)' },
-                    { clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)', duration: 1.2, ease: 'power4.inOut' }
-                )
-                .fromTo('.mag-strip',
-                    { yPercent: 100 },
-                    { yPercent: 0, duration: 1, stagger: 0.1, ease: 'power3.out' },
-                    '-=0.9'
-                )
-                .fromTo('.mag-strip-bg img',
-                    { scale: 1.4, filter: 'blur(10px)' },
-                    { scale: 1.1, filter: 'blur(0px)', duration: 1.5, stagger: 0.1, ease: 'power2.out' },
-                    '-=0.8'
-                )
-                .fromTo('.mag-shrunk-content',
-                    { opacity: 0, y: 50 },
-                    { opacity: 1, y: 0, duration: 0.8, stagger: 0.1, ease: 'power2.out' },
-                    '-=1'
-                );
-        }, containerRef);
-        
-        return () => ctx.revert();
-    }, []);
+    // POWERED BY GSAP-SKILLS: Scoped editorial opening and elevator reveal
+    useGSAP(() => {
+        tlRef.current = gsap.timeline({ paused: true })
+            .fromTo('.mag-overlay', 
+                { clipPath: 'polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)' },
+                { clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)', duration: 1.2, ease: 'power4.inOut' }
+            )
+            .fromTo('.mag-strip',
+                { yPercent: 100 },
+                { yPercent: 0, duration: 1, stagger: 0.1, ease: 'power3.out' },
+                '-=0.9'
+            )
+            .fromTo('.mag-strip-bg img',
+                { scale: 1.4, filter: 'blur(10px)' },
+                { scale: 1.1, filter: 'blur(0px)', duration: 1.5, stagger: 0.1, ease: 'power2.out' },
+                '-=0.8'
+            )
+            .fromTo('.mag-shrunk-content',
+                { autoAlpha: 0, y: 50 },
+                { autoAlpha: 1, y: 0, duration: 0.8, stagger: 0.1, ease: 'power2.out' },
+                '-=1'
+            );
+    }, { scope: containerRef });
 
     useEffect(() => {
         if (isOpen) {
@@ -63,14 +60,16 @@ export const MagazineAccordionMenu: React.FC = () => {
         };
     }, [isOpen]);
 
-    const toggleMenu = () => {
+    const { contextSafe } = useGSAP({ scope: containerRef });
+
+    const toggleMenu = contextSafe(() => {
         if (!isOpen) {
             setIsOpen(true);
             tlRef.current?.timeScale(1).play();
         } else {
             tlRef.current?.timeScale(1.8).reverse().then(() => setIsOpen(false));
         }
-    };
+    });
 
     return (
         <div ref={containerRef} className="mag-accordion-wrapper">

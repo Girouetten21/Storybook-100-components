@@ -1,9 +1,12 @@
 import React, { useRef, useState, useLayoutEffect } from 'react';
 import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 import './IrisRevealHero.scss';
 
 // Import cinematic background
 import bgHero from '../../assets/img/Background_2.webp';
+
+gsap.registerPlugin(useGSAP);
 
 export const IrisRevealHero: React.FC = () => {
     const [isRevealed, setIsRevealed] = useState(false);
@@ -14,14 +17,15 @@ export const IrisRevealHero: React.FC = () => {
     const contentLayerRef = useRef<HTMLDivElement>(null);
     const holdTimeline = useRef<gsap.core.Timeline | null>(null);
 
+    // POWERED BY GSAP-SKILLS: Using contextSafe for interaction-based animations
+    const { contextSafe } = useGSAP({ scope: containerRef });
+
     // CRITICAL: Scroll Lock Logic until the 'Iris' is fully opened
     useLayoutEffect(() => {
         const preventDefault = (e: Event) => e.preventDefault();
 
         if (!isRevealed) {
             document.body.style.overflow = 'hidden';
-
-            // Force zero-scroll and block events
             window.scrollTo(0, 0);
             window.addEventListener('wheel', preventDefault, { passive: false });
             window.addEventListener('touchmove', preventDefault, { passive: false });
@@ -39,7 +43,7 @@ export const IrisRevealHero: React.FC = () => {
     }, [isRevealed]);
 
     // Handle the "Iris" opening cinematic
-    const triggerIrisAnimation = () => {
+    const triggerIrisAnimation = contextSafe(() => {
         if (isAnimating.current || isRevealed) return;
         isAnimating.current = true;
 
@@ -58,21 +62,21 @@ export const IrisRevealHero: React.FC = () => {
         
         // 2. Cinematic reveal of the background content
         .fromTo('.iris-content-inner', 
-            { scale: 1.25, opacity: 0, filter: 'blur(15px)' },
-            { scale: 1, opacity: 1, filter: 'blur(0px)', duration: 2, ease: 'power3.out' },
+            { scale: 1.25, autoAlpha: 0, filter: 'blur(15px)' },
+            { scale: 1, autoAlpha: 1, filter: 'blur(0px)', duration: 2, ease: 'power3.out' },
             '-=1.8'
         )
         
         // 3. Staggered typography reveal
         .fromTo('.iris-content-inner *',
-            { y: 60, opacity: 0 },
-            { y: 0, opacity: 1, duration: 1.2, stagger: 0.2, ease: 'power4.out' },
+            { y: 60, autoAlpha: 0 },
+            { y: 0, autoAlpha: 1, duration: 1.2, stagger: 0.2, ease: 'power4.out' },
             '-=1.5'
         );
-    };
+    });
 
     // Tracking the "Hold" interaction physics
-    const startHolding = () => {
+    const startHolding = contextSafe(() => {
         if (isRevealed) return;
         
         // Kill any existing drain animation
@@ -88,9 +92,9 @@ export const IrisRevealHero: React.FC = () => {
                 triggerIrisAnimation();
             }
         });
-    };
+    });
 
-    const stopHolding = () => {
+    const stopHolding = contextSafe(() => {
         if (isRevealed) return;
         if (holdTimeline.current) {
             holdTimeline.current.kill();
@@ -103,7 +107,7 @@ export const IrisRevealHero: React.FC = () => {
                 onUpdate: () => setHoldProgress(currentObj.val)
             });
         }
-    };
+    });
 
     return (
         <div ref={containerRef} className={`iris-reveal-container ${isRevealed ? 'is-stable' : ''}`}>

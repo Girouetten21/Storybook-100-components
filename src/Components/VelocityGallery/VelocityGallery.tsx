@@ -1,6 +1,7 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useGSAP } from '@gsap/react';
 import './VelocityGallery.scss';
 
 import img1 from '../../assets/img/Character_1.webp';
@@ -9,7 +10,7 @@ import img3 from '../../assets/img/Character_2.webp';
 import img4 from '../../assets/img/Space_2.webp';
 import img5 from '../../assets/img/Character_3.webp';
 
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 const galleryItems = [
     { id: 1, image: img1, title: 'The Silent Muse', subtitle: 'Portrait Collection' },
@@ -23,80 +24,77 @@ export const VelocityGallery: React.FC = () => {
     const sectionRef = useRef<HTMLDivElement>(null);
     const trackRef = useRef<HTMLDivElement>(null);
 
-    useEffect(() => {
-        if (!sectionRef.current || !trackRef.current) return;
+    // POWERED BY GSAP-SKILLS: Official useGSAP hook + scoping
+    useGSAP(() => {
+        const track = trackRef.current;
+        if (!track) return;
 
-        // Use GSAP Context for safe React cleanup
-        const ctx = gsap.context(() => {
-            const track = trackRef.current;
-            if (!track) return;
+        const items = gsap.utils.toArray('.velocity-item');
+        
+        // Calculate how far the track needs to slide horizontally
+        const getScrollAmount = () => track.scrollWidth - window.innerWidth;
 
-            const items = gsap.utils.toArray('.velocity-item');
-            
-            // Calculate how far the track needs to slide horizontally
-            // It's the total width of the track minus the viewport width
-            const getScrollAmount = () => track.scrollWidth - window.innerWidth;
+        // Clamp function to restrict the skew angle
+        const clamp = gsap.utils.clamp(-20, 20);
 
-            // Clamp function to restrict the skew angle
-            const clamp = gsap.utils.clamp(-20, 20);
+        // 1. HORIZONTAL SCROLL ANIMATION (PINNED)
+        gsap.to(track, {
+            x: () => -getScrollAmount(),
+            ease: "none",
+            scrollTrigger: {
+                trigger: sectionRef.current,
+                pin: true,
+                start: "top top",
+                end: () => `+=${getScrollAmount()}`,
+                scrub: 1, // Smooth scrubbing
+                invalidateOnRefresh: true,
+                onUpdate: (self) => {
+                    // SKEW EFFECT BASED ON SCROLL VELOCITY
+                    const velocity = self.getVelocity();
+                    let angle = clamp(velocity / -300);
+                    
+                    // Apply to all items
+                    gsap.to('.velocity-item', {
+                        skewX: angle,
+                        duration: 0.8,
+                        overwrite: "auto",
+                        ease: "power3.out"
+                    });
+                }
+            }
+        });
 
-            // 1. HORIZONTAL SCROLL ANIMATION (PINNED)
-            gsap.to(track, {
-                x: () => -getScrollAmount(),
+        // 2. INNER PARALLAX FOR IMAGES
+        items.forEach((item: any) => {
+            const imageContainer = item.querySelector('.image-container');
+            gsap.to(imageContainer, {
+                xPercent: -30, 
                 ease: "none",
                 scrollTrigger: {
                     trigger: sectionRef.current,
-                    pin: true,
                     start: "top top",
                     end: () => `+=${getScrollAmount()}`,
-                    scrub: 1, // Smooth scrubbing
+                    scrub: true,
                     invalidateOnRefresh: true,
-                    onUpdate: (self) => {
-                        // SKEW EFFECT BASED ON SCROLL VELOCITY
-                        const velocity = self.getVelocity();
-                        // Adjust the divisor (e.g., 300) to control skew sensitivity
-                        let angle = clamp(velocity / -300);
-                        
-                        // Apply the skew rotation to all gallery items
-                        gsap.to('.velocity-item', {
-                            skewX: angle,
-                            duration: 0.8, // Smooth recovery
-                            overwrite: "auto",
-                            ease: "power3.out"
-                        });
-                    }
                 }
             });
+        });
 
-            // 2. INNER PARALLAX FOR IMAGES (Opposite direction sliding)
-            items.forEach((item: any) => {
-                const imageContainer = item.querySelector('.image-container');
-                gsap.to(imageContainer, {
-                    xPercent: -30, // Pan the image left inside its container
-                    ease: "none",
-                    scrollTrigger: {
-                        trigger: sectionRef.current,
-                        start: "top top",
-                        end: () => `+=${getScrollAmount()}`,
-                        scrub: true,
-                        invalidateOnRefresh: true,
-                    }
-                });
+        // 3. Ensure items naturally rest at 0 skew when scroll stops
+        const onScrollEnd = () => {
+            gsap.to('.velocity-item', {
+                skewX: 0,
+                duration: 0.8,
+                ease: "power3.out"
             });
+        };
 
-            // 3. Ensure items naturally rest at 0 skew when scroll stops
-            ScrollTrigger.addEventListener("scrollEnd", () => {
-                gsap.to('.velocity-item', {
-                    skewX: 0,
-                    duration: 0.8,
-                    ease: "power3.out"
-                });
-            });
+        ScrollTrigger.addEventListener("scrollEnd", onScrollEnd);
+        
+        // useGSAP handles custom listener cleanup if we return them or if they're standard GSAP
+        return () => ScrollTrigger.removeEventListener("scrollEnd", onScrollEnd);
 
-        }, sectionRef);
-
-        return () => ctx.revert();
-    }, []);
+    }, { scope: sectionRef }); // AUTO CLEANUP & SCOPING
 
     return (
         <section className="velocity-gallery-wrapper" ref={sectionRef}>

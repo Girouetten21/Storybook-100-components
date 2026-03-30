@@ -1,5 +1,6 @@
-import React, { useRef, useState, useLayoutEffect, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 import './FolioMenu.scss';
 
 import img1 from '../../assets/img/Space_1.webp';
@@ -14,67 +15,47 @@ const chapters = [
     { chapter: 'Chapter IV', title: 'The Epilogue', desc: 'Contact & Outcomes', image: img4 },
 ];
 
+gsap.registerPlugin(useGSAP);
+
 export const FolioMenu: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [hoverIndex, setHoverIndex] = useState(0);
     const containerRef = useRef<HTMLDivElement>(null);
     const tlRef = useRef<gsap.core.Timeline | null>(null);
 
-    useLayoutEffect(() => {
-        if (!containerRef.current) return;
-        
+    // POWERED BY GSAP-SKILLS: Scoped 3D hinge and page flip logic
+    useGSAP(() => {
         // Architecture of the Book: Establish 3D perspective and hinge logic
         gsap.set('.folio-book-container', { perspective: 2500 });
         gsap.set('.folio-cover', { transformOrigin: 'left center', transformStyle: 'preserve-3d' });
-        
-        const ctx = gsap.context(() => {
-            tlRef.current = gsap.timeline({ paused: true })
-                // 1. Hide the trigger button
-                .to('.folio-toggle', { opacity: 0, duration: 0.2 }) 
-                
-                // 2. Prepare rendering frame
-                .set('.folio-overlay', { visibility: 'visible', pointerEvents: 'auto' })
-                
-                // 3. Fade in the dimly lit dark oak/leather table background
-                .fromTo('.folio-leather-bg', { opacity: 0 }, { opacity: 1, duration: 0.4 })
-                
-                // 4. The closed book firmly lands onto the table (Fast)
-                .fromTo('.folio-book-container', 
-                    { y: '10vh', opacity: 0, rotationX: 10 }, 
-                    { y: 0, opacity: 1, rotationX: 0, duration: 0.6, ease: 'power3.out' },
-                    '-=0.2'
-                )
-                
-                // 5. The Cinematic Page Turn: Snappy but majestic sweep
-                .to('.folio-cover', {
-                    rotationY: -180,
-                    duration: 1.2,
-                    ease: 'expo.inOut' // Whiplash acceleration, soft deceleration
-                })
-                // Hide the backface so performance is clean
-                .set('.folio-cover', { visibility: 'hidden' }) 
-                
-                // 6. Typographic Staggering of the Index
-                .fromTo('.folio-index ul li',
-                    { opacity: 0, x: -20 },
-                    { opacity: 1, x: 0, stagger: 0.05, duration: 0.5, ease: 'power2.out' },
-                    '-=0.5' // Starts halfway through the cover flip
-                )
-                
-                // 7. Visual Plate snaps into focus
-                .fromTo('.folio-plate',
-                    { opacity: 0, filter: 'blur(5px)' },
-                    { opacity: 1, filter: 'blur(0px)', duration: 0.6, ease: 'power3.out' },
-                    '-=0.6' // Synchronized with text entrance
-                )
-                
-                // 8. Introduce close button seamlessly
-                .fromTo('.folio-close', { opacity: 0 }, { opacity: 1, duration: 0.3 });
 
-        }, containerRef);
-        
-        return () => ctx.revert();
-    }, []);
+        tlRef.current = gsap.timeline({ paused: true })
+            .to('.folio-toggle', { autoAlpha: 0, duration: 0.2 }) 
+            .set('.folio-overlay', { visibility: 'visible', pointerEvents: 'auto' })
+            .fromTo('.folio-leather-bg', { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.4 })
+            .fromTo('.folio-book-container', 
+                { y: '10vh', autoAlpha: 0, rotationX: 10 }, 
+                { y: 0, autoAlpha: 1, rotationX: 0, duration: 0.6, ease: 'power3.out' },
+                '-=0.2'
+            )
+            .to('.folio-cover', {
+                rotationY: -180,
+                duration: 1.2,
+                ease: 'expo.inOut' 
+            })
+            .set('.folio-cover', { visibility: 'hidden' }) 
+            .fromTo('.folio-index ul li',
+                { autoAlpha: 0, x: -20 },
+                { autoAlpha: 1, x: 0, stagger: 0.05, duration: 0.5, ease: 'power2.out' },
+                '-=0.5'
+            )
+            .fromTo('.folio-plate',
+                { autoAlpha: 0, filter: 'blur(5px)' },
+                { autoAlpha: 1, filter: 'blur(0px)', duration: 0.6, ease: 'power3.out' },
+                '-=0.6'
+            )
+            .fromTo('.folio-close', { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.3 });
+    }, { scope: containerRef });
 
     useEffect(() => {
         if (isOpen) {
@@ -85,18 +66,19 @@ export const FolioMenu: React.FC = () => {
         return () => { document.body.style.overflow = ''; };
     }, [isOpen]);
 
-    const toggleMenu = () => {
+    const { contextSafe } = useGSAP({ scope: containerRef });
+
+    const toggleMenu = contextSafe(() => {
         if (!isOpen) {
             setIsOpen(true);
             tlRef.current?.timeScale(1).play();
         } else {
-            // Speed up reverse gracefully to simulate shutting the book
             tlRef.current?.timeScale(1.8).reverse().then(() => {
                 setIsOpen(false);
-                setHoverIndex(0); // Reset chapter selection safely
+                setHoverIndex(0); 
             });
         }
-    };
+    });
 
     return (
         <div ref={containerRef} className="folio-wrapper">
