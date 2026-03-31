@@ -1,0 +1,40 @@
+.fibo-container {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: #060606; // Architect's dark void blueprint paper
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: all;
+  will-change: opacity, transform;
+
+  .fibo-svg {
+    width: 90vw;
+    max-width: 1400px;
+    height: auto; // Maintains true 1.618 aspect ratio safely scaling on all screen sizes
+    
+    .fibo-boxes {
+      .fibo-box {
+        fill: none;
+        stroke: rgba(255, 255, 255, 0.1);
+        stroke-width: 1.5px;
+      }
+    }
+
+    .spiral-path {
+      fill: none;
+      stroke: #D4AF37; // Standard Bespoke luxury gold
+      stroke-width: 3.5px;
+      stroke-linecap: round;
+      
+      // Black Magic: We manually calculated the exact pixel length of the continuous 6 Arcs 
+      // length = (PI/2)*800 + (PI/2)*500 + ... = 3141.59
+      stroke-dasharray: 3142;
+      stroke-dashoffset: 3142; // Starts entirely hidden off the end of the dasharray
+      
+      // Beautiful gold radiation glow
+      filter: drop-shadow(0px 0px 18px rgba(212, 175, 55, 0.45));
+    }
+  }
+}

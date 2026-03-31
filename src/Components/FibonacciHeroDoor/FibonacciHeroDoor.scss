@@ -1,0 +1,188 @@
+.fibonacci-hero-door {
+  position: fixed;
+  inset: 0;
+  z-index: 999998; // Immediately below any core structural elements like the absolute menu button
+  overflow: hidden;
+
+  .hero-door-background {
+    position: absolute;
+    inset: 0;
+    background: #020202; // Void black
+    z-index: 1;
+  }
+
+  // The Bulletproof Mathematically Absolute CSS Grid Matrix
+  .grid-layer {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: grid;
+    // CRITICAL: minmax(0, Xfr) enforces ratio over-riding intrinsic box dimensions
+    grid-template-columns: minmax(0, 8fr) minmax(0, 5fr);
+    grid-template-rows: minmax(0, 5fr) minmax(0, 3fr);
+    gap: 0; 
+    perspective: 1000px; // For the 3D scattering offscreen!
+
+    .grid-panel {
+      background: #050505; 
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      outline: 1px solid rgba(255, 255, 255, 0.08); // Subtle structural lines
+      outline-offset: -1px;
+      min-width: 0;
+      min-height: 0;
+      will-change: transform, opacity; // Optimization flag for the violent scatter explosion
+    }
+
+    // Root Placements
+    .panel-8 { grid-column: 1 / 2; grid-row: 1 / 3; }
+    .panel-5 { grid-column: 2 / 3; grid-row: 1 / 2; }
+
+    // Nested 5x3 Quadrant
+    .nested-5x3 {
+      grid-column: 2 / 3;
+      grid-row: 2 / 3;
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); 
+      grid-template-rows: minmax(0, 1fr) minmax(0, 2fr);    
+      gap: 0;
+      min-width: 0;
+      min-height: 0;
+
+      .panel-3 { grid-column: 2 / 3; grid-row: 1 / 3; }
+      .panel-2 { grid-column: 1 / 2; grid-row: 2 / 3; }
+
+      // Core 1x1 Quadrants
+      .nested-2x1 {
+        grid-column: 1 / 2;
+        grid-row: 1 / 2;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 0;
+        min-width: 0;
+        min-height: 0;
+
+        .panel-1a { grid-column: 1 / 2; }
+        .panel-1b { grid-column: 2 / 3; }
+      }
+    }
+
+    // Interior typography styling
+    .geom-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: 'Playfair Display', serif;
+      font-weight: 400;
+      color: rgba(255, 255, 255, 0.03); // Almost entirely invisible ghost texts
+      pointer-events: none;
+      line-height: 0.8;
+      margin: 0;
+    }
+
+    // Responsive Typography specific mapping to the size of the logical box
+    .panel-8 .geom-text { font-size: 25vw; }
+    .panel-5 .geom-text { font-size: 15vw; }
+    .panel-3 .geom-text { font-size: 10vw; }
+    .panel-2 .geom-text { font-size: 8vw; }
+    .panel-1a .geom-text { font-size: 4vw; }
+    
+    // Intelligent architectural typography overlays
+    .structural-info {
+      position: absolute;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      color: rgba(255, 255, 255, 0.4);
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+
+      .label { opacity: 0.4; font-size: 0.50rem; }
+      .value { color: rgba(212, 175, 55, 0.8); }
+
+      &.top-left { top: 2rem; left: 2rem; }
+      &.top-right { top: 2rem; right: 2rem; text-align: right; }
+      &.bottom-left { bottom: 2rem; left: 2rem; }
+      &.bottom-right { bottom: 2rem; right: 2rem; text-align: right; }
+      
+      &.center-text {
+        top: 50%; left: 50%; transform: translate(-50%, -50%);
+        text-align: center;
+        line-height: 1.5;
+        width: 100%;
+      }
+    }
+
+    .rotate-label {
+      position: absolute;
+      left: 0.5rem;
+      bottom: 0.5rem;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.4rem;
+      letter-spacing: 0.3em;
+      color: rgba(255, 255, 255, 0.3);
+      white-space: nowrap;
+    }
+
+    // The interactive trigger chamber (Eye of the spiral makes the whole box glow)
+    .interact-box {
+      &.hover-glow {
+        cursor: pointer;
+        transition: all 0.5s ease;
+        background: rgba(10, 10, 10, 0.8);
+        
+        .unlock-text {
+          position: absolute;
+          top: 50%; left: 50%; transform: translate(-50%, -50%);
+          font-family: 'Inter', sans-serif;
+          font-size: 0.65rem;
+          font-weight: 500;
+          letter-spacing: 0.4em;
+          text-indent: 0.4em;
+          color: rgba(212, 175, 55, 1);
+          transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+          z-index: 10;
+        }
+
+        &:hover {
+          background: rgba(212, 175, 55, 0.15); // The square illuminates
+          box-shadow: inset 0 0 40px rgba(212, 175, 55, 0.1);
+
+          .unlock-text {
+            letter-spacing: 0.6em; // text expands architecturally
+            text-indent: 0.6em;
+            color: #fff;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+            transform: translate(-50%, -50%) scale(1.1);
+          }
+        }
+        &:active {
+          background: rgba(212, 175, 55, 0.3);
+        }
+      }
+    }
+  }
+
+  // Pure SVG mathematics overlay
+  .spiral-layer {
+    position: absolute;
+    inset: 0;
+    width: 100%; // Ignores OS vertical scrollbars strictly mapping DOM nodes
+    height: 100%;
+    pointer-events: none;
+    z-index: 4;
+
+    .door-spiral-path {
+      fill: none;
+      stroke: rgba(212, 175, 55, 0.6); // Muted gold solid stroke
+      stroke-width: 2px;
+      stroke-width: 1px;
+      stroke-linecap: square;
+      stroke-dasharray: 3142; // Pre-calculated Arc distance for 1300x800 bounds
+      stroke-dashoffset: 0; // Starts 100% Fully Drawn sealing the components together!
+    }
+  }
+}

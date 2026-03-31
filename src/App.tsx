@@ -1,12 +1,31 @@
 import AvantGardeFashionScroll from './Components/AvantGardeFashionScroll/AvantGardeFashionScroll'
 import ChronicleFolioScroll from './Components/ChronicleFolioScroll/ChronicleFolioScroll'
+import CinematicOvertureLoader from './Components/CinematicOvertureLoader/CinematicOvertureLoader'
+import AestheticTypographicLoader from './Components/AestheticTypographicLoader/AestheticTypographicLoader'
+import FibonacciGeometryLoader from './Components/FibonacciGeometryLoader/FibonacciGeometryLoader'
+import FibonacciHeroDoor from './Components/FibonacciHeroDoor/FibonacciHeroDoor'
+import FibonacciGoldenMenu from './Components/FibonacciGoldenMenu/FibonacciGoldenMenu'
 import EpistolaryStackScroll from './Components/EpistolaryStackScroll/EpistolaryStackScroll'
 import KineticCarouselScroll from './Components/KineticCarouselScroll/KineticCarouselScroll'
 import SartorialHeritageScroll from './Components/SartorialHeritageScroll/SartorialHeritageScroll'
 
 function App() {
   return (
-    <div className="app-container" style={{ background: '#0d0d0d' }}>
+    <div style={{ background: '#0b0d10', color: '#fff' }}>
+      {/* 🎬 Component #47: Cinematic Default (Commented Out) */}
+      {/* <CinematicOvertureLoader /> */}
+
+      {/* 🖋️ Component #48: Aesthetic Default (Commented Out) */}
+      {/* <AestheticTypographicLoader /> */}
+
+      {/* 📐 Component #49: Fibonacci Loader (Commented Out) */}
+      {/* <FibonacciGeometryLoader /> */}
+      
+      {/* 🚪 Component #51: The Interactive Golden Rule Entry Gate */}
+      <FibonacciHeroDoor />
+
+      {/* ⚜️ Component #50: The Master Mathematical Menu! */}
+      <FibonacciGoldenMenu />
 
       {/* Hero Section */}
       <section style={{

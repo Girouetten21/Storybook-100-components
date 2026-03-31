@@ -1,0 +1,264 @@
+.fibonacci-menu-container {
+
+  // Floating Trigger Button
+  // Floating Trigger Button (Minimalist Original)
+  .menu-trigger-btn {
+    position: fixed;
+    top: 2rem;
+    right: 2rem;
+    z-index: 999999;
+    
+    background: transparent;
+    border: none;
+    padding: 0;
+    
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    mix-blend-mode: difference;
+    
+    cursor: pointer;
+    outline: none;
+    transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+
+    // The drawing underline effect
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -6px;
+      left: 0;
+      width: 0%;
+      height: 1px;
+      background: #fff;
+      transition: width 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+    
+    &:hover {
+      letter-spacing: 0.4em; // Stretches the text elegantly apart
+      
+      &::after {
+        width: 100%; // The line instantly shoots across holding the text
+      }
+    }
+
+    &:active {
+      transform: translateY(2px); 
+    }
+  }
+
+  // Master Wrapper
+  .fibonacci-wrapper {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    background: transparent;
+
+    // The Master 13x8 Fibonacci Architecture
+    .grid-layer {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      // Defines the exact mathematical split on a flex canvas 8 (left) vs 5 (right)
+      // CRITICAL FIX: minmax(0, Xfr) forces CSS Grid to mathematically clamp layout irrespective of box content limits
+      grid-template-columns: minmax(0, 8fr) minmax(0, 5fr);
+      grid-template-rows: minmax(0, 5fr) minmax(0, 3fr);
+      gap: 0; // ZERO GAPS: Physical gaps subtract width, breaking absolute SVG synchronization
+
+      // Every single box acts independently
+      .grid-panel {
+        background: #050505; // Architect carbon black
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        // Mimicking physical grid gaps without compromising mathematical DOM width/height
+        outline: 1px solid rgba(255, 255, 255, 0.15);
+        outline-offset: -1px;
+        min-width: 0;
+        min-height: 0;
+      }
+
+      // Root Placements
+      .panel-8 { grid-column: 1 / 2; grid-row: 1 / 3; }
+      .panel-5 { grid-column: 2 / 3; grid-row: 1 / 2; }
+
+      // Sub-Grid 5x3 (Bottom Right Sector)
+      .nested-5x3 {
+        grid-column: 2 / 3;
+        grid-row: 2 / 3;
+        display: grid;
+        grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); // Left is 2 unit wide, Right is 3 unit wide
+        grid-template-rows: minmax(0, 1fr) minmax(0, 2fr);    // Top is 1 unit tall, Bottom is 2 unit tall
+        gap: 0;
+        min-width: 0;
+        min-height: 0;
+
+        // Panel 3 (3x3 ratio) lives entirely on the Right
+        .panel-3 { grid-column: 2 / 3; grid-row: 1 / 3; }
+        
+        // Panel 2 (2x2 ratio) lives on the Bottom Left
+        .panel-2 { grid-column: 1 / 2; grid-row: 2 / 3; }
+
+        // Core Fractaling 2x1 (1x1 Micro Boxes) live on the Top Left
+        .nested-2x1 {
+          grid-column: 1 / 2;
+          grid-row: 1 / 2;
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+          gap: 0;
+          min-width: 0;
+          min-height: 0;
+
+          .panel-1a { grid-column: 1 / 2; }
+          .panel-1b { grid-column: 2 / 3; }
+        }
+      }
+    }
+
+    // Mathematical SVG Tracer Layer
+    .spiral-layer {
+      position: absolute;
+      inset: 0;
+      width: 100%; // CRITICAL FIX: 100vw includes the Windows scrollbar, stretching the SVG beyond the grid!! 100% binds it safely.
+      height: 100%; // Bound strictly to the fixed container, completely ignoring OS scrollbars.
+      pointer-events: none; // Completely click-through
+
+      .menu-spiral-path {
+        fill: none;
+        stroke: rgba(212, 175, 55, 0.4); // Burnished Gold, slightly faded to not overwhelm texts
+        stroke-width: 2px;
+        stroke-linecap: square;
+        stroke-dasharray: 3142;
+        stroke-dashoffset: 3142; // GSAP manipulates this
+      }
+    }
+
+    // Layouts Internos de cada bloque (The DOM inside the physics grid)
+    .panel-inner {
+      width: 100%;
+      height: 100%;
+      padding: 3rem;
+      will-change: transform, opacity;
+
+      // Box 8
+      &.primary-nav {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        
+        .nav-heading {
+          font-family: 'Inter', sans-serif;
+          font-size: 0.65rem;
+          font-weight: 500;
+          letter-spacing: 0.4em;
+          color: rgba(255,255,255,0.4);
+          margin-bottom: 4rem;
+        }
+
+        ul {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+
+          li {
+            margin-bottom: 2rem;
+            a {
+              text-decoration: none;
+              color: white;
+              font-family: 'Playfair Display', serif;
+              font-size: 6vw; // Massive typography
+              font-weight: 300;
+              letter-spacing: -0.02em;
+              display: flex;
+              align-items: baseline;
+              transition: opacity 0.3s;
+
+              &:hover {
+                opacity: 0.6;
+              }
+
+              .idx {
+                font-family: 'Inter', sans-serif;
+                font-size: 0.8rem;
+                letter-spacing: 0;
+                margin-right: 2rem;
+                opacity: 0.3;
+                font-variant-numeric: tabular-nums;
+              }
+            }
+          }
+        }
+      }
+
+      // Box 5
+      &.image-box {
+        padding: 0; // Images bleed mathematically to edge
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          filter: grayscale(100%);
+          opacity: 0.4;
+          transition: filter 1s ease, opacity 1s ease;
+
+          &:hover {
+            filter: grayscale(0%);
+            opacity: 1;
+          }
+        }
+        .image-overlay-text {
+          position: absolute;
+          bottom: 2rem;
+          right: 2rem;
+          font-family: 'Inter', sans-serif;
+          font-size: 0.75rem;
+          letter-spacing: 0.3em;
+          color: #fff;
+        }
+      }
+
+      // Box 3
+      &.contact-box {
+        font-family: 'Inter', sans-serif;
+        font-size: 0.85rem;
+        line-height: 2;
+        color: rgba(255,255,255,0.6);
+        letter-spacing: 0.05em;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+      }
+
+      // Box 2
+      &.social-box {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 1.5rem;
+        
+        a {
+          text-decoration: none;
+          color: #fff;
+          font-family: 'Inter', sans-serif;
+          font-size: 0.75rem;
+          letter-spacing: 0.2em;
+          opacity: 0.5;
+          transition: opacity 0.3s;
+          &:hover { opacity: 1; }
+        }
+      }
+
+      &.tiny-box {
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.65rem;
+        letter-spacing: 0.2em;
+        color: rgba(255,255,255,0.3);
+      }
+    }
+  }
+}

@@ -1,0 +1,106 @@
+.aesthetic-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  pointer-events: all;
+  color: #1A1A1A; 
+  overflow: hidden;
+
+  // Split Panel Architecture for the Exit Wipe
+  .bg-panel {
+    position: absolute;
+    top: 0;
+    height: 100vh;
+    background: #F4F3EE; // Ultra-Premium Warm Museum Alabaster
+    pointer-events: none;
+    will-change: transform;
+    &.panel-left { left: 0; width: 50vw; }
+    &.panel-right { right: 0; width: 50vw; }
+  }
+
+  // HUD Elements (Corners)
+  .loader-hud {
+    position: absolute;
+    top: 3rem;
+    left: 4rem;
+    right: 4rem;
+    display: flex;
+    justify-content: space-between;
+    z-index: 10; // Above the panels
+    
+    .folio-id, .counter-wrap {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      opacity: 0.6;
+      will-change: transform, opacity;
+    }
+    
+    .counter-wrap {
+      font-variant-numeric: tabular-nums; // Stops the numbers from 'jumping' width horizontally
+    }
+  }
+
+  // Purely architectural geometric line splitting the composition
+  .abstract-line {
+    position: absolute;
+    top: 50%;
+    left: 10%;
+    width: 80%;
+    height: 1px;
+    background: rgba(26, 26, 26, 0.15); // Very subtle dark thread
+    transform-origin: center;
+    z-index: 5;
+  }
+
+  // Massive Typography Grid
+  .typography-container {
+    position: relative;
+    width: 82%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 20;
+
+    .char-mask {
+      // CRITICAL: This hides the letter when it is pushed 'below' its baseline with yPercent: 120
+      overflow: hidden; 
+      padding-bottom: 2vw; // Allows the descenders of serif fonts to not clip violently
+    }
+
+    .char-inner {
+      font-family: 'Playfair Display', Times, serif;
+      font-size: 15vw; // Colossal editorial size spanning the view
+      font-weight: 300;
+      line-height: 0.9; 
+      color: #1A1A1A; // Rich charcoal almost black
+      will-change: transform;
+    }
+  }
+
+  // Lower HUD elements
+  .loader-footer {
+    position: absolute;
+    bottom: 3rem;
+    left: 4rem;
+    right: 4rem;
+    display: flex;
+    justify-content: space-between;
+    z-index: 10;
+    
+    .caption {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.3em;
+      opacity: 0.4;
+      text-transform: uppercase;
+      will-change: transform, opacity;
+    }
+  }
+}
