@@ -1,0 +1,77 @@
+.kinetic-pixel-scroll {
+  position: relative;
+  width: 100%;
+  height: 350vh; // Creates massive scrollable mathematical track distance to absorb the scrubbing
+  background: #020202; // Absolute void
+  
+  .scroll-track {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  // The sticky window anchoring the destruction simulation against the scroll flow
+  .sticky-viewport {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    perspective: 1200px; // Grants deep immersive 3D volume for the shattered Z-axis bits
+  }
+
+  // Underlying Core Monolith Typography 
+  .reveal-layer {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    background: radial-gradient(circle at center, #111 0%, #020202 100%); // Dynamic deep light spot
+
+    .reveal-headline {
+      font-family: 'Playfair Display', serif;
+      font-size: 8vw;
+      font-weight: 700;
+      line-height: 0.9;
+      letter-spacing: -0.02em;
+      color: rgba(255,255,255,0.9);
+      text-align: center;
+      margin: 0;
+      text-transform: uppercase;
+    }
+  }
+
+  // Foreground Matrix Lattice
+  .pixel-grid {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: grid;
+    // Exactly matches typescript matrix dimension definitions
+    grid-template-columns: repeat(25, 1fr);
+    grid-template-rows: repeat(15, 1fr);
+    transform-style: preserve-3d; // Instruct DOM to accurately shadow physical overlapping 
+    will-change: transform;
+
+    .pixel-cell {
+      width: 100%;
+      height: 100%;
+      // Use an ultra sharp cyberpunk aesthetic structural reference image
+      background-image: url('https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?q=80&w=2600&auto=format&fit=crop'); 
+      background-size: 100vw 100vh; // Mathematically lock the image resolution absolutely perfectly into the parent window
+      background-repeat: no-repeat;
+      
+      // Extremely thin physical grid-lining allowing user to sense the mathematical fragility prior to explosion
+      border: 1px solid rgba(255, 255, 255, 0.04); 
+      
+      transform-style: preserve-3d;
+      will-change: transform, opacity;
+      backface-visibility: hidden; // Critical hardware optimization for 300+ manipulating DOM nodes
+    }
+  }
+}

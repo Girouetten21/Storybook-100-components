@@ -1,0 +1,126 @@
+.kinetic-pixel-menu-container {
+  
+  // Brutalist floating interaction button
+  .pixel-menu-trigger {
+    position: fixed;
+    top: 2.5rem;
+    right: 3rem;
+    z-index: 999999; // Absolute execution priority
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.25em;
+    mix-blend-mode: difference; // Adaptable visibility masking on any environment
+    cursor: pointer;
+    outline: none;
+    transition: transform 0.2s ease, letter-spacing 0.4s ease;
+
+    &:hover {
+      letter-spacing: 0.4em; // Typographic tension
+    }
+  }
+
+  // Superior Absolute Isolation Wrapper
+  .kinetic-pixel-menu-wrapper {
+    position: fixed;
+    inset: 0;
+    z-index: 999998;
+    pointer-events: none; // Deflects mouse interaction ensuring DOM beneath operates untouched when collapsed
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    perspective: 1200px; 
+
+    // The void background blind
+    .pixel-menu-backing {
+      position: absolute;
+      inset: 0;
+      background: #020202; // Jet black
+      opacity: 0;
+      visibility: hidden;
+      z-index: 1;
+    }
+
+    // Identical grid rendering algorithms as component 52
+    .menu-pixel-grid {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      display: grid;
+      // Absolute adherence to React definitions
+      grid-template-columns: repeat(25, 1fr);
+      grid-template-rows: repeat(15, 1fr);
+      transform-style: preserve-3d;
+      
+      .menu-pixel-cell {
+        width: 100%;
+        height: 100%;
+        // Premium Dark Architectural / Micro-Tech background 
+        background-image: url('https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2600&auto=format&fit=crop'); 
+        background-size: 100vw 100vh; 
+        background-repeat: no-repeat;
+        transform-style: preserve-3d;
+        will-change: transform, opacity;
+        backface-visibility: hidden;
+        opacity: 0; // Staged invisible out-of-the-box awaiting GSAP timelines
+      }
+    }
+
+    // Foreground Interactive Layers
+    .menu-navigation {
+      position: relative;
+      z-index: 10; 
+      pointer-events: none; // Pre-staged invisible
+
+      ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+
+        .menu-item {
+          font-family: 'Playfair Display', serif;
+          font-size: 5vw;
+          font-weight: 700;
+          color: #fff;
+          margin: 0;
+          padding: 0;
+          line-height: 1;
+          letter-spacing: -0.02em;
+          text-transform: uppercase;
+          pointer-events: auto; // Enables distinct interactions once assembled
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          gap: 2rem;
+          opacity: 0; 
+          transition: color 0.4s ease, transform 0.4s ease, letter-spacing 0.4s ease;
+
+          .index {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.4);
+            letter-spacing: 0.1em;
+            font-weight: 500;
+            transition: color 0.4s ease;
+          }
+
+          &:hover {
+            color: rgba(0, 255, 150, 1); // Matrix-inspired neon green-mint highlighting
+            transform: translateX(40px); // Aggressive forward lunge
+            letter-spacing: 0.05em;
+            
+            .index {
+              color: rgba(0, 255, 150, 0.8);
+            }
+          }
+        }
+      }
+    }
+  }
+}

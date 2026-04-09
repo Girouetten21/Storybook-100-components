@@ -1,0 +1,233 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,200;0,9..144,400;1,9..144,200&family=Outfit:wght@300;400;600&display=swap');
+
+.ethos-section {
+    position: relative;
+    width: 100%;
+    background: radial-gradient(circle at 50% 30%, #fcfbf9 0%, #f4f2ee 100%);
+    color: #1a1a1a;
+    overflow: hidden;
+    font-family: 'Outfit', sans-serif;
+    padding: 20vh 0;
+
+    // 🏷️ BACKGROUND DECOR (Monumental Headliner)
+    .ethos-bg-text {
+        position: absolute;
+        top: 5vh;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 24vw;
+        letter-spacing: -0.05em;
+        font-weight: 700;
+        color: rgba(0,0,0,0.04);
+        line-height: 1;
+        pointer-events: none;
+        z-index: 0;
+        user-select: none;
+        white-space: nowrap;
+        font-family: 'Fraunces', serif;
+    }
+
+    // 📝 HEADER AREA
+    .ethos-header {
+        position: relative;
+        z-index: 10;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        margin-bottom: 15vh;
+        padding: 0 5%;
+
+        .ethos-tag {
+            font-size: 0.7rem;
+            letter-spacing: 0.5em;
+            text-transform: uppercase;
+            color: rgba(0,0,0,0.4);
+            margin-bottom: 2rem;
+            font-weight: 600;
+        }
+
+        .ethos-title {
+            font-family: 'Fraunces', serif;
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 200;
+            line-height: 1;
+            margin: 0;
+            span {
+                font-style: italic;
+                color: #8b7e6a; // Muted taupe
+            }
+        }
+    }
+
+    // 🧥 MAIN EDITORIAL SPLIT
+    .ethos-hero {
+        position: relative;
+        z-index: 10;
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+        gap: 5vw;
+        max-width: 1600px;
+        margin: 0 auto 20vh;
+        padding: 0 5%;
+        align-items: center;
+
+        .hero-img-box {
+            position: relative;
+            width: 100%;
+            height: 80vh;
+            overflow: hidden;
+
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                filter: sepia(0.2) contrast(1.1);
+            }
+
+            .img-overlay-text {
+                position: absolute;
+                bottom: 2rem;
+                left: 2rem;
+                color: #fff;
+                font-family: 'Fraunces', serif;
+                font-size: 2.5rem;
+                font-weight: 200;
+                mix-blend-mode: difference;
+            }
+        }
+
+        .hero-desc-box {
+            padding-right: 2rem;
+
+            h3 {
+                font-family: 'Fraunces', serif;
+                font-size: 2.2rem;
+                font-weight: 300;
+                margin-bottom: 2rem;
+                line-height: 1.2;
+            }
+
+            p {
+                font-size: 1.1rem;
+                line-height: 1.8;
+                color: rgba(0,0,0,0.6);
+                margin-bottom: 3rem;
+                max-width: 400px;
+            }
+
+            .ethos-cta {
+                display: inline-flex;
+                align-items: center;
+                gap: 1.5rem;
+                font-weight: 600;
+                font-size: 0.8rem;
+                letter-spacing: 0.2rem;
+                text-transform: uppercase;
+                cursor: pointer;
+                transition: gap 0.3s ease;
+
+                &::after {
+                    content: '';
+                    width: 40px;
+                    height: 1px;
+                    background: #1a1a1a;
+                    transition: width 0.3s ease;
+                }
+
+                &:hover {
+                    gap: 2.5rem;
+                    &::after { width: 60px; }
+                }
+            }
+        }
+    }
+
+    // 🧪 CHARACTERISTICS GRID
+    .ethos-features {
+        position: relative;
+        z-index: 10;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2rem;
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 5%;
+
+        .feature-card {
+            background-color: #fff;
+            padding: 4rem 3rem;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+
+            &:hover {
+                transform: translateY(-15px);
+            }
+
+            .f-icon-box {
+                width: 100%;
+                height: 250px;
+                background-color: #f0f0f0;
+                margin-bottom: 3rem;
+                overflow: hidden;
+
+                img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    transition: transform 1.2s ease;
+                }
+            }
+
+            h4 {
+                font-family: 'Fraunces', serif;
+                font-size: 1.6rem;
+                font-weight: 400;
+                margin-bottom: 1.5rem;
+            }
+
+            p {
+                font-size: 0.95rem;
+                line-height: 1.7;
+                color: rgba(0,0,0,0.5);
+            }
+
+            &:hover .f-icon-box img {
+                transform: scale(1.1);
+            }
+        }
+    }
+
+    // 🌊 SECONDARY FLOAT TEXT (Enhanced Visibility)
+    .ethos-floating-marker {
+        position: absolute;
+        font-size: 0.65rem;
+        letter-spacing: 0.8em;
+        text-transform: uppercase;
+        color: rgba(0,0,0,0.6); // 🟢 More notorious
+        font-weight: 600;
+        transform: rotate(-90deg);
+        white-space: nowrap;
+        z-index: 10;
+        
+        &.left { top: 40%; left: -2.5rem; }
+        &.right { bottom: 20%; right: -2.5rem; }
+    }
+}
+
+// 📱 MOBILE RESPONSIVENESS
+@media (max-width: 1024px) {
+    .ethos-section {
+        .ethos-hero {
+            grid-template-columns: 1fr;
+            .hero-img-box { height: 60vh; }
+            .hero-desc-box { padding: 4rem 0; }
+        }
+
+        .ethos-features {
+            grid-template-columns: 1fr;
+            gap: 4rem;
+        }
+    }
+}

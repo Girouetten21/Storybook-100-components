@@ -3,11 +3,26 @@ import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import './FibonacciGoldenMenu.scss';
 
+// Dynamic Assets
+import imgCollection from '../../assets/img/Character_1.webp';
+import imgAtelier from '../../assets/img/fibonacci_golden.png';
+import imgCampaigns from '../../assets/img/Character_2.webp';
+import imgBespoke from '../../assets/img/fashion-01.png';
+
 gsap.registerPlugin(useGSAP);
+
+const NAV_IMAGES: Record<string, string> = {
+    'COLLECTION': imgCollection,
+    'THE ATELIER': imgAtelier,
+    'CAMPAIGNS': imgCampaigns,
+    'BESPOKE SUITING': imgBespoke
+};
 
 export const FibonacciGoldenMenu: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const [activeImage, setActiveImage] = useState(imgCollection);
     const containerRef = useRef<HTMLDivElement>(null);
+    const imageRef = useRef<HTMLImageElement>(null);
     const timelineRef = useRef<gsap.core.Timeline | null>(null);
 
     useGSAP(() => {
@@ -90,6 +105,22 @@ export const FibonacciGoldenMenu: React.FC = () => {
         };
     }, [isOpen]);
 
+    // ⚡ DYNAMIC IMAGE SWAP ANIMATION
+    useEffect(() => {
+        if (!imageRef.current) return;
+
+        gsap.fromTo(imageRef.current, 
+            { autoAlpha: 0, scale: 1.1, filter: 'blur(10px)' },
+            { autoAlpha: 1, scale: 1, filter: 'blur(0px)', duration: 0.8, ease: "power2.out" }
+        );
+    }, [activeImage]);
+
+    const handleHover = (title: string) => {
+        if (NAV_IMAGES[title]) {
+            setActiveImage(NAV_IMAGES[title]);
+        }
+    };
+
     return (
         <div className="fibonacci-menu-container" ref={containerRef}>
             
@@ -113,10 +144,18 @@ export const FibonacciGoldenMenu: React.FC = () => {
                         <div className="panel-inner primary-nav">
                             <h4 className="nav-heading">NAVIGATION</h4>
                             <ul>
-                                <li><a href="#"><span className="idx">01</span><span>COLLECTION</span></a></li>
-                                <li><a href="#"><span className="idx">02</span><span>THE ATELIER</span></a></li>
-                                <li><a href="#"><span className="idx">03</span><span>CAMPAIGNS</span></a></li>
-                                <li><a href="#"><span className="idx">04</span><span>BESPOKE SUITING</span></a></li>
+                                <li onMouseEnter={() => handleHover('COLLECTION')}>
+                                    <a href="#"><span className="idx">01</span><span>COLLECTION</span></a>
+                                </li>
+                                <li onMouseEnter={() => handleHover('THE ATELIER')}>
+                                    <a href="#"><span className="idx">02</span><span>THE ATELIER</span></a>
+                                </li>
+                                <li onMouseEnter={() => handleHover('CAMPAIGNS')}>
+                                    <a href="#"><span className="idx">03</span><span>CAMPAIGNS</span></a>
+                                </li>
+                                <li onMouseEnter={() => handleHover('BESPOKE SUITING')}>
+                                    <a href="#"><span className="idx">04</span><span>BESPOKE SUITING</span></a>
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -124,8 +163,12 @@ export const FibonacciGoldenMenu: React.FC = () => {
                     {/* Panel 5: Sub-feature Image Block */}
                     <div className="grid-panel panel-5">
                         <div className="panel-inner image-box">
-                            {/* Dummy highly-aesthetic editorial placeholder */}
-                            <img src="https://images.unsplash.com/photo-1534126416832-a88fdf2911c2?q=80&w=1000&auto=format&fit=crop" alt="Editorial" />
+                            {/* Dynamic highly-aesthetic editorial image */}
+                            <img 
+                                ref={imageRef}
+                                src={activeImage} 
+                                alt="Editorial" 
+                            />
                             <div className="image-overlay-text">ARCHIVE VOL. II</div>
                         </div>
                     </div>

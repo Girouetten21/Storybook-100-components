@@ -47,13 +47,12 @@ export const AvantGardeFashionScroll: React.FC = () => {
         if (slides.length === 0) return;
 
         // 1. Precise GSAP Setup
-        // We target only the image containers to be clipped, saving identical dimensions
         const imgContainers = slides.map(s => s.querySelector('.avant-img-container') as HTMLElement);
         
         gsap.set(imgContainers.slice(1), { clipPath: 'inset(100% 0% 0% 0%)' });
         
-        // Hide giant flex indices exactly out of bounds
-        gsap.set(indices.slice(1), { yPercent: 100, autoAlpha: 0 });
+        // Use autoAlpha for indices with small Y offset for a cleaner transition
+        gsap.set(indices.slice(1), { y: 200, autoAlpha: 0 });
 
         // Lock metadata visibility
         gsap.set(metas[0], { y: 0, autoAlpha: 1 });
@@ -90,10 +89,10 @@ export const AvantGardeFashionScroll: React.FC = () => {
 
             masterTl
                 // --- Step A: Sweep away old index, bring in new giant index ---
-                .to(prevIndex, { yPercent: -100, autoAlpha: 0, duration: 1, ease: 'power3.inOut' }, `scene${i}`)
+                .to(prevIndex, { y: -200, autoAlpha: 0, duration: 1, ease: 'power3.inOut' }, `scene${i}`)
                 .fromTo(currIndex, 
-                    { yPercent: 100, autoAlpha: 0 },
-                    { yPercent: 0, autoAlpha: 1, duration: 1, ease: 'power3.inOut' }, 
+                    { y: 200, autoAlpha: 0 },
+                    { y: 0, autoAlpha: 1, duration: 1, ease: 'power3.inOut' }, 
                     `scene${i}`
                 )
 

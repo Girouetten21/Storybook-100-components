@@ -1,0 +1,260 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;1,9..144,300&family=JetBrains+Mono:wght@300;500;700&display=swap');
+
+.gem-section-wrapper {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    background-color: #050505;
+    color: #fff;
+    overflow: hidden;
+    font-family: 'JetBrains Mono', monospace;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6rem 8%;
+
+    // 🥢 MAIN CONTAINER
+    .gem-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        max-width: 1600px;
+        gap: 6rem;
+        z-index: 10; // Foreground content
+
+        // 📝 LEFT: INFORMATION PANEL
+        .gem-info-panel {
+            flex: 1.2;
+            max-width: 650px;
+
+            .section-tag {
+                display: block;
+                font-size: 0.6rem;
+                letter-spacing: 0.6em;
+                color: rgba(255,255,255,0.4);
+                margin-bottom: 2.5rem;
+                text-transform: uppercase;
+            }
+
+            .gem-title {
+                font-family: 'Fraunces', serif;
+                font-size: 8rem; // Massive, elegant title
+                font-weight: 300;
+                line-height: 0.85;
+                margin: 0 0 4rem 0;
+                display: flex;
+                flex-direction: column;
+                letter-spacing: -0.05em;
+
+                span { display: block; }
+                .outline {
+                    color: transparent;
+                    -webkit-text-stroke: 1px rgba(255,255,255,0.15);
+                    font-style: italic;
+                    margin-left: 1.5rem;
+                }
+            }
+
+            // 🖱️ NAVIGATION / SELECTOR
+            .gem-selector {
+                display: flex;
+                gap: 1.5rem;
+                margin-bottom: 4rem;
+
+                .gem-nav-btn {
+                    background: none;
+                    border: 1px solid rgba(255,255,255,0.1);
+                    padding: 0.8rem 1.6rem;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-start;
+                    cursor: pointer;
+                    transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+                    min-width: 140px;
+
+                    .idx {
+                        font-size: 0.5rem;
+                        color: rgba(255,255,255,0.3);
+                        margin-bottom: 0.4rem;
+                        font-family: 'JetBrains Mono', monospace;
+                    }
+
+                    .name {
+                        font-size: 0.65rem;
+                        color: #fff;
+                        font-weight: 700;
+                        letter-spacing: 0.1em;
+                    }
+
+                    &:hover, &.active {
+                        border-color: var(--gem-color);
+                        box-shadow: 0 0 20px rgba(var(--gem-color), 0.2);
+                        transform: translateY(-5px);
+                        
+                        .name { color: var(--gem-color); }
+                    }
+
+                    &.active {
+                        background-color: rgba(255,255,255,0.03);
+                    }
+                }
+            }
+
+            .gem-description-box {
+                margin-bottom: 4rem;
+                max-width: 480px;
+
+                .desc-text {
+                    font-size: 1.1rem;
+                    line-height: 1.8;
+                    color: rgba(255,255,255,0.5);
+                    font-weight: 300;
+                    margin-bottom: 1.5rem;
+                    font-family: Arial, Helvetica, sans-serif; // Subtle sans for readability
+                }
+
+                .origin-label {
+                    display: block;
+                    font-size: 0.65rem;
+                    color: #fff;
+                    letter-spacing: 0.2em;
+                    font-weight: 700;
+                }
+            }
+
+            // 📊 STATS ROW
+            .gem-stats-row {
+                display: flex;
+                gap: 3.5rem;
+                margin-bottom: 5rem;
+                padding-bottom: 3rem;
+                border-bottom: 1px solid rgba(255,255,255,0.05);
+
+                .stat-item {
+                    display: flex;
+                    flex-direction: column;
+
+                    .s-label {
+                        font-size: 0.5rem;
+                        color: rgba(255,255,255,0.3);
+                        letter-spacing: 0.3em;
+                        margin-bottom: 0.8rem;
+                    }
+
+                    .s-val {
+                        font-size: 0.9rem;
+                        font-weight: 700;
+                        color: #fff;
+                    }
+                }
+            }
+
+            .gem-cta {
+                background: none;
+                border: 1px solid rgba(255,255,255,0.15);
+                padding: 1.2rem 2.8rem;
+                color: #fff;
+                font-family: 'JetBrains Mono', monospace;
+                font-size: 0.7rem;
+                letter-spacing: 0.3em;
+                cursor: pointer;
+                text-transform: uppercase;
+                transition: all 0.4s ease;
+
+                &:hover {
+                    background-color: #fff;
+                    color: #000;
+                }
+            }
+        }
+
+        // 🎨 RIGHT: INTERACTIVE VIEWER
+        .gem-viewer {
+            flex: 0.8;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            .gem-glare {
+                position: absolute;
+                width: 140%;
+                height: 140%;
+                background: radial-gradient(circle at center, rgba(255,255,255,0.03) 0%, transparent 60%);
+                z-index: 1;
+                filter: blur(50px);
+                animation: flare-glow 8s infinite alternate;
+            }
+
+            .gem-image-container {
+                position: relative;
+                z-index: 5;
+                width: 100%;
+                max-width: 500px;
+
+                .gem-image-current {
+                    width: 100%;
+                    height: auto;
+                    filter: drop-shadow(0 0 50px rgba(0,0,0,0.8));
+                    will-change: transform, opacity;
+                }
+            }
+        }
+    }
+
+    // 💎 BACKGROUND OVERLAY TEXT
+    .gem-bg-text {
+        position: absolute;
+        bottom: -5%;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 18vw;
+        font-weight: 900;
+        opacity: 0.04; // Subtle yet visible
+        letter-spacing: -0.05em;
+        white-space: nowrap;
+        pointer-events: none;
+        z-index: 1; // Correct stacking
+        text-transform: uppercase;
+        color: #fff;
+        width: 100%;
+        text-align: center;
+    }
+
+    @keyframes flare-glow {
+        from { transform: scale(1) opacity(0.5); }
+        to { transform: scale(1.2) opacity(0.8); }
+    }
+}
+
+// 📱 RESPONSIVE ADAPTATIONS
+@media (max-width: 1200px) {
+    .gem-section-wrapper {
+        padding: 6rem 4%;
+        .gem-title { font-size: 6rem; }
+        .gem-container { gap: 3rem; }
+    }
+}
+
+@media (max-width: 900px) {
+    .gem-section-wrapper {
+        min-height: auto;
+        padding: 4rem 1rem;
+        
+        .gem-container {
+            flex-direction: column-reverse;
+            text-align: center;
+        }
+
+        .gem-info-panel {
+            max-width: 100%;
+            .gem-title { align-items: center; .outline { margin-left: 0; } }
+            .gem-selector { justify-content: center; flex-wrap: wrap; }
+            .gem-description-box { margin: 0 auto 4rem; }
+            .gem-stats-row { justify-content: center; gap: 2rem; }
+        }
+
+        .gem-viewer { margin-bottom: 4rem; .gem-glare { width: 100%; height: 100%; } }
+    }
+}

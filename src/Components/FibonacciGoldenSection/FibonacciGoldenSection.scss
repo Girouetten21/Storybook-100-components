@@ -1,0 +1,275 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,400;1,700&family=Outfit:wght@300;400;700&display=swap');
+
+.fibonacci-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  background-color: #0c0c0c;
+  color: #fff;
+  overflow: hidden;
+  font-family: 'Outfit', sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4vw; // Outer safety margin
+  --gold: #d4af37;
+  --phi: 1.618;
+
+  // 🌀 SPIRAL SVG OVERLAY
+  .spiral-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 92vw; // Matches layout width roughly
+    height: calc(92vw / 1.618);
+    pointer-events: none;
+    z-index: 50;
+    opacity: 0.15;
+
+    .golden-spiral-svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+
+      path {
+        stroke-width: 0.8;
+      }
+    }
+  }
+
+  // 📐 MAIN FIBONACCI GRID LAYOUT
+  .fibonacci-layout {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    gap: 1.5rem;
+    z-index: 10;
+
+    .fibonacci-block {
+      background-color: #111;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      position: relative;
+      overflow: hidden;
+      will-change: transform, opacity;
+
+      .block-inner {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        overflow: hidden;
+      }
+    }
+
+    // 🧱 LEFT MAJOR: The 61.8% Block
+    .block-major {
+      flex: 1.618;
+      border-radius: 4px;
+
+      img {
+        width: 100%;
+        height: 120%; // Extra height for parallax
+        object-fit: cover;
+        position: absolute;
+        top: -10%;
+        opacity: 0.8;
+      }
+
+      .block-overlay {
+        position: absolute;
+        bottom: 0; left: 0; right: 0;
+        height: 40%;
+        background: linear-gradient(to top, #0c0c0c 0%, transparent 100%);
+      }
+
+      .block-label {
+        position: absolute;
+        bottom: 2rem;
+        left: 2rem;
+        font-size: 0.6rem;
+        letter-spacing: 0.5em;
+        opacity: 0.3;
+        color: var(--gold);
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+    }
+
+    // 🏗️ RIGHT COLUMN: The 38.2% Block subdivided
+    .fibonacci-column-minor {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+
+      // TOP: The Square (roughly match height to width for visual ratio)
+      .block-square {
+        flex: 1.618;
+        display: flex;
+        align-items: center;
+        background: radial-gradient(circle at top right, #1a1a1a, #111);
+
+        .content-pad {
+          padding: 3rem;
+          position: relative;
+
+          .phi-symbol {
+            position: absolute;
+            top: -1.5rem;
+            left: 2.5rem;
+            font-size: 8rem;
+            font-family: 'Playfair Display', serif;
+            color: var(--gold);
+            opacity: 0.04;
+            pointer-events: none;
+          }
+
+          .golden-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            font-weight: 400;
+            line-height: 1.1;
+            margin-bottom: 2rem;
+            letter-spacing: -0.01em;
+            
+            &::first-letter {
+              font-style: italic;
+              color: var(--gold);
+              padding-right: 0.1em;
+            }
+          }
+
+          .golden-desc {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: rgba(255,255,255,0.6);
+            max-width: 80%;
+          }
+        }
+      }
+
+      // BOTTOM ROW: Final subdivisions (Rectangles)
+      .fibonacci-row-minor {
+        flex: 1;
+        display: flex;
+        gap: 1.5rem;
+
+        .block-detail {
+          flex: 1.618;
+          display: flex;
+          align-items: center;
+          padding: 2rem;
+          background-color: #0c0c0c;
+          border-left: 1px solid var(--gold);
+
+          .detail-tag {
+            font-size: 0.55rem;
+            letter-spacing: 0.4em;
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+          }
+
+          .detail-value {
+            font-size: 1.8rem;
+            font-weight: 300;
+            letter-spacing: -0.02em;
+          }
+        }
+
+        .block-cta {
+          flex: 1;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background-color: #111;
+
+          .phi-button {
+            background: none;
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 1.5rem;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            cursor: pointer;
+            transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+
+            .btn-text {
+              font-size: 0.65rem;
+              letter-spacing: 0.3em;
+              color: var(--gold);
+              opacity: 0.8;
+            }
+
+            .btn-arrow {
+              font-size: 1.5rem;
+              color: var(--gold);
+              transition: transform 0.4s ease;
+            }
+
+            &:hover {
+              background-color: var(--gold);
+              border-color: var(--gold);
+              .btn-text { color: #000; opacity: 1; }
+              .btn-arrow { color: #000; transform: translateX(8px); }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // 🥢 GRID LINES DECORATION
+  .phi-grid-lines {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 92vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 5;
+    opacity: 0.05;
+
+    .line-h {
+      width: 100%;
+      height: 1px;
+      background: #fff;
+      position: absolute;
+      top: 61.8%; 
+    }
+    .line-v {
+      width: 1px;
+      height: 100%;
+      background: #fff;
+      position: absolute;
+      left: 61.8%;
+    }
+  }
+
+  // RESPONSIVITY: Mobile Fibonacci stacking
+  @media (max-width: 1024px) {
+    height: auto;
+    padding: 2rem;
+
+    .fibonacci-layout {
+      flex-direction: column;
+      
+      .block-major {
+        height: 60vh;
+        flex: none;
+      }
+      .fibonacci-column-minor {
+        flex: none;
+        
+        .block-square { flex: none; height: 50vh; }
+        .fibonacci-row-minor { flex: none; height: 30vh; }
+      }
+    }
+
+    .spiral-overlay { display: none; }
+  }
+}

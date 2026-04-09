@@ -1,0 +1,188 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Outfit:wght@200;300;400;500;600;700&display=swap');
+
+// 📷 PHOTOGRAPHY EXHIBITION: FOLDED PERSPECTIVE
+.photography-exhib {
+    position: relative;
+    width: 100%;
+    min-height: 120vh;
+    background: #050505;
+    color: #fff;
+    font-family: 'Outfit', sans-serif;
+    padding: 20vh 8%;
+    overflow: hidden;
+
+    &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at 70% 50%, rgba(212, 175, 55, 0.05) 0%, transparent 60%);
+        pointer-events: none;
+    }
+
+    .photo-layout {
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+        gap: 10vw;
+        position: relative;
+        z-index: 10;
+        perspective: 2000px;
+    }
+
+    // 📝 LEFT: EDITORIAL
+    .photo-editorial {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+        .photo-hero-text {
+            .eyebrow {
+                font-size: 0.7rem;
+                letter-spacing: 0.6em;
+                color: #d4af37;
+                display: block;
+                margin-bottom: 2rem;
+                font-weight: 700;
+            }
+
+            h2 {
+                font-family: 'Playfair Display', serif;
+                font-size: clamp(3rem, 6vw, 6rem);
+                line-height: 1.1;
+                margin: 0 0 3rem;
+                letter-spacing: -0.02em;
+
+                span { font-style: italic; font-weight: 400; color: #d4af37; }
+            }
+
+            .separator {
+                width: 60px;
+                height: 1px;
+                background: rgba(255,255,255,0.2);
+                margin-bottom: 3rem;
+            }
+
+            p {
+                font-size: 1.1rem;
+                line-height: 1.8;
+                color: rgba(255,255,255,0.6);
+                max-width: 500px;
+                margin-bottom: 5rem;
+                font-weight: 300;
+            }
+        }
+
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 4rem;
+
+            .service-item {
+                label { font-size: 0.6rem; color: #d4af37; display: block; margin-bottom: 1rem; font-weight: 700; }
+                h4 { font-size: 1rem; letter-spacing: 0.2em; margin-bottom: 1rem; }
+                p { font-size: 0.85rem; line-height: 1.6; color: rgba(255,255,255,0.4); }
+            }
+        }
+    }
+
+    // 🖼️ RIGHT: FOLDED VISUALS
+    .photo-visuals {
+        position: relative;
+        height: 80vh;
+
+        .skew-image-wrapper {
+            position: absolute;
+            background: #111;
+            padding: 8px;
+            box-shadow: 20px 30px 60px rgba(0,0,0,0.5);
+            transition: transform 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+            
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                display: block;
+            }
+
+            .photo-tag {
+                position: absolute;
+                bottom: -30px;
+                right: 0;
+                font-size: 0.6rem;
+                letter-spacing: 0.2em;
+                color: rgba(255,255,255,0.3);
+                font-weight: 600;
+            }
+
+            // Individual "Folds" and Positions
+            &.p-main {
+                width: 350px;
+                height: 450px;
+                top: 0;
+                right: 5vw;
+                transform: rotateY(-25deg) skewY(2deg);
+                z-index: 5;
+            }
+
+            &.p-fashion {
+                width: 250px;
+                height: 350px;
+                top: 40vh;
+                right: 15vw;
+                transform: rotateY(30deg) skewY(-5deg) rotate(5deg);
+                z-index: 6;
+            }
+
+            &.p-arch {
+                width: 300px;
+                height: 400px;
+                top: 15vh;
+                left: -5vw;
+                transform: rotateY(15deg) skewY(5deg) rotate(-2deg);
+                z-index: 4;
+            }
+
+            &:hover {
+                transform: rotateY(0deg) skewY(0deg) rotate(0deg) scale(1.05);
+                z-index: 100;
+            }
+        }
+    }
+
+    // 🎞️ DECOR
+    .film-marker {
+        position: absolute;
+        font-size: 0.6rem;
+        letter-spacing: 0.5em;
+        color: rgba(255,255,255,0.15);
+        font-weight: 700;
+        text-transform: uppercase;
+
+        &.top-left { top: 5vh; left: 5vw; }
+        &.bottom-right { bottom: 5vh; right: 5vw; }
+    }
+}
+
+// 📱 MOBILE
+@media (max-width: 1100px) {
+    .photography-exhib {
+        padding: 10vh 5%;
+        .photo-layout {
+            grid-template-columns: 1fr;
+            gap: 10vh;
+        }
+        .photo-visuals {
+            height: 60vh;
+            .skew-image-wrapper {
+                position: relative;
+                width: 80% !important;
+                height: auto !important;
+                aspect-ratio: 1;
+                margin: 0 auto 5vh;
+                right: auto !important;
+                left: auto !important;
+                top: auto !important;
+                transform: none !important;
+            }
+        }
+    }
+}

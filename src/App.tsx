@@ -1,67 +1,36 @@
-import AvantGardeFashionScroll from './Components/AvantGardeFashionScroll/AvantGardeFashionScroll'
-import ChronicleFolioScroll from './Components/ChronicleFolioScroll/ChronicleFolioScroll'
-import CinematicOvertureLoader from './Components/CinematicOvertureLoader/CinematicOvertureLoader'
-import AestheticTypographicLoader from './Components/AestheticTypographicLoader/AestheticTypographicLoader'
-import FibonacciGeometryLoader from './Components/FibonacciGeometryLoader/FibonacciGeometryLoader'
-import FibonacciHeroDoor from './Components/FibonacciHeroDoor/FibonacciHeroDoor'
-import FibonacciGoldenMenu from './Components/FibonacciGoldenMenu/FibonacciGoldenMenu'
-import EpistolaryStackScroll from './Components/EpistolaryStackScroll/EpistolaryStackScroll'
-import KineticCarouselScroll from './Components/KineticCarouselScroll/KineticCarouselScroll'
-import SartorialHeritageScroll from './Components/SartorialHeritageScroll/SartorialHeritageScroll'
+import { useState } from 'react';
+// Menus & Loaders
+import PhotographyArchiveMenu from './Components/PhotographyArchiveMenu/PhotographyArchiveMenu'
+
+// Section Components
+import HeroDoorPhotography from './Components/HeroDoorPhotography/HeroDoorPhotography'
+import LensApertureExhibition from './Components/LensApertureExhibition/LensApertureExhibition'
+import PhotographyServiceMosaic from './Components/PhotographyServiceMosaic/PhotographyServiceMosaic'
 
 function App() {
+  const [isGated, setIsGated] = useState(true);
+
   return (
-    <div style={{ background: '#0b0d10', color: '#fff' }}>
-      {/* 🎬 Component #47: Cinematic Default (Commented Out) */}
-      {/* <CinematicOvertureLoader /> */}
+    <div style={{ background: '#050505', color: '#fff' }}>
 
-      {/* 🖋️ Component #48: Aesthetic Default (Commented Out) */}
-      {/* <AestheticTypographicLoader /> */}
+      {/* 🧭 Component #65: Photography Archive Menu */}
+      {!isGated && <PhotographyArchiveMenu />}
 
-      {/* 📐 Component #49: Fibonacci Loader (Commented Out) */}
-      {/* <FibonacciGeometryLoader /> */}
-      
-      {/* 🚪 Component #51: The Interactive Golden Rule Entry Gate */}
-      <FibonacciHeroDoor />
+      <main>
 
-      {/* ⚜️ Component #50: The Master Mathematical Menu! */}
-      <FibonacciGoldenMenu />
+        {/* 🚪 New: Hero Door Photography */}
+        <HeroDoorPhotography onUnlock={() => setIsGated(false)} />
 
-      {/* Hero Section */}
-      <section style={{
-        height: '100vh',
-        background: '#fff',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        color: '#000',
-        zIndex: 5,
-        position: 'relative',
-        flexDirection: 'column'
-      }}>
-        <span style={{ fontSize: '0.7rem', letterSpacing: '0.8em', opacity: 0.3, textTransform: 'uppercase' }}>— Section IV —</span>
-        <h1 style={{ fontSize: '5rem', margin: '20px 0', fontFamily: 'serif', fontStyle: 'italic' }}>Abstract Forms</h1>
-        <p style={{ opacity: 0.4, maxWidth: '400px', margin: '0 auto', textAlign: 'center', lineHeight: '1.6' }}>Slowing down to appreciate the silence of monochromatic poetry.</p>
-      </section>
+        {/* 🧿 Component #64: Lens Aperture Exhibition (New!) */}
+        <LensApertureExhibition isUnlocked={!isGated} />
 
-      <EpistolaryStackScroll />
+        {/* 🧩 New: Photography Service Mosaic */}
+        <PhotographyServiceMosaic />
 
-      {/* Footer Section */}
-      <section style={{
-        height: '100vh',
-        background: '#fff',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        color: '#000',
-        zIndex: 5,
-        position: 'relative',
-        flexDirection: 'column'
-      }}>
-        <span style={{ fontSize: '0.7rem', letterSpacing: '0.8em', opacity: 0.3, textTransform: 'uppercase' }}>— Section IV —</span>
-        <h1 style={{ fontSize: '5rem', margin: '20px 0', fontFamily: 'serif', fontStyle: 'italic' }}>Abstract Forms</h1>
-        <p style={{ opacity: 0.4, maxWidth: '400px', margin: '0 auto', textAlign: 'center', lineHeight: '1.6' }}>Slowing down to appreciate the silence of monochromatic poetry.</p>
-      </section>
+        <section style={{ height: '100vh', background: '#0c0c0c' }}></section>
+
+      </main>
+
     </div>
   )
 }

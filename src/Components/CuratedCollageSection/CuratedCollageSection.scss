@@ -1,0 +1,353 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,200;1,9..144,400&family=Outfit:wght@300;400;700&display=swap');
+
+.collage-wrapper {
+    position: relative;
+    width: 100%;
+    min-height: 140vh; 
+    background-color: #f7f7f4; 
+    color: #111;
+    overflow: hidden;
+    font-family: 'Outfit', sans-serif;
+    padding: 8vw;
+
+    // 🧱 HARMONIC GRID SYSTEM
+    .collage-grid {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        grid-auto-rows: 10vh;
+        gap: 2rem;
+        width: 100%;
+        max-width: 1600px;
+        margin: 0 auto;
+
+        // Intro Area
+        .item-intro {
+            grid-column: 1 / 7;
+            grid-row: 1 / 5;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            z-index: 10;
+
+            .collage-tag {
+                display: inline-block;
+                padding: 0.6rem 1.4rem;
+                background-color: #000;
+                color: #fff;
+                font-size: 0.55rem;
+                letter-spacing: 0.5em;
+                margin-bottom: 2rem;
+                width: fit-content;
+            }
+
+            .main-title {
+                font-family: 'Fraunces', serif;
+                font-size: 8vw;
+                font-weight: 200;
+                line-height: 0.85;
+                margin: 0;
+                letter-spacing: -0.05em;
+                text-transform: uppercase;
+            }
+
+            .sub-title {
+                font-family: 'Fraunces', serif;
+                font-size: 5vw;
+                font-weight: 400;
+                font-style: italic;
+                line-height: 0.9;
+                margin-top: -0.5rem;
+                margin-bottom: 2.5rem;
+                color: var(--gold, #B8860B);
+            }
+
+            .description {
+                font-size: 0.9rem;
+                line-height: 1.8;
+                max-width: 380px;
+                color: rgba(0,0,0,0.5);
+                font-weight: 300;
+            }
+        }
+
+        // Individual Grid Spans for Harmony
+        .collage-item {
+            position: relative;
+            z-index: 5;
+            cursor: pointer;
+            will-change: transform, opacity;
+
+            .item-inner {
+                background: #fff;
+                padding: 1.5rem;
+                box-shadow: 0 15px 45px rgba(0,0,0,0.03);
+                border: 1px solid rgba(0,0,0,0.03);
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                position: relative;
+
+                img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    filter: grayscale(1);
+                    transition: all 1s cubic-bezier(0.19, 1, 0.22, 1);
+                }
+
+                .item-label {
+                    margin-top: 1.2rem;
+                    font-size: 0.55rem;
+                    letter-spacing: 0.3em;
+                    font-weight: 700;
+                    opacity: 0.4;
+                }
+
+                .click-hint {
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    font-size: 0.6rem;
+                    letter-spacing: 0.2em;
+                    background: #000;
+                    color: #fff;
+                    padding: 0.5rem 1rem;
+                    opacity: 0;
+                    pointer-events: none;
+                    transition: all 0.4s ease;
+                    white-space: nowrap;
+                    z-index: 10;
+                }
+
+                &:hover {
+                    img {
+                        filter: grayscale(0);
+                        transform: scale(1.03);
+                    }
+                    .click-hint {
+                        opacity: 1;
+                        transform: translate(-50%, -50%) scale(1.1);
+                    }
+                }
+            }
+        }
+
+        // Explicit Layout Map
+        .grid-item-1 { grid-column: 8 / 12; grid-row: 1 / 6; }
+        .grid-item-2 { grid-column: 2 / 5;  grid-row: 7 / 12; }
+        .grid-item-3 { grid-column: 6 / 9;  grid-row: 6 / 10; margin-top: 5vh; }
+        .grid-item-4 { grid-column: 10 / 13; grid-row: 9 / 14; }
+        .grid-item-5 { grid-column: 5 / 8;   grid-row: 11 / 15; }
+    }
+
+    // 🖥️ MODAL STYLES
+    .collage-modal-overlay {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(247, 247, 244, 0.85);
+        backdrop-filter: blur(15px);
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 4rem;
+
+        .modal-content {
+            background-color: #fff;
+            width: 100%;
+            max-width: 1200px;
+            max-height: 80vh;
+            position: relative;
+            box-shadow: 0 40px 100px rgba(0,0,0,0.1);
+            overflow: hidden;
+
+            .modal-close {
+                position: absolute;
+                top: 2rem;
+                right: 2rem;
+                background: none;
+                border: none;
+                font-family: 'Outfit', sans-serif;
+                font-size: 0.7rem;
+                letter-spacing: 0.2em;
+                cursor: pointer;
+                z-index: 10;
+                &:hover { text-decoration: underline; }
+            }
+
+            .modal-layout {
+                display: flex;
+                height: 100%;
+
+                .modal-image-box {
+                    flex: 1.2;
+                    background-color: #f0f0f0;
+                    height: 80vh;
+                    
+                    img {
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                    }
+                }
+
+                .modal-info-box {
+                    flex: 1;
+                    padding: 4rem;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+
+                    .m-tag {
+                        font-size: 0.6rem;
+                        letter-spacing: 0.4em;
+                        color: var(--gold, #B8860B);
+                        font-weight: 700;
+                        margin-bottom: 2rem;
+                        display: block;
+                    }
+
+                    .m-title {
+                        font-family: 'Fraunces', serif;
+                        font-size: 3.5rem;
+                        font-weight: 200;
+                        line-height: 1;
+                        margin-bottom: 2.5rem;
+                        letter-spacing: -0.04em;
+                    }
+
+                    .m-desc {
+                        font-size: 1.1rem;
+                        line-height: 1.8;
+                        color: rgba(0,0,0,0.6);
+                        margin-bottom: 3rem;
+                        font-weight: 300;
+                    }
+
+                    .m-specs {
+                        border-top: 1px solid #eee;
+                        padding-top: 2rem;
+                        margin-bottom: 4rem;
+
+                        .spec-row {
+                            display: flex;
+                            justify-content: space-between;
+                            margin-bottom: 1rem;
+                            font-size: 0.75rem;
+
+                            .s-key { opacity: 0.4; text-transform: uppercase; letter-spacing: 0.1em; }
+                            .s-val { font-weight: 700; }
+                        }
+                    }
+
+                    .modal-cta {
+                        background: #000;
+                        color: #fff;
+                        border: none;
+                        padding: 1.2rem 2rem;
+                        font-family: 'Outfit', sans-serif;
+                        font-size: 0.65rem;
+                        letter-spacing: 0.3em;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                        
+                        &:hover {
+                            background-color: var(--gold, #B8860B);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    background: 
+        radial-gradient(circle at 50% 50%, rgba(255,255,255,1) 0%, rgba(247, 247, 244, 1) 100%),
+        url('https://grainy-gradients.vercel.app/noise.svg');
+    background-blend-mode: overlay;
+
+    // 🥢 ARCHITECTURAL BACKGROUND LINES
+    .collage-bg-lines {
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        pointer-events: none;
+        z-index: 1;
+        opacity: 0.1;
+
+        .line-v {
+            position: absolute;
+            top: 0; bottom: 0;
+            width: 1px;
+            background-color: #000;
+        }
+
+        .line-h {
+            position: absolute;
+            left: 0; right: 0;
+            height: 1px;
+            background-color: #000;
+        }
+
+        .v-1 { left: 33.333%; }
+        .v-2 { left: 66.666%; }
+        .h-1 { top: 50%; }
+    }
+}
+
+// 📱 MOBILE MODAL
+@media (max-width: 1024px) {
+    .collage-modal-overlay {
+        padding: 1rem;
+        
+        .modal-content {
+            max-height: 95vh;
+            overflow-y: auto;
+
+            .modal-layout {
+                flex-direction: column;
+                
+                .modal-image-box { height: 40vh; flex: none; }
+                .modal-info-box { padding: 3rem 2rem; flex: none; }
+            }
+
+            .m-title { font-size: 2.5rem !important; }
+        }
+    }
+}
+
+@media (max-width: 1024px) {
+    .collage-wrapper {
+        height: auto;
+        padding: 4rem 1rem;
+
+        .collage-container {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+
+            .collage-title-wrapper {
+                position: relative;
+                transform: none;
+                top: auto; left: auto;
+                margin-bottom: 4rem;
+
+                .main-title { font-size: 18vw; }
+                .sub-title { font-size: 12vw; }
+            }
+
+            .collage-item {
+                position: relative !important;
+                top: auto !important;
+                left: auto !important;
+                width: 100% !important;
+                margin: 0 auto;
+                max-width: 400px;
+            }
+        }
+
+        .bg-text-layer { display: none; }
+    }
+}

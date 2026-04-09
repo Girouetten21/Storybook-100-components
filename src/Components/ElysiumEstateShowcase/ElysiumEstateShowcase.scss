@@ -1,0 +1,252 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Outfit:wght@200;300;400;500;600;700&display=swap');
+
+// 🎬 CINEMATIC SHOWCASE: ELYSIUM ESTATES
+.elysium-cinematic {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    background: #000;
+    color: #fff;
+    font-family: 'Outfit', sans-serif;
+    overflow: hidden;
+    display: flex;
+
+    // 🏷️ FLOATING OVERLAY TITLE
+    .floating-title {
+        position: absolute;
+        top: 8vh;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 100;
+        text-align: center;
+        pointer-events: none;
+        mix-blend-mode: difference;
+
+        .eyebrow {
+            font-size: 0.7rem;
+            letter-spacing: 0.6em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.6);
+            display: block;
+            margin-bottom: 2rem;
+            font-weight: 600;
+        }
+
+        h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(3rem, 8vw, 7rem);
+            font-weight: 400;
+            margin: 0;
+            letter-spacing: -0.03em;
+            line-height: 0.9;
+            color: #fff;
+        }
+    }
+
+    // 🏗️ STRIP GALLERY
+    .gallery-container {
+        display: flex;
+        width: 100%;
+        height: 100%;
+
+        .estate-strip {
+            position: relative;
+            flex: 1;
+            height: 100%;
+            cursor: pointer;
+            overflow: hidden;
+            transition: flex 1.2s cubic-bezier(0.19, 1, 0.22, 1);
+            border-right: 1px solid rgba(255,255,255,0.1);
+
+            // 🖼️ BG
+            .strip-bg {
+                position: absolute;
+                inset: 0;
+                z-index: 1;
+                
+                img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    transform: scale(1.1);
+                    transition: transform 1.8s cubic-bezier(0.19, 1, 0.22, 1), 
+                                filter 1s ease;
+                    filter: brightness(0.3) contrast(1.1) grayscale(0.5);
+                }
+
+                .vignette {
+                    position: absolute;
+                    inset: 0;
+                    background: radial-gradient(circle, transparent 20%, rgba(0,0,0,0.8) 100%);
+                    z-index: 2;
+                }
+            }
+
+            // 🖱️ VERTICAL LABEL (When collapsed)
+            .strip-label {
+                position: absolute;
+                bottom: 10vh;
+                left: 50%;
+                transform: translateX(-50%) rotate(-90deg);
+                transform-origin: center center;
+                z-index: 10;
+                white-space: nowrap;
+                transition: opacity 0.5s ease, transform 0.5s ease;
+                
+                span {
+                    font-size: 0.75rem;
+                    letter-spacing: 0.4em;
+                    text-transform: uppercase;
+                    color: rgba(255,255,255,0.4);
+                    font-weight: 700;
+                }
+            }
+
+            // 📝 CONTENT
+            .strip-content {
+                position: absolute;
+                inset: 0;
+                z-index: 20;
+                display: flex;
+                align-items: center;
+                padding: 0 10vw;
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.8s ease 0.4s;
+
+                .content-inner {
+                    max-width: 600px;
+
+                    .id-marker {
+                        font-size: 0.8rem;
+                        color: #d4af37;
+                        font-weight: 700;
+                        margin-bottom: 2rem;
+                        border: 1px solid rgba(212, 175, 55, 0.3);
+                        width: 40px;
+                        height: 40px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        border-radius: 50%;
+                    }
+
+                    .main-info {
+                        h3 {
+                            font-family: 'Playfair Display', serif;
+                            font-size: clamp(2.5rem, 5vw, 4.5rem);
+                            margin: 0 0 1rem;
+                            letter-spacing: -0.01em;
+                        }
+                        .estate-loc {
+                            font-size: 0.8rem;
+                            letter-spacing: 0.3em;
+                            text-transform: uppercase;
+                            color: rgba(255,255,255,0.5);
+                            margin-bottom: 3rem;
+                        }
+                    }
+
+                    .expanded-data {
+                        .feature-list {
+                            display: flex;
+                            gap: 2rem;
+                            margin-bottom: 4rem;
+                            span {
+                                font-size: 0.65rem;
+                                text-transform: uppercase;
+                                letter-spacing: 0.2em;
+                                color: #d4af37;
+                                border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+                                padding-bottom: 0.5rem;
+                            }
+                        }
+
+                        .stats-block {
+                            display: grid;
+                            grid-template-columns: repeat(2, 1fr);
+                            gap: 4rem;
+                            margin-bottom: 4rem;
+                            
+                            .stat {
+                                label { font-size: 0.6rem; text-transform: uppercase; color: rgba(255,255,255,0.4); letter-spacing: 0.2em; display: block; margin-bottom: 0.8rem; }
+                                p { font-size: 1.5rem; font-weight: 300; margin: 0; }
+                            }
+                        }
+
+                        .cta-button {
+                            background: #fff;
+                            color: #000;
+                            border: none;
+                            padding: 1.2rem 3rem;
+                            font-size: 0.7rem;
+                            letter-spacing: 0.4em;
+                            font-weight: 700;
+                            cursor: pointer;
+                            transition: transform 0.3s ease;
+                            
+                            &:hover { transform: translateY(-3px); }
+                        }
+                    }
+                }
+            }
+
+            // ⚡ ACTIVE STATES
+            &.is-active {
+                flex: 15; // 🟢 Nearly full-screen expansion
+                cursor: default;
+
+                .strip-bg img {
+                    transform: scale(1);
+                    filter: brightness(0.6) contrast(1) grayscale(0);
+                }
+
+                .strip-label {
+                    opacity: 0;
+                    transform: translateX(-50%) translateY(20px) rotate(-90deg);
+                }
+
+                .strip-content {
+                    opacity: 1;
+                    pointer-events: all;
+                }
+            }
+
+            &:hover:not(.is-active) {
+                .strip-bg img {
+                    filter: brightness(0.5) contrast(1.1) grayscale(0.2);
+                    transform: scale(1.05);
+                }
+                .strip-label span { color: #fff; }
+            }
+        }
+    }
+}
+
+// 📱 MOBILE ADAPTATION
+@media (max-width: 900px) {
+    .elysium-cinematic {
+        flex-direction: column;
+        .floating-title { top: 12vh; }
+        .gallery-container {
+            flex-direction: column;
+            .estate-strip {
+                border-right: none;
+                border-bottom: 1px solid rgba(255,255,255,0.1);
+                
+                .strip-label {
+                    transform: translateX(-50%);
+                    bottom: 2rem;
+                    left: 2rem;
+                    transform-origin: left bottom;
+                    rotate: 0deg;
+                }
+
+                &.is-active {
+                    .strip-content { padding: 5rem 2rem; }
+                    .stats-block { gap: 2rem; }
+                }
+            }
+        }
+    }
+}
