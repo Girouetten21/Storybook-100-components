@@ -1,0 +1,175 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Outfit:wght@200;300;400;500&family=JetBrains+Mono:wght@400;500&display=swap');
+
+.editorial-collage {
+    position: relative;
+    width: 100%;
+    min-height: 180vh; // 🟢 Extra altura para el parallax largo
+    background: #050505;
+    padding: 20vh 8vw;
+    color: #fff;
+    font-family: 'Outfit', sans-serif;
+    overflow: visible; // 🟢 Necesario para el paralaje negativo
+
+    .collage-header {
+        margin-bottom: 15vh;
+        max-width: 600px;
+
+        .eyebrow {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            letter-spacing: 0.5em;
+            color: #d4af37;
+            display: block;
+            margin-bottom: 1.5rem;
+        }
+
+        .title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            line-height: 1.1;
+            margin: 0;
+
+            span {
+                font-style: italic;
+                font-weight: 400;
+                color: #d4af37;
+            }
+        }
+    }
+
+    // 🧩 GRID ASIMÉTRICO
+    .collage-grid {
+        position: relative;
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 0;
+    }
+
+    .collage-item {
+        position: relative;
+        z-index: 1;
+
+        .item-inner {
+            position: relative;
+            background: #0a0a0a;
+            overflow: hidden;
+            
+            &:hover {
+                .image-wrap img {
+                    transform: scale(1.05);
+                    filter: grayscale(0) brightness(1);
+                }
+                .item-card {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+        }
+
+        .image-wrap {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            aspect-ratio: 4 / 5;
+
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                filter: grayscale(0.5) brightness(0.7);
+                transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), 
+                            filter 0.8s ease;
+            }
+        }
+
+        .item-card {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 2rem;
+            background: linear-gradient(transparent, rgba(0,0,0,0.9));
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            pointer-events: none;
+
+            .item-meta {
+                font-family: 'JetBrains Mono', monospace;
+                font-size: 0.65rem;
+                letter-spacing: 0.25em;
+                color: #d4af37;
+                display: block;
+                margin-bottom: 0.5rem;
+            }
+
+            .item-title {
+                margin: 0;
+                font-size: 0.85rem;
+                font-weight: 500;
+                letter-spacing: 0.3em;
+                text-transform: uppercase;
+            }
+        }
+
+        // 📐 POSICIONAMIENTO BRUTALISTA
+        &.pos-1 { 
+            grid-column: 1 / 7; 
+            z-index: 5;
+        }
+        &.pos-2 { 
+            grid-column: 8 / 12; 
+            margin-top: 20vh;
+            z-index: 10;
+        }
+        &.pos-3 { 
+            grid-column: 2 / 6; 
+            margin-top: -10vh;
+            z-index: 15;
+        }
+        &.pos-4 { 
+            grid-column: 7 / 13; 
+            margin-top: 5vh;
+            z-index: 5;
+        }
+    }
+
+    // 🔍 HUD DECOR
+    .collage-hud {
+        margin-top: 20vh;
+        text-align: right;
+
+        .hud-line {
+            width: 100%;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin-bottom: 1.5rem;
+        }
+
+        .hud-data {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 0.5em;
+            color: rgba(255, 255, 255, 0.15);
+        }
+    }
+}
+
+// 📱 RESPONSIVE
+@media (max-width: 900px) {
+    .editorial-collage {
+        padding: 10vh 6vw;
+        min-height: auto;
+
+        .collage-item {
+            grid-column: 1 / 13 !important;
+            margin: 0 0 10vh 0 !important;
+            transform: none !important; // Desactiva parallax en móvil
+            
+            .image-wrap {
+                aspect-ratio: 16 / 9;
+            }
+        }
+    }
+}

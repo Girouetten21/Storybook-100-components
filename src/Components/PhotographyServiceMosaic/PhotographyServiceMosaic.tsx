@@ -6,6 +6,7 @@ import { useGSAP } from '@gsap/react';
 // Assets
 import mansionImg from '../../assets/img/services/mansion.png';
 import portraitImg from '../../assets/img/services/portrait_bw.png';
+import fashionImg from '../../assets/img/photography/fashion.png';
 import opticsImg from '../../assets/img/photography/mosaic_optics.png';
 
 import './PhotographyServiceMosaic.scss';
@@ -115,6 +116,19 @@ const PhotographyServiceMosaic: React.FC = () => {
                         <h3>OPTICAL<br/>ARTISTRY</h3>
                         <p>The science of focus. Using radioactive glass and prism refraction to bend reality into art.</p>
                         <div className="card-cta">THE LAB</div>
+                    </div>
+                </div>
+
+                <div className="mosaic-card fashion large">
+                    <div className="card-image-wrap">
+                        <img src={fashionImg} alt="Cinematic Storytelling" />
+                        <div className="prism-overlay" />
+                    </div>
+                    <div className="card-content">
+                        <span className="card-index">04</span>
+                        <h3>CINEMATIC<br/>STORYTELLING</h3>
+                        <p>Bridging the gap between a single frame and a motion sequence. High-concept editorial direction for modern brands.</p>
+                        <div className="card-cta">MOTION SUITE</div>
                     </div>
                 </div>
 

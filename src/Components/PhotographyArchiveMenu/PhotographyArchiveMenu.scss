@@ -11,8 +11,8 @@
     // 🎯 TRIGGER
     .menu-trigger {
         position: absolute;
-        top: 6vh;
-        right: 6vw;
+        top: 1.5vh;
+        right: 1.5vw;
         pointer-events: auto;
         background: none;
         border: none;
@@ -26,9 +26,13 @@
 
         &:hover {
             transform: scale(1.05);
-            .trigger-icon { 
+
+            .trigger-icon {
                 border-color: #d4af37;
-                svg path { stroke: #d4af37; }
+
+                svg path {
+                    stroke: #d4af37;
+                }
             }
         }
 
@@ -41,7 +45,7 @@
             align-items: center;
             justify-content: center;
             transition: all 0.3s ease;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(10px);
 
             img {
@@ -67,7 +71,7 @@
         inset: 0;
         background: #080808;
         z-index: 2100;
-        clip-path: circle(0% at calc(100% - 6vw) 6vh);
+        clip-path: circle(0% at calc(100% - 3.5vw) 3.5vh);
         pointer-events: auto;
         display: flex;
         align-items: center;
@@ -137,17 +141,23 @@
 
             .menu-item {
                 display: flex;
-                align-items: center; 
-                gap: 60px; 
+                align-items: center;
+                gap: 60px;
                 padding: 1.5rem 0;
                 border-bottom: 1px solid rgba(255, 255, 255, 0.05);
                 transition: transform 0.4s ease;
 
                 &:hover {
                     transform: translateX(30px);
-                    
-                    .item-meta { color: #fff; opacity: 1; }
-                    .menu-link { color: #d4af37; }
+
+                    .item-meta {
+                        color: #fff;
+                        opacity: 1;
+                    }
+
+                    .menu-link {
+                        color: #d4af37;
+                    }
                 }
 
                 .item-meta {
@@ -156,7 +166,7 @@
                     color: #d4af37;
                     letter-spacing: 0.3em;
                     opacity: 0.6;
-                    min-width: 180px; 
+                    min-width: 180px;
                     transition: all 0.4s ease;
                 }
 
@@ -215,11 +225,19 @@
 @media (max-width: 900px) {
     .photo-menu-container {
         .menu-overlay {
-            .menu-content { width: 90vw; }
+            .menu-content {
+                width: 90vw;
+            }
+
             .menu-list .menu-item {
                 gap: 20px;
-                .item-meta { min-width: 60px; font-size: 0.6rem; }
+
+                .item-meta {
+                    min-width: 60px;
+                    font-size: 0.6rem;
+                }
             }
+
             .menu-footer {
                 flex-direction: column;
                 align-items: flex-start;

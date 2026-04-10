@@ -1,226 +1,266 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Outfit:wght@200;300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
-// 🧿 LENS APERTURE EXHIBITION: EPIC HUD
 .lens-exhibition {
     position: relative;
     width: 100%;
     height: 100vh;
-    background: #000;
+    background: #050505;
     color: #fff;
     font-family: 'Outfit', sans-serif;
     overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 
-    // 🎞️ HUD ELEMENTS
-    .lens-ui-top,
-    .lens-ui-bottom {
+    &.is-locked {
+        .lens-ui-top, .lens-ui-bottom, .lens-split-layout {
+            opacity: 0;
+            pointer-events: none;
+        }
+    }
+
+    // 🎞️ GLOBAL UI DECOR
+    .lens-ui-top, .lens-ui-bottom {
         position: absolute;
         width: 100%;
+        padding: 4vh 6vw;
         display: flex;
         justify-content: space-between;
-        padding: 4vh 5vw;
-        z-index: 100;
         font-family: 'JetBrains Mono', monospace;
         font-size: 0.7rem;
-        letter-spacing: 0.3em;
-        color: rgba(255, 255, 255, 0.4);
+        letter-spacing: 0.4em;
+        color: rgba(255, 255, 255, 0.3);
+        z-index: 100;
         pointer-events: none;
-        text-transform: uppercase;
-        opacity: 0; // 🟢 Ocultar para intro
     }
 
-    .lens-ui-top {
-        top: 0;
-    }
+    .lens-ui-top { top: 0; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+    .lens-ui-bottom { bottom: 0; border-top: 1px solid rgba(255, 255, 255, 0.05); }
 
-    .lens-ui-bottom {
-        bottom: 0;
-    }
-
-    // 🧿 THE LENS SYSTEM
-    .lens-container {
-        position: relative;
-        width: 80vh;
-        height: 80vh;
+    // 🔳 SPLIT LAYOUT
+    .lens-split-layout {
         display: flex;
+        width: 100%;
+        height: 100%;
         align-items: center;
+        padding: 0 6vw;
+        gap: 4vw;
+    }
+
+    // 📝 TEXT SIDE (Left Column)
+    .lens-text-side {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
         justify-content: center;
         z-index: 10;
 
-        .lens-base {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            border: 20px solid #111;
-            box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1),
-                inset 0 0 100px rgba(0, 0, 0, 0.8),
-                0 40px 100px rgba(0, 0, 0, 0.9);
-            overflow: hidden;
-            background: #050505;
+        .text-content {
+            max-width: 500px;
         }
-
-        .aperture-hardware {
-            position: absolute;
-            inset: -20%;
-            z-index: 5;
-            opacity: 0.3;
-            pointer-events: none;
-
-            img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-                filter: grayscale(1);
-            }
-        }
-
-        .aperture-viewport {
-            position: absolute;
-            inset: 20px;
-            border-radius: 50%;
-            overflow: hidden;
-            z-index: 10;
-            background: #000;
-            clip-path: circle(0% at 50% 50%); // 🟢 Inicia totalmente cerrado (Negro)
-            box-shadow: inset 0 0 30px rgba(0,0,0,1); 
-
-            .lens-content-inner {
-                position: relative;
-                width: 100%;
-                height: 100%; // 🟢 Ahora es estático, no se desplaza verticalmente
-                z-index: 20;
-
-                .lens-slide {
-                    position: absolute; // 🟢 Apilados unos sobre otros
-                    inset: 0;
-                    width: 100%;
-                    height: 100%;
-                    transform: scale(1.1); 
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    opacity: 0; // 🟢 Ningún slide visible al inicio
-                    transition: opacity 0.5s ease;
-
-                    &.p-slide-1, &.p-slide-2, &.p-slide-3 {
-                        opacity: 0; // 🟢 Todos ocultos al inicio
-                    }
-
-                    img {
-                        width: 100%;
-                        height: 100%;
-                        object-fit: cover;
-                        object-position: center;
-                        filter: brightness(0.8) contrast(1.1);
-                    }
-
-                    .slide-label {
-                        position: absolute;
-                        bottom: 25%; // 🟢 Ajustado a 25%
-                        left: 50%;
-                        transform: translateX(-50%);
-                        font-size: 0.6rem;
-                        letter-spacing: 0.5em;
-                        color: #fff;
-                        background: rgba(0, 0, 0, 0.5);
-                        padding: 0.5rem 1rem;
-                        backdrop-filter: blur(5px);
-                        white-space: nowrap;
-                        z-index: 100;
-                    }
-
-                    .video-placeholder {
-                        width: 100%;
-                        height: 100%;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        background: radial-gradient(circle, #111, #000);
-
-                        .epic-text {
-                            font-size: 1.5rem;
-                            letter-spacing: 0.8em;
-                            color: #d4af37;
-                        }
-                    }
-                }
-            }
-
-            .shutter-flash {
-                position: absolute;
-                inset: 0;
-                background: radial-gradient(circle, #fff 0%, #fff 40%, rgba(255,255,255,0.7) 100%);
-                z-index: 1000;
-                opacity: 0;
-                pointer-events: none;
-                mix-blend-mode: screen; // 🟢 Efecto de luz volumétrica
-            }
-        }
-    }
-
-    // 📝 INFO BLOCK
-    .lens-info-block {
-        position: absolute;
-        left: 8vw;
-        max-width: 350px;
-        z-index: 100;
-        pointer-events: none;
-        opacity: 0; // 🟢 Ocultar para intro
 
         .eyebrow {
-            font-size: 0.65rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
             letter-spacing: 0.5em;
             color: #d4af37;
             display: block;
             margin-bottom: 2rem;
-            font-weight: 700;
         }
 
-        h3 {
+        .lens-headline {
             font-family: 'Playfair Display', serif;
-            font-size: clamp(3rem, 6vw, 5.5rem); // 🟢 Mucho más grande
+            font-size: clamp(3rem, 10vw, 6.5rem);
             line-height: 0.85;
             letter-spacing: -0.05em;
-            margin: 0 0 2rem;
-            text-transform: uppercase;
+            margin: 0 0 3rem 0;
             font-weight: 700;
 
             span {
                 font-style: italic;
                 font-weight: 400;
+                color: #d4af37;
+                margin-left: -0.05em;
             }
         }
 
-        p {
-            font-size: 0.95rem;
-            line-height: 1.8;
-            color: rgba(255, 255, 255, 0.4);
-            font-weight: 300;
+        .description-wrap {
+            border-left: 1px solid rgba(212, 175, 55, 0.2);
+            padding-left: 2rem;
+
+            p {
+                font-size: 1rem;
+                line-height: 1.8;
+                color: rgba(255, 255, 255, 0.5);
+                margin-bottom: 2.5rem;
+                font-weight: 300;
+            }
+
+            .meta-stats {
+                display: flex;
+                gap: 3rem;
+
+                .stat {
+                    font-family: 'JetBrains Mono', monospace;
+                    font-size: 0.75rem;
+                    color: #fff;
+                    
+                    span {
+                        color: rgba(255, 255, 255, 0.2);
+                        display: block;
+                        margin-bottom: 5px;
+                    }
+                }
+            }
+        }
+    }
+
+    // 🧿 VISUAL SIDE (Right Column)
+    .lens-visual-side {
+        flex: 1.2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        height: 100%;
+    }
+
+    .lens-container {
+        position: relative;
+        width: clamp(380px, 45vw, 750px);
+        aspect-ratio: 1;
+        z-index: 5;
+        border-radius: 50%; // 🟢 RECORTA TODO EN UN CÍRCULO PERFECTO
+        overflow: hidden;    // 🟢 OCULTA LAS ESQUINAS DEL HARDWARE
+        border: 2px solid rgba(255, 255, 255, 0.05); // 🟢 SIMULA EL ANILLO METÁLICO
+        box-shadow: 
+            0 0 100px rgba(0,0,0,0.8),
+            inset 0 0 40px rgba(255, 255, 255, 0.02);
+        background: #000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .lens-base {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .aperture-hardware {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 130%; // 🟢 Un poco más grande para evitar cortes
+            height: 130%;
+            z-index: 5;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                filter: brightness(1.1) contrast(1.1);
+            }
+        }
+
+        .aperture-viewport {
+            position: absolute;
+            top: 50%;
+            left: 49.4%; // 🟢 Ajuste milimétrico a la izquierda
+            transform: translate(-50%, -50%);
+            width: 89%;   // 🟢 +5% Adicional para un look imponente
+            height: 89%;
+            border-radius: 50%;
+            overflow: hidden;
+            background: #000;
+            clip-path: circle(0% at 50% 50%); 
+            box-shadow: inset 0 0 80px rgba(0,0,0,1);
+            z-index: 10;
+            
+            &::after {
+                content: '';
+                position: absolute;
+                inset: 0;
+                background: radial-gradient(circle, transparent 40%, #000 100%);
+                pointer-events: none;
+                z-index: 15;
+            }
+        }
+
+        .lens-content-inner {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .lens-slide {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            filter: blur(20px);
+            
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                transform: scale(1.15);
+            }
+
+            .slide-label {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                font-family: 'JetBrains Mono', monospace;
+                font-size: 0.65rem;
+                letter-spacing: 0.8em;
+                color: #fff;
+                text-transform: uppercase;
+                white-space: nowrap;
+                z-index: 20;
+                background: rgba(0,0,0,0.5);
+                padding: 8px 25px;
+                backdrop-filter: blur(8px);
+                border: 1px solid rgba(255,255,255,0.1);
+            }
+        }
+
+        .shutter-flash {
+            position: absolute;
+            inset: 0;
+            background: #fff;
+            opacity: 0;
+            z-index: 50;
+            pointer-events: none;
         }
     }
 }
 
 // 📱 RESPONSIVE
-@media (max-width: 1100px) {
+@media (max-width: 1024px) {
     .lens-exhibition {
-        flex-direction: column;
-        justify-content: flex-end;
-        padding-bottom: 15vh;
+        height: auto;
+        min-height: 100vh;
 
-        .lens-info-block {
-            position: relative;
-            left: 0;
+        .lens-split-layout {
+            flex-direction: column;
+            padding: 15vh 6vw;
+            gap: 10vh;
+        }
+
+        .lens-text-side {
+            align-items: center;
             text-align: center;
-            max-width: 80%;
-            margin-top: 5vh;
+            .description-wrap { border: none; padding: 0; }
         }
 
         .lens-container {
-            width: 50vh;
-            height: 50vh;
+            width: 80vw;
         }
     }
 }
