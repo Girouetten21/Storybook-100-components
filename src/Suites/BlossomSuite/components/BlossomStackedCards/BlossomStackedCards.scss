@@ -1,0 +1,186 @@
+@import url('https://fonts.googleapis.com/css2?family=Baskervville:ital@0;1&family=Inter:wght@400;500;600;700&family=Oswald:wght@500;600&display=swap');
+
+.blossom-stacked-wrapper {
+    position: relative;
+    width: 100%;
+    background-color: #fff9f9;
+    padding-bottom: 20vh;
+}
+
+.blossom-sticky-container {
+    height: 100vh;
+    position: sticky;
+    top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.blossom-card {
+    width: 92%;
+    max-width: 1400px;
+    height: 85vh;
+    border-radius: 32px;
+    position: relative;
+    overflow: hidden;
+    background-size: cover;
+    background-position: center;
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.08); 
+    will-change: transform, filter;
+    transform-origin: top center;
+
+    &::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 60%;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 100%);
+        pointer-events: none;
+    }
+
+    .blossom-card-content {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        padding: 4rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        z-index: 2;
+    }
+
+    .blossom-tag {
+        background-color: #ec407a; 
+        color: #fff;
+        font-family: 'Oswald', 'Inter', sans-serif;
+        font-size: 1.2rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        padding: 0.2rem 0.6rem;
+        width: max-content;
+        margin-bottom: 1rem;
+        line-height: 1.2;
+        letter-spacing: 0.05em;
+    }
+
+    h2.blossom-title {
+        font-family: 'Baskervville', serif;
+        font-size: 5.5rem;
+        color: #fff;
+        line-height: 0.95;
+        margin: 0 0 2rem 0;
+        max-width: 800px;
+        letter-spacing: -0.03em;
+    }
+
+    .blossom-bottom-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+
+        .blossom-details {
+            display: flex;
+            gap: 1rem;
+
+            .blossom-pill {
+                background-color: #ec407a;
+                color: #fff;
+                font-family: 'Oswald', 'Inter', sans-serif;
+                font-size: 1.1rem;
+                font-weight: 500;
+                padding: 0.3rem 1rem;
+                border-radius: 50px;
+                text-transform: uppercase;
+                letter-spacing: 0.02em;
+            }
+        }
+
+        .blossom-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+
+            .blossom-explore-btn {
+                background-color: #fff;
+                color: #111;
+                font-family: 'Inter', sans-serif;
+                font-size: 1rem;
+                font-weight: 500;
+                padding: 1rem 2rem;
+                border-radius: 50px;
+                border: none;
+                cursor: pointer;
+                transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+
+                &:hover {
+                    transform: translateY(-3px);
+                    background-color: #ec407a;
+                    color: #fff;
+                    box-shadow: 0 10px 25px rgba(236, 64, 122, 0.4);
+                }
+            }
+
+            .blossom-arrow-btn {
+                width: 56px;
+                height: 56px;
+                border-radius: 50%;
+                background-color: #ec407a;
+                color: #fff;
+                border: none;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+
+                svg {
+                    width: 24px;
+                    height: 24px;
+                    stroke-width: 2;
+                    transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+                }
+
+                &:hover {
+                    transform: translateY(-3px);
+                    background-color: #fff;
+                    color: #ec407a;
+                    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+                    svg {
+                        transform: translate(4px, -4px);
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: 1024px) {
+    .blossom-card {
+        .blossom-card-content { padding: 3rem; }
+        h2.blossom-title { font-size: 4rem; }
+    }
+}
+
+@media (max-width: 768px) {
+    .blossom-card {
+        width: 100%;
+        border-radius: 0;
+        .blossom-card-content { padding: 2rem; }
+        h2.blossom-title { font-size: 3rem; }
+        .blossom-bottom-row {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 2rem;
+            .blossom-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+        }
+    }
+}

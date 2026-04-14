@@ -1,0 +1,165 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+$void-black: #050505;
+$aether-gold: #c0b8a0;
+$soft-white: #f5f5f7;
+
+.aetherial-ethereal-cards {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    padding: 20vh 8vw;
+    background: $void-black;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-sizing: border-box;
+
+    .ethereal-header {
+        margin-bottom: 12vh;
+        
+        .ethereal-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 6vw;
+            color: $soft-white;
+            margin: 0;
+            line-height: 1.1;
+            font-weight: 300;
+            letter-spacing: -0.01em;
+
+            i {
+                color: $aether-gold;
+                font-style: italic;
+                font-weight: 400;
+            }
+        }
+    }
+
+    .ethereal-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 3vw;
+        position: relative;
+        z-index: 5;
+
+        .ethereal-card {
+            position: relative;
+            height: 550px;
+            display: flex;
+            flex-direction: column;
+            will-change: transform, opacity;
+
+            .card-glass-body {
+                flex: 1;
+                background: rgba(255, 255, 255, 0.02);
+                backdrop-filter: blur(15px);
+                border: 0.5px solid rgba($aether-gold, 0.15);
+                padding: 60px 45px;
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-end;
+                position: relative;
+                overflow: hidden;
+                transition: border-color 0.8s ease, background 0.8s ease;
+
+                // Subtle light sweep overlay
+                &::after {
+                    content: '';
+                    position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+                    background: radial-gradient(circle at center, rgba(255,255,255,0.05) 0%, transparent 70%);
+                    opacity: 0; transition: opacity 1s ease;
+                }
+
+                .card-tag {
+                    font-family: 'Outfit', sans-serif;
+                    font-size: 0.65rem;
+                    text-transform: uppercase;
+                    letter-spacing: 0.5em;
+                    color: $aether-gold;
+                    margin-bottom: 30px;
+                    display: block;
+                    font-weight: 300;
+                }
+
+                .card-title {
+                    font-family: 'Playfair Display', serif;
+                    font-size: 2.5rem;
+                    color: $soft-white;
+                    margin: 0 0 20px 0;
+                    line-height: 1.2;
+                    font-weight: 400;
+                }
+
+                .card-desc {
+                    font-family: 'Outfit', sans-serif;
+                    font-weight: 200;
+                    font-size: 1.1rem;
+                    color: rgba(255, 255, 255, 0.5);
+                    line-height: 1.8;
+                    margin: 0;
+                    max-width: 250px;
+                }
+
+                .card-ornament {
+                    position: absolute;
+                    top: 60px; right: 45px;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    gap: 15px;
+
+                    .ornament-line { width: 1px; height: 40px; background: rgba($aether-gold, 0.3); }
+                    .ornament-dot { width: 6px; height: 6px; border: 1px solid $aether-gold; border-radius: 50%; opacity: 0.5; }
+                }
+            }
+
+            .card-bg-indicator {
+                position: absolute;
+                top: 30px;
+                right: 30px; // Moved inside from the left/out
+                font-family: 'Playfair Display', serif;
+                font-size: 6rem;
+                color: rgba(255, 255, 255, 0.03);
+                font-weight: 700;
+                z-index: -1;
+                pointer-events: none;
+                line-height: 1;
+            }
+
+            &:hover {
+                .card-glass-body {
+                    border-color: rgba($aether-gold, 0.4);
+                    background: rgba(255, 255, 255, 0.04);
+                    &::after { opacity: 1; }
+                }
+            }
+        }
+    }
+
+    // Atmospheric Details
+    .ethereal-aura {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(150px);
+        opacity: 0.1;
+        z-index: 1;
+        pointer-events: none;
+
+        &.aura-1 { width: 600px; height: 600px; background: $aether-gold; top: -10%; right: -10%; }
+        &.aura-2 { width: 400px; height: 400px; background: #fff; bottom: 5%; left: 5%; }
+    }
+}
+
+// Mobile
+@media (max-width: 1024px) {
+    .aetherial-ethereal-cards {
+        padding: 10vh 6vw;
+        .ethereal-header .ethereal-title { font-size: 12vw; }
+        .ethereal-grid {
+            grid-template-columns: 1fr;
+            gap: 12vh;
+            .ethereal-card { height: 450px !important; }
+        }
+    }
+}

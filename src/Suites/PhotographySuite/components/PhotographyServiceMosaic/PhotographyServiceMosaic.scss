@@ -1,0 +1,304 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Outfit:wght@200;300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+.service-mosaic {
+    position: relative;
+    width: 100%;
+    min-height: 150vh;
+    background: #020202;
+    color: #fff;
+    padding: 20vh 8vw;
+    font-family: 'Outfit', sans-serif;
+    overflow: hidden;
+
+    // 🌫️ BACKGROUND WATERMARK
+    .mosaic-watermark {
+        position: absolute;
+        bottom: 5%; // 🟢 Movido abajo según pedido
+        left: 0;
+        font-family: 'Playfair Display', serif;
+        font-size: 25vw;
+        font-weight: 900;
+        color: rgba(255, 255, 255, 0.02);
+        white-space: nowrap;
+        pointer-events: none;
+        z-index: 0;
+        text-transform: uppercase;
+    }
+
+    // 🎯 VIEWfinder CROSSHAIRS
+    .focus-crosshair {
+        position: absolute;
+        width: 40px;
+        height: 40px;
+        border: 1px solid rgba(212, 175, 55, 0.3);
+        z-index: 10;
+        pointer-events: none;
+
+        &.top-left {
+            top: 40px;
+            left: 40px;
+            border-right: 0;
+            border-bottom: 0;
+        }
+
+        &.top-right {
+            top: 40px;
+            right: 40px;
+            border-left: 0;
+            border-bottom: 0;
+        }
+
+        &.bottom-left {
+            bottom: 40px;
+            left: 40px;
+            border-right: 0;
+            border-top: 0;
+        }
+
+        &.bottom-right {
+            bottom: 40px;
+            right: 40px;
+            border-left: 0;
+            border-top: 0;
+        }
+    }
+
+    .section-header {
+        position: relative;
+        z-index: 10;
+        margin-bottom: 15vh;
+
+        .eyebrow {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.5em;
+            color: #d4af37;
+            display: block;
+            margin-bottom: 2rem;
+            animation: fadeIn 1s ease forwards;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(3rem, 8vw, 6rem);
+            margin: 0;
+            line-height: 0.9;
+            letter-spacing: -0.04em;
+
+            span {
+                font-style: italic;
+                font-weight: 400;
+                color: #d4af37;
+            }
+        }
+    }
+
+    .mosaic-grid {
+        position: relative;
+        z-index: 10;
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 60px;
+        perspective: 2000px;
+    }
+
+    .mosaic-card {
+        position: relative;
+        background: #0a0a0a;
+        border: 1px solid rgba(255, 255, 255, 0.03);
+        display: flex;
+        flex-direction: column;
+        overflow: visible;
+        cursor: pointer; // 🟢 Cursor visible y claro
+
+        &:hover {
+            border-color: rgba(212, 175, 55, 0.5);
+            z-index: 50;
+
+            .card-content h3 {
+                color: #d4af37;
+                transform: translateX(10px);
+            }
+        }
+
+        .card-image-wrap {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #000;
+
+            img {
+                width: calc(100% + 100px); // 🟢 Espacio para el magnetic shift
+                height: calc(100% + 100px);
+                object-fit: cover;
+                position: absolute;
+                top: -50px;
+                left: -50px;
+                filter: grayscale(0.8) contrast(1.2);
+                transition: filter 0.6s ease;
+            }
+
+            &:hover img {
+                filter: grayscale(0) contrast(1.1);
+            }
+
+            .prism-overlay {
+                position: absolute;
+                inset: 0;
+                background: radial-gradient(circle at center, rgba(212, 175, 55, 0.3), transparent, rgba(0, 150, 255, 0.2));
+                opacity: 0;
+                pointer-events: none;
+                mix-blend-mode: color-dodge;
+                z-index: 5;
+            }
+        }
+
+        .card-content {
+            padding: 4rem 3rem;
+            position: relative;
+            z-index: 10;
+            background: #0a0a0a;
+
+            .card-index {
+                font-family: 'JetBrains Mono', monospace;
+                font-size: 0.7rem;
+                color: rgba(212, 175, 55, 0.5);
+                display: block;
+                margin-bottom: 2rem;
+            }
+
+            h3 {
+                font-family: 'Playfair Display', serif;
+                font-size: 2.4rem;
+                margin-bottom: 1.5rem;
+                line-height: 1.1;
+                transition: transform 0.4s ease, color 0.4s ease;
+            }
+
+            p {
+                font-size: 0.95rem;
+                line-height: 1.8;
+                color: rgba(255, 255, 255, 0.4);
+                margin-bottom: 2.5rem;
+                font-weight: 300;
+                max-width: 90%;
+            }
+
+            .card-cta {
+                font-size: 0.7rem;
+                letter-spacing: 0.4em;
+                font-weight: 600;
+                color: #fff;
+                text-transform: uppercase;
+                display: inline-flex;
+                align-items: center;
+                gap: 15px;
+
+                &::after {
+                    content: '';
+                    width: 40px;
+                    height: 1px;
+                    background: #d4af37;
+                    transition: width 0.4s ease;
+                }
+
+                &:hover::after {
+                    width: 60px;
+                }
+            }
+        }
+
+        // Layout Variants
+        &.architectural {
+            grid-column: 1 / 8;
+
+            .card-image-wrap {
+                height: 600px;
+            }
+        }
+
+        &.portrait {
+            grid-column: 8 / 13;
+            margin-top: 20vh;
+
+            .card-image-wrap {
+                height: 500px;
+            }
+        }
+
+        &.technical {
+            grid-column: 3 / 9;
+            margin-top: -15vh;
+
+            .card-image-wrap {
+                height: 450px;
+            }
+        }
+    }
+
+    .mosaic-label {
+        position: absolute;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.65rem;
+        letter-spacing: 1em;
+        color: rgba(255, 255, 255, 0.1);
+        white-space: nowrap;
+        pointer-events: none;
+        z-index: 5;
+        text-transform: uppercase;
+
+        &.absolute-tl {
+            top: 15%;
+            left: 5%;
+            writing-mode: vertical-rl;
+        }
+
+        &.absolute-br {
+            bottom: 5%;
+            right: 5%;
+            color: #d4af37;
+            opacity: 0.4;
+        }
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+// 📱 Responsive
+@media (max-width: 1024px) {
+    .service-mosaic {
+        padding: 10vh 5vw;
+
+        .mosaic-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 60px;
+        }
+
+        .mosaic-card {
+            grid-column: auto !important;
+            margin-top: 0 !important;
+
+            .card-image-wrap {
+                height: 400px !important;
+            }
+        }
+
+        .mosaic-watermark,
+        .mosaic-label,
+        .focus-crosshair {
+            display: none;
+        }
+    }
+}

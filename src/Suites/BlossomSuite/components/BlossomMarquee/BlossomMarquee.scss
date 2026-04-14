@@ -1,0 +1,100 @@
+@import url('https://fonts.googleapis.com/css2?family=Baskervville:ital@0;1&family=Inter:wght@400;500;700;900&display=swap');
+
+.blossom-marquee-container {
+    width: 100%;
+    height: 100vh;
+    background-color: #fff9f9; 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+    padding: 2rem 0;
+
+    .blossom-marquee-wrapper {
+        width: 150%; 
+        display: flex;
+        flex-direction: column;
+        gap: 2.5rem; 
+        position: relative;
+    }
+
+    .blossom-marquee-bar {
+        width: 100%;
+        height: 220px; 
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+        white-space: nowrap;
+        position: relative;
+        box-shadow: 0 15px 50px rgba(0, 0, 0, 0.08);
+
+        &.blossom-top-bar {
+            background-color: #f8bbd0;
+            transform: rotate(-4deg);
+            z-index: 1;
+        }
+
+        &.blossom-middle-bar {
+            background-color: #f48fb1;
+            transform: rotate(4deg); 
+            z-index: 10; 
+        }
+
+        &.blossom-bottom-bar {
+            background-color: #f06292;
+            transform: rotate(-4deg);
+            z-index: 1;
+        }
+
+        .blossom-marquee-content {
+            display: flex;
+            align-items: center;
+            will-change: transform;
+            width: fit-content;
+
+            .blossom-marquee-set {
+                display: flex;
+                align-items: center;
+                gap: 3rem;
+                padding-right: 3rem; 
+                flex-shrink: 0;
+            }
+
+            .blossom-marquee-item {
+                display: flex;
+                align-items: center;
+                gap: 3rem;
+                flex-shrink: 0;
+            }
+        }
+
+        .blossom-text {
+            font-family: 'Baskervville', serif;
+            font-size: 8.5rem; 
+            font-weight: 900;
+            color: #1a1a1a;
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+        }
+
+        .blossom-circle-img {
+            width: 150px; 
+            height: 150px;
+            border-radius: 50%;
+            background-color: #fff;
+            border: 8px solid rgba(255, 255, 255, 0.5);
+            background-size: cover;
+            background-position: center;
+            flex-shrink: 0;
+            overflow: hidden;
+
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+        }
+    }
+}
