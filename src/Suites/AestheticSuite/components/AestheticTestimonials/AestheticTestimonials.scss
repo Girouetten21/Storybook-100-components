@@ -1,0 +1,144 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600&family=Playfair+Display:ital,wght@1,400;1,600&display=swap');
+
+$bg-color: #fff9f5;
+$pink-soft: #ffdce0;
+$pink-deep: #ff8fa3;
+$mint-soft: #d0e8e3;
+
+.aesthetic-testimonials {
+    position: relative;
+    padding: 20vh 10vw;
+    background: $bg-color;
+    overflow: hidden;
+
+    .decorations {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0; left: 0;
+        z-index: 1;
+
+        .deco-blob {
+            position: absolute;
+            filter: blur(80px);
+            border-radius: 50%;
+            opacity: 0.3;
+            
+            &.blob-1 {
+                width: 40vw; height: 40vw;
+                background: $pink-soft;
+                top: -10vw; right: -10vw;
+            }
+            &.blob-2 {
+                width: 30vw; height: 30vw;
+                background: $mint-soft;
+                bottom: -5vw; left: -5vw;
+            }
+        }
+    }
+
+    .testimonials-header {
+        text-align: center;
+        margin-bottom: 8vh;
+        position: relative;
+        z-index: 5;
+        
+        .eyebrow {
+            font-family: 'Quicksand', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.4em;
+            color: $pink-deep;
+            font-size: 0.8rem;
+            display: block;
+            margin-bottom: 1rem;
+        }
+        .title {
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            color: darken($pink-deep, 25%);
+            margin: 0;
+            font-weight: 300;
+        }
+    }
+
+    .testimonials-grid {
+        position: relative;
+        z-index: 5;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 3vw;
+
+        .testimonial-card {
+            background: white;
+            padding: 5rem 3rem 4rem;
+            border-radius: 40px 10px;
+            text-align: center;
+            box-shadow: 0 40px 90px rgba($pink-deep, 0.15);
+            border: 1px solid rgba($pink-soft, 0.4);
+            border-top: 6px solid $pink-deep; 
+            transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+            position: relative;
+            z-index: 10; // Higher than blobs
+            opacity: 1; // Ensure visible
+            visibility: visible;
+
+            &:nth-child(2) { border-top-color: $mint-soft; margin-top: 5vh; }
+            &:nth-child(3) { border-top-color: #ffaab2; } // Replaced lighten($pink-deep, 10%)
+
+            &:hover {
+                transform: translateY(-20px);
+                box-shadow: 0 60px 120px rgba($pink-deep, 0.25);
+            }
+
+            .quote-icon {
+                font-family: 'Playfair Display', serif;
+                font-size: 8rem;
+                color: $pink-soft;
+                line-height: 1;
+                opacity: 0.3;
+                position: absolute;
+                top: -10px;
+                left: 50%;
+                transform: translateX(-50%);
+                z-index: 1;
+            }
+
+            .testimonial-text {
+                font-family: 'Quicksand', sans-serif;
+                font-size: 1.2rem;
+                line-height: 1.8;
+                color: rgba(0, 0, 0, 0.7);
+                margin: 2rem 0;
+                font-style: italic;
+                position: relative;
+                z-index: 2;
+            }
+
+            .testimonial-author {
+                .name {
+                    display: block;
+                    font-family: 'Playfair Display', serif;
+                    font-size: 1.5rem;
+                    color: #b33951; // Replaced darken($pink-deep, 20%)
+                    font-weight: 700;
+                }
+                .role {
+                    display: block;
+                    font-family: 'Quicksand', sans-serif;
+                    font-size: 0.75rem;
+                    text-transform: uppercase;
+                    letter-spacing: 0.3em;
+                    color: rgba(0, 0, 0, 0.4);
+                    margin-top: 8px;
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: 1024px) {
+    .aesthetic-testimonials .testimonials-grid {
+        grid-template-columns: 1fr;
+        gap: 5vh;
+    }
+}

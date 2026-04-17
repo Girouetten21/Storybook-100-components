@@ -4,20 +4,20 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 import './BlossomGallery.scss';
 
-import img1 from '../../../../assets/img/Space_1.webp';
-import img2 from '../../../../assets/img/Background_1.webp';
-import img3 from '../../../../assets/img/Character_2.webp';
-import img4 from '../../../../assets/img/Space_2.webp';
-import img5 from '../../../../assets/img/Background_2.webp';
+import img1 from '../../img/blossom_1.png';
+import img2 from '../../img/blossom_2.png';
+import img3 from '../../img/blossom_3.png';
+import img4 from '../../img/blossom_4.png';
+import img5 from '../../img/blossom_hero.png';
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 const galleryData = [
-    { id: '1', title: 'Gardenia', image: img1 },
-    { id: '2', title: 'Sakura Mist', image: img2 },
-    { id: '3', title: 'Petal Dreams', image: img3 },
-    { id: '4', title: 'Floral Dusk', image: img4 },
-    { id: '5', title: 'Celestial Dew', image: img5 },
+    { id: '1', title: 'Eternal Sakura', image: img1 },
+    { id: '2', title: 'Verdant Ivy', image: img2 },
+    { id: '3', title: 'Wooden Grace', image: img3 },
+    { id: '4', title: 'Zen Reflection', image: img4 },
+    { id: '5', title: 'Majestic Gate', image: img5 },
 ];
 
 export const BlossomGallery: React.FC = () => {

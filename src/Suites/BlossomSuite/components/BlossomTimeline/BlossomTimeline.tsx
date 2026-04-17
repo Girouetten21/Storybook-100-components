@@ -1,13 +1,14 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 import './BlossomTimeline.scss';
 
-import photo1 from '../../../../assets/img/Space_1.webp';
-import photo2 from '../../../../assets/img/Character_2.webp';
-import photo3 from '../../../../assets/img/Background_3.webp';
+import photo1 from '../../img/blossom_1.png';
+import photo2 from '../../img/blossom_2.png';
+import photo3 from '../../img/blossom_3.png';
 
-gsap.registerPlugin(useGSAP);
+gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 interface BlossomEvent {
     id: number;
@@ -41,6 +42,18 @@ const events: BlossomEvent[] = [
         tags: ['LEGACY', 'LIFE', 'SPIRIT'],
         image: photo1
     },
+    {
+        id: 5,
+        title: 'Wild Whispers',
+        tags: ['WILD', 'FREEDOM', 'MOSS'],
+        image: photo2
+    },
+    {
+        id: 6,
+        title: 'Solstice Bloom',
+        tags: ['LIGHT', 'SUMMER', 'VIBRANCE'],
+        image: photo3
+    },
 ];
 
 export const BlossomTimeline: React.FC = () => {
@@ -48,6 +61,10 @@ export const BlossomTimeline: React.FC = () => {
     const [hoveredId, setHoveredId] = useState<number | null>(null);
     const containerRef = useRef<HTMLDivElement>(null);
     const imageContainerRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        ScrollTrigger.refresh();
+    }, []);
 
     useGSAP(() => {
         if (!imageContainerRef.current) return;
@@ -61,7 +78,9 @@ export const BlossomTimeline: React.FC = () => {
         };
 
         window.addEventListener('mousemove', handleMouseMove);
-        return () => window.removeEventListener('mousemove', handleMouseMove);
+        return () => {
+            window.removeEventListener('mousemove', handleMouseMove);
+        };
     }, { scope: containerRef });
 
     const { contextSafe } = useGSAP({ scope: containerRef });

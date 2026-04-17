@@ -4,8 +4,8 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 import './BlossomTestimonial.scss';
 
-import image1 from '../../../../assets/img/Space_1.webp';
-import image2 from '../../../../assets/img/Character_2.webp';
+import image1 from '../../img/blossom_2.png';
+import image2 from '../../img/blossom_4.png';
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
@@ -19,7 +19,7 @@ export const BlossomTestimonial = () => {
         const tl = gsap.timeline({
             scrollTrigger: {
                 trigger: wrapperRef.current,
-                start: "top bottom",
+                start: "top 40%",
                 end: "bottom bottom",
                 scrub: 1,
             }

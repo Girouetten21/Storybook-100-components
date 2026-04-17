@@ -11,7 +11,7 @@ import AetherialFooter from './components/AetherialFooter/AetherialFooter';
 
 export const AetherialSuite: React.FC = () => {
   return (
-    <div className="aetherialsuite-wrapper" style={{ overflowX: 'hidden', background: '#050505' }}>
+    <div className="aetherialsuite-wrapper" style={{ overflowX: 'hidden', background: '#050505', position: 'relative', width: '100%' }}>
       <AetherialVectorMenu />
       <AetherialMonolithHero />
       <AetherialTextMatrix />

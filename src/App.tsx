@@ -1,9 +1,9 @@
-import AetherialSuite from "./Suites/AetherialSuite/AetherialSuite";
+import GlitchSuite from "./Suites/GlitchSuite/GlitchSuite";
 
 function App() {
   return (
     <div className="app-container">
-      <AetherialSuite />
+      < GlitchSuite />
     </div>
   )
 }

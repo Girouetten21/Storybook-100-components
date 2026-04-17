@@ -50,10 +50,11 @@ export const AetherialDetailScroll: React.FC = () => {
                 end: "+=500%", 
                 pin: true, 
                 pinSpacing: true,
+                pinType: 'fixed', // Force fixed to prevent transform-based jitter
                 scrub: 1.5,
                 invalidateOnRefresh: true,
-                anticipatePin: 1,
-                refreshPriority: 10 // FORCE CALCULATE FIRST
+                anticipatePin: 2, // Smooths the entry even more
+                refreshPriority: 10
             }
         });
 

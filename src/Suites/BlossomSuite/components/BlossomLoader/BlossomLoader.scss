@@ -1,0 +1,86 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,300;1,600&family=Montserrat:wght@300;400;500&display=swap');
+
+$blossom-pink: #fce4ec;
+$blossom-deep: #f06292;
+$sage-green: #e8f5e9;
+$sage-dark: #81c784;
+
+.blossom-loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: white;
+    z-index: 10000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+
+    &::after {
+        content: '';
+        position: absolute;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba($blossom-pink, 0.3) 0%, rgba(white, 0) 70%);
+        animation: rotate 20s linear infinite;
+        z-index: 1;
+    }
+
+    .loader-content {
+        position: relative;
+        z-index: 5;
+        text-align: center;
+        width: 300px;
+
+        .flower-icon {
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            display: block;
+            animation: pulse-flower 2s ease-in-out infinite;
+        }
+
+        .percentage {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.5rem;
+            color: $blossom-deep;
+            font-style: italic;
+            display: block;
+            margin-bottom: 1rem;
+        }
+
+        .progress-bar-wrapper {
+            width: 100%;
+            height: 2px;
+            background: rgba($sage-dark, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+
+            .progress-bar {
+                height: 100%;
+                background: linear-gradient(90deg, $blossom-deep, $sage-dark);
+                transition: width 0.1s linear;
+            }
+        }
+
+        .loading-text {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            color: rgba(0,0,0,0.3);
+        }
+    }
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes pulse-flower {
+    0%, 100% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.2); opacity: 1; }
+}

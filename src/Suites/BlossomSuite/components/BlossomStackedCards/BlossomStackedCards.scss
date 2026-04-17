@@ -3,14 +3,21 @@
 .blossom-stacked-wrapper {
     position: relative;
     width: 100%;
-    background-color: #fff9f9;
-    padding-bottom: 20vh;
+    background-color: #fcfdfa;
+}
+
+.blossom-stacked-pin-area {
+    width: 100%;
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
 }
 
 .blossom-sticky-container {
     height: 100vh;
-    position: sticky;
+    position: absolute;
     top: 0;
+    left: 0;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -55,7 +62,7 @@
     }
 
     .blossom-tag {
-        background-color: #ec407a; 
+        background-color: #f06292; 
         color: #fff;
         font-family: 'Oswald', 'Inter', sans-serif;
         font-size: 1.2rem;
@@ -89,7 +96,7 @@
             gap: 1rem;
 
             .blossom-pill {
-                background-color: #ec407a;
+                background-color: #f06292;
                 color: #fff;
                 font-family: 'Oswald', 'Inter', sans-serif;
                 font-size: 1.1rem;
@@ -120,7 +127,7 @@
 
                 &:hover {
                     transform: translateY(-3px);
-                    background-color: #ec407a;
+                    background-color: #f06292;
                     color: #fff;
                     box-shadow: 0 10px 25px rgba(236, 64, 122, 0.4);
                 }
@@ -130,7 +137,7 @@
                 width: 56px;
                 height: 56px;
                 border-radius: 50%;
-                background-color: #ec407a;
+                background-color: #f06292;
                 color: #fff;
                 border: none;
                 display: flex;
@@ -149,7 +156,7 @@
                 &:hover {
                     transform: translateY(-3px);
                     background-color: #fff;
-                    color: #ec407a;
+                    color: #f06292;
                     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
                     svg {
                         transform: translate(4px, -4px);

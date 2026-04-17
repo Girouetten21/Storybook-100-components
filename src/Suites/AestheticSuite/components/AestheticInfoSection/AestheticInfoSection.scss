@@ -1,0 +1,132 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600&family=Playfair+Display:ital,wght@1,400;1,600&display=swap');
+
+$bg-color: #fff9f5;
+$pink-soft: #ffdce0;
+$pink-deep: #ff8fa3;
+$mint-soft: #d0e8e3;
+
+.aesthetic-info-section {
+    position: relative;
+    padding: 15vh 10vw;
+    background: $bg-color;
+    overflow: hidden;
+
+    .info-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10vw;
+        align-items: center;
+        position: relative;
+        z-index: 5;
+
+        .info-text {
+            .info-tag {
+                font-family: 'Quicksand', sans-serif;
+                text-transform: uppercase;
+                letter-spacing: 0.4em;
+                font-size: 0.7rem;
+                color: $pink-deep;
+                margin-bottom: 2rem;
+                display: block;
+            }
+
+            .info-title {
+                font-family: 'Playfair Display', serif;
+                font-size: 4rem;
+                line-height: 1.1;
+                margin: 0 0 2rem 0;
+                color: darken($pink-deep, 20%);
+                font-weight: 300;
+
+                i { font-style: italic; color: $pink-deep; }
+            }
+
+            .info-desc {
+                font-family: 'Quicksand', sans-serif;
+                font-size: 1.15rem;
+                line-height: 1.8;
+                color: rgba(0, 0, 0, 0.6);
+                margin-bottom: 3rem;
+                font-weight: 300;
+            }
+
+            .info-cta {
+                background: transparent;
+                border: 1px solid $pink-soft;
+                padding: 15px 40px;
+                font-family: 'Quicksand', sans-serif;
+                text-transform: uppercase;
+                letter-spacing: 0.2em;
+                font-size: 0.8rem;
+                color: $pink-deep;
+                cursor: pointer;
+                transition: all 0.4s ease;
+                border-radius: 30px;
+
+                &:hover {
+                    background: $pink-soft;
+                    color: #fff;
+                    transform: translateY(-5px);
+                }
+            }
+        }
+
+        .info-visual {
+            .image-frame {
+                position: relative;
+                
+                .info-image {
+                    width: 100%;
+                    padding-bottom: 125%; // 4:5 aspect ratio
+                    background-size: cover;
+                    background-position: center;
+                    border-radius: 10px;
+                    box-shadow: 0 30px 60px rgba($pink-soft, 0.3);
+                }
+
+                .frame-decoration {
+                    position: absolute;
+                    top: -20px;
+                    right: -20px;
+                    width: 100px;
+                    height: 100px;
+                    border: 2px solid $mint-soft;
+                    border-radius: 10px;
+                    z-index: -1;
+                }
+            }
+        }
+    }
+
+    .background-shapes {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+
+        .shape-1 {
+            position: absolute;
+            bottom: -10vw;
+            left: -5vw;
+            width: 40vw;
+            height: 40vw;
+            background: $pink-soft;
+            filter: blur(80px);
+            opacity: 0.2;
+            border-radius: 50%;
+        }
+    }
+}
+
+@media (max-width: 1024px) {
+    .aesthetic-info-section {
+        padding: 10vh 5vw;
+        .info-content {
+            grid-template-columns: 1fr;
+            gap: 8vh;
+            
+            .info-title { font-size: 3rem; }
+        }
+    }
+}

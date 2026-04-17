@@ -1,0 +1,268 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600&family=Playfair+Display:ital,wght@1,400;1,600&family=Homemade+Apple&display=swap');
+
+$bg-color: #fff9f5;
+$pink-soft: #ffdce0;
+$pink-deep: #ff8fa3;
+$mint-soft: #d0e8e3;
+
+.aesthetic-mood-scrapbook {
+    padding: 15vh 10vw;
+    background: $bg-color;
+    position: relative;
+    overflow: hidden;
+
+    .scrapbook-header {
+        text-align: center;
+
+        .eyebrow {
+            font-family: 'Quicksand', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.4em;
+            color: $pink-deep;
+            font-size: 0.75rem;
+            display: block;
+            margin-bottom: 1rem;
+        }
+
+        .title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            color: darken($pink-deep, 20%);
+            margin: 0;
+            font-weight: 300;
+        }
+    }
+
+    .scrapbook-container {
+        position: relative;
+        height: 100vh;
+        max-width: 1300px;
+        margin: 0 auto;
+        z-index: 10; // Ensure it sits above any stray blobs
+
+        .scrapbook-item {
+            position: absolute;
+            pointer-events: auto; // Explicitly enable interaction
+            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.08);
+            transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1), z-index 0s;
+            cursor: pointer;
+            background: white; 
+            transform-origin: center center;
+            z-index: 5;
+
+            &:hover {
+                z-index: 100 !important;
+                transform: scale(1.1) rotate(0deg);
+                box-shadow: 0 30px 70px rgba($pink-deep, 0.2);
+            }
+
+            // High priority hover for the large image to keep it centered
+            &.large-img:hover {
+                transform: translate(-50%, -50%) scale(1.05) rotate(1deg) !important;
+                z-index: 101 !important;
+            }
+
+            .image {
+                width: 100%;
+                height: 100%;
+                background-size: cover;
+                background-position: center;
+            }
+
+            // Polaroid Style
+            &.polaroid-1,
+            &.polaroid-2,
+            &.polaroid-3 {
+                background: white;
+                padding: 15px 15px 50px 15px;
+                border-radius: 2px;
+
+                .caption {
+                    font-family: 'Homemade Apple', cursive;
+                    font-size: 0.9rem;
+                    color: rgba(0, 0, 0, 0.5);
+                    text-align: center;
+                    margin-top: 15px;
+                }
+            }
+
+            &.polaroid-1 {
+                width: 250px;
+                height: 320px;
+                top: 0%;
+                left: 2%;
+                transform: rotate(-8deg);
+            }
+
+            &.polaroid-2 {
+                width: 220px;
+                height: 280px;
+                bottom: 5%;
+                right: 5%;
+                transform: rotate(12deg);
+            }
+
+            &.polaroid-3 {
+                width: 240px;
+                height: 300px;
+                bottom: 5%;
+                left: 8%;
+                transform: rotate(-5deg);
+                z-index: 3;
+            }
+
+            &.large-img {
+                width: 450px;
+                height: 550px;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%) rotate(2deg);
+                z-index: 2;
+
+                .washi-tape {
+                    position: absolute;
+                    top: -25px;
+                    left: 25%;
+                    width: 120px;
+                    height: 40px;
+                    background: rgba($mint-soft, 0.7);
+                    backdrop-filter: blur(2px);
+                    transform: rotate(-12deg);
+                    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.05);
+                }
+            }
+
+            &.card-note {
+                width: 280px;
+                background: white;
+                padding: 35px;
+                top: 50%;
+                left: 3%;
+                border-radius: 5px;
+                transform: rotate(-10deg);
+                border-left: 8px solid $pink-soft;
+
+                .note-content {
+                    p {
+                        font-family: 'Playfair Display', serif;
+                        font-style: italic;
+                        font-size: 1.5rem;
+                        color: #c6536b; // Replaced darken($pink-deep, 15%)
+                        line-height: 1.4;
+                        margin: 0 0 15px 0;
+                    }
+
+                    span {
+                        font-family: 'Quicksand', sans-serif;
+                        font-size: 0.75rem;
+                        text-transform: uppercase;
+                        letter-spacing: 0.15em;
+                        color: rgba(0, 0, 0, 0.3);
+                    }
+                }
+            }
+
+            &.card-note-2 {
+                background: $mint-soft;
+                padding: 20px 40px;
+                top: 10%;
+                right: 10%;
+                transform: rotate(5deg);
+                border-radius: 50px;
+
+                p {
+                    margin: 0;
+                    font-family: 'Homemade Apple', cursive;
+                    font-size: 1.2rem;
+                    color: #4a7e74; // Replaced darken($mint-soft, 50%)
+
+                    i {
+                        font-style: normal;
+                        color: $pink-deep;
+                    }
+                }
+            }
+
+            &.mini-img {
+                width: 180px;
+                height: 220px;
+                top: 35%;
+                right: 2%;
+                transform: rotate(-15deg);
+                border-radius: 10px;
+                z-index: 4;
+            }
+        }
+
+        .sticker {
+            position: absolute;
+            font-size: 3rem;
+            z-index: 10;
+            pointer-events: none;
+
+            &.s-1 {
+                top: 30%;
+                left: 25%;
+            }
+
+            &.s-2 {
+                bottom: 35%;
+                right: 25%;
+            }
+
+            &.s-3 {
+                top: 15%;
+                left: 55%;
+            }
+
+            &.s-4 {
+                bottom: 15%;
+                left: 40%;
+            }
+        }
+
+        .stamp {
+            position: absolute;
+            bottom: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 2px solid rgba($pink-deep, 0.8);
+            padding: 5px 15px;
+            color: rgba($pink-deep, 0.8);
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 600;
+            letter-spacing: 0.3em;
+            border-radius: 5px;
+            font-size: 0.8rem;
+        }
+    }
+}
+
+@media (max-width: 1024px) {
+    .aesthetic-mood-scrapbook {
+        .scrapbook-container {
+            height: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 5vh;
+            align-items: center;
+
+            .scrapbook-item {
+                position: static;
+                width: 80% !important;
+                height: auto !important;
+                transform: none !important;
+            }
+
+            .scrapbook-item .image {
+                height: 300px;
+            }
+
+            .sticker,
+            .stamp,
+            .washi-tape {
+                display: none;
+            }
+        }
+    }
+}

@@ -72,20 +72,22 @@ const preventStrictScroll = (e: Event) => e.preventDefault();
 
     useEffect(() => {
         if (isOpen) {
-            const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+            // Apply stability dynamically to the root to prevent jump
+            document.documentElement.style.scrollbarGutter = 'stable';
             document.body.style.overflow = 'hidden';
-            document.body.style.paddingRight = `${scrollbarWidth}px`;
+            
             window.addEventListener('wheel', preventStrictScroll, { passive: false });
             window.addEventListener('touchmove', preventStrictScroll, { passive: false });
         } else {
+            document.documentElement.style.scrollbarGutter = '';
             document.body.style.overflow = '';
-            document.body.style.paddingRight = '';
+            
             window.removeEventListener('wheel', preventStrictScroll);
             window.removeEventListener('touchmove', preventStrictScroll);
         }
         return () => { 
+            document.documentElement.style.scrollbarGutter = '';
             document.body.style.overflow = ''; 
-            document.body.style.paddingRight = '';
             window.removeEventListener('wheel', preventStrictScroll);
             window.removeEventListener('touchmove', preventStrictScroll);
         };

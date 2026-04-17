@@ -4,9 +4,9 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 import './BlossomMarquee.scss';
 
-import photo1 from '../../../../assets/img/Space_1.webp';
-import photo2 from '../../../../assets/img/Character_2.webp';
-import photo3 from '../../../../assets/img/Background_3.webp';
+import photo1 from '../../img/blossom_1.png';
+import photo2 from '../../img/blossom_2.png';
+import photo3 from '../../img/blossom_3.png';
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 

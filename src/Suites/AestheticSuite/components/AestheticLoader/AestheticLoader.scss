@@ -1,106 +1,94 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600&family=Playfair+Display:ital,wght@1,400;1,600&display=swap');
+
+$bg-color: #fff9f5;
+$pink-soft: #ffdce0;
+$pink-deep: #ff8fa3;
+$mint-soft: #d0e8e3;
+
 .aesthetic-loader {
-  position: fixed;
-  inset: 0;
-  z-index: 99999;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  pointer-events: all;
-  color: #1A1A1A; 
-  overflow: hidden;
-
-  // Split Panel Architecture for the Exit Wipe
-  .bg-panel {
-    position: absolute;
+    position: fixed;
     top: 0;
+    left: 0;
+    width: 100%;
     height: 100vh;
-    background: #F4F3EE; // Ultra-Premium Warm Museum Alabaster
-    pointer-events: none;
-    will-change: transform;
-    &.panel-left { left: 0; width: 50vw; }
-    &.panel-right { right: 0; width: 50vw; }
-  }
-
-  // HUD Elements (Corners)
-  .loader-hud {
-    position: absolute;
-    top: 3rem;
-    left: 4rem;
-    right: 4rem;
+    background: $bg-color;
+    z-index: 100000;
     display: flex;
-    justify-content: space-between;
-    z-index: 10; // Above the panels
-    
-    .folio-id, .counter-wrap {
-      font-family: 'Inter', sans-serif;
-      font-size: 0.75rem;
-      font-weight: 500;
-      letter-spacing: 0.2em;
-      opacity: 0.6;
-      will-change: transform, opacity;
-    }
-    
-    .counter-wrap {
-      font-variant-numeric: tabular-nums; // Stops the numbers from 'jumping' width horizontally
-    }
-  }
-
-  // Purely architectural geometric line splitting the composition
-  .abstract-line {
-    position: absolute;
-    top: 50%;
-    left: 10%;
-    width: 80%;
-    height: 1px;
-    background: rgba(26, 26, 26, 0.15); // Very subtle dark thread
-    transform-origin: center;
-    z-index: 5;
-  }
-
-  // Massive Typography Grid
-  .typography-container {
-    position: relative;
-    width: 82%;
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
-    z-index: 20;
+    overflow: hidden;
 
-    .char-mask {
-      // CRITICAL: This hides the letter when it is pushed 'below' its baseline with yPercent: 120
-      overflow: hidden; 
-      padding-bottom: 2vw; // Allows the descenders of serif fonts to not clip violently
+    .loader-content {
+        text-align: center;
+        z-index: 10;
+
+        .heart-wrapper {
+            margin-bottom: 2rem;
+            
+            .loader-heart {
+                width: 100px;
+                height: 100px;
+                fill: rgba($pink-soft, 0.5);
+                stroke: $pink-deep;
+                stroke-width: 0.5px;
+                
+                .heart-fill {
+                    fill: $pink-deep;
+                    stroke: none;
+                    transition: clip-path 0.1s linear;
+                }
+            }
+        }
+
+        .loader-text {
+            .percentage {
+                display: block;
+                font-family: 'Quicksand', sans-serif;
+                font-size: 2.5rem;
+                font-weight: 600;
+                color: $pink-deep;
+                margin-bottom: 0.5rem;
+            }
+
+            .status {
+                font-family: 'Playfair Display', serif;
+                font-style: italic;
+                font-size: 1.2rem;
+                color: rgba($pink-deep, 0.6);
+                margin: 0;
+            }
+        }
     }
 
-    .char-inner {
-      font-family: 'Playfair Display', Times, serif;
-      font-size: 15vw; // Colossal editorial size spanning the view
-      font-weight: 300;
-      line-height: 0.9; 
-      color: #1A1A1A; // Rich charcoal almost black
-      will-change: transform;
-    }
-  }
+    .loader-curves {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
 
-  // Lower HUD elements
-  .loader-footer {
-    position: absolute;
-    bottom: 3rem;
-    left: 4rem;
-    right: 4rem;
-    display: flex;
-    justify-content: space-between;
-    z-index: 10;
-    
-    .caption {
-      font-family: 'Inter', sans-serif;
-      font-size: 0.65rem;
-      font-weight: 500;
-      letter-spacing: 0.3em;
-      opacity: 0.4;
-      text-transform: uppercase;
-      will-change: transform, opacity;
+        .curve {
+            position: absolute;
+            background: lighten($pink-soft, 2%);
+            border-radius: 50%;
+            pointer-events: none;
+            
+            &.curve-1 {
+                width: 60vw;
+                height: 60vw;
+                top: -30vw;
+                left: -20vw;
+                opacity: 0.3;
+            }
+
+            &.curve-2 {
+                width: 50vw;
+                height: 50vw;
+                bottom: -25vw;
+                right: -10vw;
+                background: $mint-soft;
+                opacity: 0.2;
+            }
+        }
     }
-  }
 }

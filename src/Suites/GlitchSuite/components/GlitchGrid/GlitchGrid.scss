@@ -1,0 +1,99 @@
+$glitch-black: #080808;
+$glitch-neon: #ccff00;
+$glitch-magenta: #ff00ff;
+
+.glitch-grid-section {
+    padding: 10vh 5vw;
+    background: $glitch-black;
+    min-height: 100vh;
+    font-family: 'JetBrains Mono', monospace;
+
+    .grid-header {
+        margin-bottom: 5vh;
+        color: $glitch-neon;
+        font-size: 1.2rem;
+        border-bottom: 1px solid rgba($glitch-neon, 0.2);
+        padding-bottom: 1rem;
+    }
+
+    .glitch-bento-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-auto-rows: 250px;
+        gap: 2rem;
+
+        @media (max-width: 1024px) {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        @media (max-width: 600px) {
+            grid-template-columns: 1fr;
+        }
+
+        .grid-item {
+            background: #111;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            transition: border-color 0.3s, background 0.3s;
+
+            &:hover {
+                background: #151515;
+                border-color: rgba($glitch-neon, 0.5);
+                .glitch-overlay { opacity: 0.1; }
+            }
+
+            &.large {
+                grid-column: span 2;
+                grid-row: span 2;
+                @media (max-width: 600px) { grid-column: span 1; grid-row: span 1; }
+            }
+
+            &.medium {
+                grid-column: span 1;
+                grid-row: span 2;
+                @media (max-width: 600px) { grid-row: span 1; }
+            }
+
+            .id-tag {
+                position: absolute;
+                top: 1rem; left: 1rem;
+                font-size: 0.6rem;
+                color: rgba(255, 255, 255, 0.3);
+            }
+
+            h3 {
+                font-family: 'Space Grotesk', sans-serif;
+                font-size: clamp(1.5rem, 4vw, 3rem);
+                color: #fff;
+                font-weight: 700;
+                margin: 0;
+            }
+
+            .grid-image-placeholder {
+                width: 100%;
+                height: 100%;
+                background: #1a1a1a;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: rgba(255, 255, 255, 0.05);
+                font-size: 5rem;
+                font-weight: 700;
+                position: relative;
+
+                .glitch-overlay {
+                    position: absolute;
+                    top: 0; left: 0; width: 100%; height: 100%;
+                    background: url("https://www.transparenttextures.com/patterns/carbon-fibre.png");
+                    opacity: 0.02;
+                    transition: opacity 0.3s;
+                }
+            }
+        }
+    }
+}

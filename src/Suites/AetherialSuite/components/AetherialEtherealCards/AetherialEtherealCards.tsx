@@ -45,13 +45,16 @@ export const AetherialEtherealCards: React.FC = () => {
         const cards = gsap.utils.toArray('.ethereal-card');
         cards.forEach((card: any, i: number) => {
             const parallaxVal = CARDS_DATA[i].parallax;
+            const cardInnerContent = card.querySelectorAll('.card-glass-body, .card-bg-indicator');
             
-            gsap.fromTo(card,
+            // Replaced `card` with `cardInnerContent` so the y-transforms don't fight
+            gsap.fromTo(cardInnerContent,
                 { autoAlpha: 0, y: 100 },
                 { 
                     autoAlpha: 1, y: 0, 
                     duration: 1.2, 
-                    delay: i * 0.2,
+                    delay: i * 0.1,
+                    stagger: 0.1,
                     ease: 'expo.out',
                     scrollTrigger: {
                         trigger: card,
@@ -60,7 +63,7 @@ export const AetherialEtherealCards: React.FC = () => {
                 }
             );
 
-            // Continuous Parallax
+            // Continuous Parallax applied to the Outer wrapper
             gsap.to(card, {
                 y: parallaxVal,
                 ease: 'none',

@@ -1,133 +1,115 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import './AestheticLoader.scss';
 
-gsap.registerPlugin(useGSAP);
-
 export const AestheticLoader: React.FC = () => {
     const containerRef = useRef<HTMLDivElement>(null);
     const [progress, setProgress] = useState(0);
-    // You can alter this word to whatever fits the brand ('ATELIER', 'GALLERY', 'BESPOKE')
-    const word = "ELEGANCE";
 
-    useGSAP(() => {
-        // Strict Mode Safe Scroll Lock
-        const preventScroll = (e: Event) => {
-            e.preventDefault();
-            e.stopPropagation();
-            return false;
-        };
-        
-        // Lock Document aggressively
-        window.addEventListener('wheel', preventScroll, { passive: false });
-        window.addEventListener('touchmove', preventScroll, { passive: false });
-        document.documentElement.style.overflow = 'hidden';
-        document.body.style.overflow = 'hidden';
-
-        const unlockScroll = () => {
-            window.removeEventListener('wheel', preventScroll);
-            window.removeEventListener('touchmove', preventScroll);
-            document.documentElement.style.overflow = '';
-            document.body.style.overflow = '';
-        };
-
-        const tl = gsap.timeline({
-            onComplete: () => {
-                unlockScroll();
-                gsap.set(containerRef.current, { display: 'none' }); 
+    // Lock scroll while loading using a style tag to ensure high specificity
+    useEffect(() => {
+        const style = document.createElement('style');
+        style.id = 'loader-scroll-lock';
+        style.innerHTML = `
+            html, body {
+                overflow: hidden !important;
+                height: 100% !important;
+                touch-action: none !important;
+                -ms-touch-action: none !important;
             }
+        `;
+        document.head.appendChild(style);
+
+        return () => {
+            const lock = document.getElementById('loader-scroll-lock');
+            if (lock) lock.remove();
+        };
+    }, []);
+
+    // Unlock when finished
+    useEffect(() => {
+        if (progress === 100) {
+            // Delay the unlock slightly to match the curtain lift
+            const timeout = setTimeout(() => {
+                const lock = document.getElementById('loader-scroll-lock');
+                if (lock) lock.remove();
+            }, 1200); // Sincronizado con la animación de salida
+            return () => clearTimeout(timeout);
+        }
+    }, [progress]);
+
+    // 1. Initial Setup and Entrance
+    useGSAP(() => {
+        const timer = setInterval(() => {
+            setProgress(prev => (prev < 100 ? prev + 1 : 100));
+        }, 40); // Slightly slower for better feel
+
+        gsap.from('.loader-heart', {
+            scale: 0,
+            opacity: 0,
+            duration: 1.8,
+            ease: 'elastic.out(1, 0.4)'
         });
 
-        // 1. Staggered Minimalist Typography Reveal (Emerging from their masks)
-        tl.fromTo('.char-inner', {
-            yPercent: 120, // Start hidden below the mask
-            rotation: 5,   // Slight slant for an organic slide-in
-        }, {
-            yPercent: 0,
-            rotation: 0,
-            duration: 1.4,
-            stagger: 0.08, // The domino effect delay between letters
-            ease: "power4.out"
-        });
-
-        // 2. Tabular Minimalist Counter progressing
-        const counterObj = { val: 0 };
-        tl.to(counterObj, {
-            val: 100,
-            duration: 2.2,
-            ease: "expo.inOut",
-            onUpdate: () => setProgress(Math.floor(counterObj.val)),
-        }, "-=0.5");
-
-        // 3. The Elegant Exit Wipe
-        // First, the letters slide up into the void
-        tl.to('.char-inner', {
-            yPercent: -120,
-            rotation: -5,
-            duration: 1,
-            stagger: 0.04,
-            ease: "power4.in"
-        }, 'exit');
-
-        // The architectural dividing line shrinks away
-        tl.to('.abstract-line', {
-            scaleX: 0,
-            duration: 0.8,
-            ease: "power3.inOut"
-        }, 'exit');
-
-        // Small HUD elements float away
-        tl.to(['.loader-hud', '.loader-footer'], {
-            autoAlpha: 0,
-            y: -20,
-            duration: 0.5,
-            ease: "power3.in"
-        }, 'exit');
-
-        // Finally, the physical alabaster canvases sweep upwards, splitting to reveal the App
-        tl.to('.bg-panel', {
-            yPercent: -100,
-            duration: 1.4,
-            ease: "expo.inOut",
-            stagger: 0.1 // Slight delay between the left and right panels wiping
-        }, 'exit+=0.4');
-
-        // Cleanup for React Strict Mode
-        return () => unlockScroll();
-
+        return () => clearInterval(timer);
     }, { scope: containerRef });
 
-    return (
-        <div className="aesthetic-loader" ref={containerRef}>
-            {/* Split panel backgrounds acting as physical curtains to add architectural complexity */}
-            <div className="bg-panel panel-left"></div>
-            <div className="bg-panel panel-right"></div>
+    // 2. Pulse and Exit
+    useGSAP(() => {
+        if (progress < 100) {
+            // Heartbeat effect
+            gsap.to('.loader-heart', {
+                scale: 1.15,
+                duration: 0.8,
+                repeat: -1,
+                yoyo: true,
+                ease: 'back.inOut(2)'
+            });
+        } else {
+            const tl = gsap.timeline();
             
-            {/* Top Minimalist Heads Up Display */}
-            <div className="loader-hud">
-                <div className="folio-id">SERIES — 48</div>
-                <div className="counter-wrap">
-                    [ {String(progress).padStart(2, '0')} — 100 ]
+            tl.to('.loader-content', { 
+                opacity: 0, 
+                y: -40, 
+                duration: 0.8, 
+                ease: 'power2.inOut' 
+            })
+            .to(containerRef.current, {
+                yPercent: -100,
+                duration: 1.6,
+                ease: 'expo.inOut'
+            }, '-=0.4')
+            .to('.curve-2', {
+                yPercent: 400, // Even more down for a safe exit
+                duration: 1.6,
+                ease: 'expo.inOut'
+            }, '<'); // Start at the same time as the parent lift
+        }
+    }, { scope: containerRef, dependencies: [progress === 100] });
+
+    return (
+        <div ref={containerRef} className="aesthetic-loader">
+            <div className="loader-content">
+                <div className="heart-wrapper">
+                    <svg className="loader-heart" viewBox="0 0 32 32">
+                        <path d="M16 28.5L14.1 26.8C7.33 20.6 3 16.7 3 11.9C3 8.04 6.04 5 9.9 5C12.1 5 14.1 6 15.4 7.5L16 8.2L16.6 7.5C17.9 6 19.9 5 22.1 5C25.96 5 29 8.04 29 11.9C29 16.7 24.67 20.6 17.9 26.8L16 28.5Z" />
+                        <path 
+                            className="heart-fill" 
+                            style={{ clipPath: `inset(${100 - progress}% 0 0 0)` }}
+                            d="M16 28.5L14.1 26.8C7.33 20.6 3 16.7 3 11.9C3 8.04 6.04 5 9.9 5C12.1 5 14.1 6 15.4 7.5L16 8.2L16.6 7.5C17.9 6 19.9 5 22.1 5C25.96 5 29 8.04 29 11.9C29 16.7 24.67 20.6 17.9 26.8L16 28.5Z" 
+                        />
+                    </svg>
+                </div>
+                <div className="loader-text">
+                    <span className="percentage">{progress}%</span>
+                    <p className="status">Creating sweetness...</p>
                 </div>
             </div>
-
-            {/* Sub-pixel structural element */}
-            <div className="abstract-line"></div>
-
-            {/* Gigantic Manual SplitText Container */}
-            <div className="typography-container">
-                {word.split('').map((char, index) => (
-                    <div className="char-mask" key={index}>
-                        <div className="char-inner">{char}</div>
-                    </div>
-                ))}
-            </div>
             
-            {/* Bottom Minimalist Footer */}
-            <div className="loader-footer">
-                <div className="caption">AESTHETIC GALLERY INITIALIZATION</div>
-                <div className="caption">© 2026</div>
+            <div className="loader-curves">
+                <div className="curve curve-1"></div>
+                <div className="curve curve-2"></div>
             </div>
         </div>
     );

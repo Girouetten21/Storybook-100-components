@@ -4,15 +4,15 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 import './BlossomDeck.scss';
 
-import img1 from '../../../../assets/img/Background_1.webp';
-import img2 from '../../../../assets/img/Space_1.webp';
-import img3 from '../../../../assets/img/Character_1.webp';
-import img4 from '../../../../assets/img/Background_2.webp';
-import img5 from '../../../../assets/img/Character_2.webp';
-import img6 from '../../../../assets/img/Space_2.webp';
-import img7 from '../../../../assets/img/Background_3.webp';
-import img8 from '../../../../assets/img/Background_4.webp';
-import img9 from '../../../../assets/img/Character_3.webp';
+import img1 from '../../img/blossom_1.png';
+import img2 from '../../img/blossom_2.png';
+import img3 from '../../img/blossom_3.png';
+import img4 from '../../img/blossom_4.png';
+import img5 from '../../img/blossom_1.png';
+import img6 from '../../img/blossom_2.png';
+import img7 from '../../img/blossom_3.png';
+import img8 from '../../img/blossom_4.png';
+import img9 from '../../img/blossom_hero.png';
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 

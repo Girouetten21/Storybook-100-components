@@ -1,0 +1,189 @@
+$glitch-black: #080808;
+$glitch-neon: #ccff00;
+$glitch-magenta: #ff00ff;
+
+.glitch-gate-hero {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    background: $glitch-black;
+    overflow: hidden;
+    font-family: 'Space Grotesk', sans-serif;
+
+    .gate-overlay {
+        position: fixed;
+        top: 0; left: 0; width: 100vw; height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+        background: #000;
+
+        .gate-wall {
+            position: absolute;
+            width: 100%;
+            height: 50%;
+            background: #111;
+            border: 1px solid rgba($glitch-neon, 0.05);
+            z-index: 1;
+            &.top { top: 0; }
+            &.bottom { bottom: 0; }
+        }
+
+        .gate-noise {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url("https://www.transparenttextures.com/patterns/pollen.png");
+            opacity: 0.03;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .gate-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+
+            .glitch-title {
+                color: #fff;
+                font-size: clamp(3rem, 8vw, 6rem);
+                font-weight: 700;
+                letter-spacing: -0.05em;
+                position: relative;
+                
+                &::before, &::after {
+                    content: attr(data-text);
+                    position: absolute;
+                    top: 0; left: 0; width: 100%; height: 100%;
+                    background: #111;
+                }
+                &::before { left: 2px; text-shadow: -2px 0 $glitch-magenta; clip: rect(44px, 450px, 56px, 0); animation: glitch-anim 5s infinite linear alternate-reverse; }
+                &::after { left: -2px; text-shadow: -2px 0 #00ffff; clip: rect(44px, 450px, 56px, 0); animation: glitch-anim 2s infinite linear alternate-reverse; }
+            }
+
+            .gate-warning {
+                color: $glitch-neon;
+                font-family: 'JetBrains Mono', monospace;
+                font-size: 0.7rem;
+                letter-spacing: 0.3em;
+            }
+
+            .breach-btn {
+                background: $glitch-neon;
+                color: #000;
+                border: none;
+                padding: 1rem 3rem;
+                font-family: 'JetBrains Mono', monospace;
+                font-size: 0.8rem;
+                font-weight: 700;
+                cursor: pointer;
+                position: relative;
+                transition: transform 0.2s;
+
+                &:hover {
+                    transform: scale(1.05);
+                    box-shadow: 0 0 40px rgba($glitch-neon, 0.4);
+                }
+
+                .btn-glitch-layer {
+                    position: absolute;
+                    top: 0; left: 0; width: 100%; height: 100%;
+                    background: $glitch-neon;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    opacity: 0;
+                }
+
+                &:hover .btn-glitch-layer {
+                    opacity: 1;
+                    animation: glitch-anim 0.2s infinite;
+                    &:nth-child(1) { color: $glitch-magenta; transform: translate(-3px, 0); }
+                    &:nth-child(2) { color: #00ffff; transform: translate(3px, 0); }
+                }
+            }
+        }
+    }
+
+    .revealed-content {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        padding-left: 8vw;
+        visibility: hidden;
+        opacity: 0;
+
+        &.active {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .hero-bg-asset {
+            position: absolute;
+            top: 0; right: 0; width: 60%; height: 100%;
+            background-size: cover;
+            background-position: center;
+            mask-image: linear-gradient(to left, #000 70%, transparent);
+            filter: saturate(1.5) contrast(1.1);
+        }
+
+        .hero-typography {
+            position: relative;
+            z-index: 10;
+
+            .main-title {
+                font-size: clamp(4rem, 12vw, 10rem);
+                color: #fff;
+                line-height: 0.85;
+                font-weight: 700;
+                letter-spacing: -0.05em;
+
+                span {
+                    color: $glitch-neon;
+                    -webkit-text-stroke: 1px $glitch-neon;
+                }
+            }
+
+            .hero-details {
+                margin-top: 4rem;
+                display: flex;
+                gap: 4rem;
+
+                .detail-item {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 0.5rem;
+
+                    span:nth-child(1) {
+                        font-family: 'JetBrains Mono', monospace;
+                        font-size: 0.6rem;
+                        color: rgba(255, 255, 255, 0.3);
+                        letter-spacing: 0.2em;
+                    }
+
+                    span:nth-child(2) {
+                        font-size: 1rem;
+                        color: #fff;
+                        font-weight: 700;
+                        &.status-low { color: $glitch-magenta; }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@keyframes glitch-anim {
+    0% { clip: rect(10px, 9999px, 40px, 0); }
+    20% { clip: rect(60px, 9999px, 20px, 0); }
+    40% { clip: rect(30px, 9999px, 80px, 0); }
+    60% { clip: rect(90px, 9999px, 10px, 0); }
+    80% { clip: rect(40px, 9999px, 60px, 0); }
+    100% { clip: rect(70px, 9999px, 30px, 0); }
+}

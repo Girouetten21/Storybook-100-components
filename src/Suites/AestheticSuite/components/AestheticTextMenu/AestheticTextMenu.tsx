@@ -3,16 +3,16 @@ import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import './AestheticTextMenu.scss';
 
-import img1 from '../../img/generated_1.png';
-import img2 from '../../img/generated_2.png';
-import img3 from '../../img/generated_3.png';
-import img4 from '../../img/generated_4.png';
+import img1 from '../../assets/gallery_1.png';
+import img2 from '../../assets/gallery_2.png';
+import img3 from '../../assets/gallery_3.png';
+import img4 from '../../assets/hero_door.png';
 
 const menuItems = [
-    { title: 'Collections', category: 'High Fashion', image: img1 },
-    { title: 'Editorials', category: 'Visual Archive', image: img2 },
-    { title: 'The Maison', category: 'Our Legacy', image: img3 },
-    { title: 'Boutiques', category: 'Global Presence', image: img4 },
+    { title: 'Collections', category: 'Soft Pieces', image: img1 },
+    { title: 'Editorials', category: 'Visual Love', image: img2 },
+    { title: 'The Atelier', category: 'Handmade Soul', image: img3 },
+    { title: 'Contact', category: 'Say Hello', image: img4 },
 ];
 
 gsap.registerPlugin(useGSAP);
@@ -26,8 +26,8 @@ export const AestheticTextMenu: React.FC = () => {
     useGSAP(() => {
         tlRef.current = gsap.timeline({ paused: true })
             .fromTo('.split-menu-overlay',
-                { clipPath: 'circle(0% at 50% 50%)', backgroundColor: '#000' },
-                { clipPath: 'circle(150% at 50% 50%)', backgroundColor: '#0a0a0c', duration: 1.2, ease: 'power4.inOut' }
+                { clipPath: 'circle(0% at 50% 50%)', backgroundColor: '#fff' },
+                { clipPath: 'circle(150% at 50% 50%)', backgroundColor: '#fff9f5', duration: 1.2, ease: 'power4.inOut' }
             )
             .fromTo('.split-menu-item',
                 { y: 50, autoAlpha: 0, rotateX: -15 },

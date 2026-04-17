@@ -1,0 +1,163 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600&family=Playfair+Display:ital,wght@1,400;1,600&display=swap');
+
+$bg-color: #fff9f5;
+$pink-soft: #ffdce0;
+$pink-deep: #ff8fa3;
+
+.aesthetic-hero-door {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    background: $bg-color;
+
+    .hero-background {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba($bg-color, 0.4);
+            backdrop-filter: blur(2px);
+        }
+
+        .hero-text-content {
+            position: relative;
+            z-index: 5;
+            text-align: center;
+            padding: 2rem;
+            max-width: 800px;
+
+            .hero-eyebrow {
+                display: block;
+                font-family: 'Quicksand', sans-serif;
+                text-transform: uppercase;
+                letter-spacing: 0.5em;
+                font-size: 0.8rem;
+                color: $pink-deep;
+                margin-bottom: 1.5rem;
+            }
+
+            .hero-title {
+                font-family: 'Playfair Display', serif;
+                font-size: 8vw;
+                line-height: 1.1;
+                margin: 0;
+                color: darken($pink-deep, 20%);
+                font-style: italic;
+                font-weight: 300;
+
+                i { color: $pink-deep; font-weight: 600; }
+            }
+
+            .hero-subtitle {
+                font-family: 'Quicksand', sans-serif;
+                font-size: 1.2rem;
+                color: rgba(0, 0, 0, 0.5);
+                margin-top: 2rem;
+                font-weight: 300;
+            }
+        }
+    }
+
+    .door-panels {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 10;
+        display: flex;
+        pointer-events: none;
+
+        .door-panel {
+            width: 50%;
+            height: 100%;
+            background: $bg-color;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            &.left {
+                border-right: 1px solid rgba($pink-soft, 0.5);
+                .panel-design { margin-left: auto; margin-right: 10vw; }
+            }
+            &.right {
+                .panel-design { margin-right: auto; margin-left: 10vw; }
+            }
+
+            .panel-design {
+                width: 2px;
+                height: 40%;
+                background: $pink-soft;
+                position: relative;
+                
+                .ornament {
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    width: 40px;
+                    height: 40px;
+                    border: 1px solid $pink-soft;
+                    border-radius: 50%;
+                    background: $bg-color;
+                    
+                    &:after {
+                        content: '';
+                        position: absolute;
+                        top: 50%; left: 50%;
+                        transform: translate(-50%, -50%);
+                        width: 10px; height: 10px;
+                        background: $pink-soft;
+                        border-radius: 50%;
+                    }
+                }
+            }
+        }
+
+        .scroll-hint {
+            position: absolute;
+            bottom: 10vh;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            opacity: 0.6;
+            animation: hint-float 2s ease-in-out infinite;
+
+            .hint-text {
+                font-family: 'Quicksand', sans-serif;
+                font-size: 0.75rem;
+                text-transform: uppercase;
+                letter-spacing: 0.3em;
+                color: $pink-deep;
+            }
+
+            .hint-line {
+                width: 1px;
+                height: 40px;
+                background: linear-gradient(to bottom, $pink-deep, transparent);
+            }
+        }
+    }
+}
+
+@keyframes hint-float {
+    0%, 100% { transform: translate(-50%, 0); opacity: 0.6; }
+    50% { transform: translate(-50%, -10px); opacity: 1; }
+}

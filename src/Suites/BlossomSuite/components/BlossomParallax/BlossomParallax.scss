@@ -2,10 +2,11 @@
 
 .blossom-parallax-container {
     padding: 6rem 4rem;
-    background-color: #fff9f9; 
+    background-color: #fcfdfa; 
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 4rem 3rem;
+    min-height: 100vh;
     
     @media (max-width: 1024px) {
         grid-template-columns: 1fr;
@@ -37,15 +38,15 @@
 
         .blossom-content-wrapper {
             .blossom-title {
-                color: #ec407a; 
+                color: #f06292; 
             }
             .blossom-divider {
-                background-color: #ec407a;
+                background-color: #f06292;
             }
             .blossom-detail-pill {
-                border-color: #ec407a;
-                background-color: rgba(236, 64, 122, 0.05);
-                color: #ec407a;
+                border-color: #f06292;
+                background-color: rgba(240, 98, 146, 0.05);
+                color: #f06292;
             }
         }
     }

@@ -4,10 +4,10 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 import './BlossomParallax.scss';
 
-import bg1 from '../../../../assets/img/Background_1.webp';
-import bg2 from '../../../../assets/img/Background_2.webp';
-import bg3 from '../../../../assets/img/Background_3.webp';
-import bg4 from '../../../../assets/img/Background_4.webp';
+import bg1 from '../../img/blossom_1.png';
+import bg2 from '../../img/blossom_2.png';
+import bg3 from '../../img/blossom_3.png';
+import bg4 from '../../img/blossom_4.png';
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 

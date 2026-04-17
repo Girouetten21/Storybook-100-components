@@ -1,0 +1,177 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600&family=Playfair+Display:ital,wght@1,400;1,600&display=swap');
+
+$bg-color: #fff9f5;
+$pink-soft: #ffdce0;
+$pink-deep: #ff8fa3;
+
+.aesthetic-footer {
+    position: relative;
+    padding: 10vh 10vw 5vh;
+    background: linear-gradient(to bottom, $bg-color, $pink-soft);
+    overflow: hidden;
+
+    .footer-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 8vh;
+
+        .footer-brand {
+            .brand-logo {
+                font-family: 'Playfair Display', serif;
+                font-size: 2.5rem;
+                margin: 0;
+                color: darken($pink-deep, 20%);
+                font-weight: 400;
+
+                i { font-style: italic; color: $pink-deep; }
+            }
+
+            .brand-motto {
+                font-family: 'Quicksand', sans-serif;
+                font-size: 0.9rem;
+                color: rgba(0, 0, 0, 0.4);
+                margin-top: 10px;
+                letter-spacing: 0.1em;
+            }
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 5vw;
+
+            .link-group {
+                display: flex;
+                flex-direction: column;
+                gap: 15px;
+
+                &.newsletter {
+                    max-width: 250px;
+                    p {
+                        font-family: 'Quicksand', sans-serif;
+                        font-size: 0.85rem;
+                        color: rgba(0, 0, 0, 0.4);
+                        margin: 0 0 10px 0;
+                    }
+
+                    .footer-input {
+                        display: flex;
+                        border-bottom: 2px solid $pink-deep;
+                        padding-bottom: 5px;
+
+                        input {
+                            background: transparent;
+                            border: none;
+                            outline: none;
+                            width: 100%;
+                            font-family: 'Quicksand', sans-serif;
+                            font-size: 0.9rem;
+                            color: darken($pink-deep, 20%);
+
+                            &::placeholder { color: lighten($pink-deep, 10%); }
+                        }
+
+                        button {
+                            background: transparent;
+                            border: none;
+                            font-size: 1.2rem;
+                            color: $pink-deep;
+                            cursor: pointer;
+                        }
+                    }
+                }
+
+                .group-title {
+                    font-family: 'Quicksand', sans-serif;
+                    text-transform: uppercase;
+                    letter-spacing: 0.2em;
+                    font-size: 0.75rem;
+                    font-weight: 600;
+                    color: darken($pink-deep, 10%);
+                    margin-bottom: 5px;
+                }
+
+                a {
+                    font-family: 'Quicksand', sans-serif;
+                    font-size: 0.9rem;
+                    color: rgba(0, 0, 0, 0.6);
+                    text-decoration: none;
+                    transition: all 0.3s ease;
+
+                    &:hover { 
+                        color: $pink-deep; 
+                        padding-left: 5px;
+                    }
+                }
+            }
+        }
+    }
+
+    .footer-bottom {
+        text-align: center;
+        
+        .social-links {
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+
+            a {
+                font-family: 'Quicksand', sans-serif;
+                font-size: 0.85rem;
+                color: darken($pink-deep, 5%);
+                text-decoration: none;
+                font-weight: 600;
+                letter-spacing: 0.1em;
+                opacity: 0.6;
+                transition: opacity 0.3s ease;
+
+                &:hover { opacity: 1; }
+            }
+        }
+
+        .bottom-line {
+            width: 100%;
+            height: 1px;
+            background: rgba($pink-deep, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .copyright {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 0.75rem;
+            color: rgba(0, 0, 0, 0.3);
+            letter-spacing: 0.05em;
+        }
+    }
+
+    .footer-decoration {
+        .petal {
+            position: absolute;
+            font-size: 1.5rem;
+            opacity: 0.4;
+            pointer-events: none;
+            
+            &.petal-1 { top: 10%; right: 15%; animation: float-gentle 6s ease-in-out infinite; }
+            &.petal-2 { bottom: 20%; left: 10%; animation: float-gentle 8s ease-in-out infinite reverse; }
+            &.petal-3 { top: 40%; left: 5%; animation: float-gentle 10s ease-in-out infinite; }
+        }
+    }
+}
+
+@keyframes float-gentle {
+    0%, 100% { transform: translateY(0) rotate(0); }
+    50% { transform: translateY(-20px) rotate(15deg); }
+}
+
+@media (max-width: 768px) {
+    .aesthetic-footer {
+        padding: 5vh 8vw;
+        .footer-content {
+            flex-direction: column;
+            gap: 5vh;
+            
+            .footer-links { gap: 10vw; }
+        }
+    }
+}
